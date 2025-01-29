@@ -1,13 +1,12 @@
 public class Cinema {
     private String name;
     private String location;
-    private int totalScreens;
-    private int totalSeats;
+    private int totalHalls;
 
-    public Cinema(String name, String location, int totalScreens, int totalSeats) {
+    public Cinema(String name, String location, int totalHalls) {
         this.name = name;
         this.location = location;
-        this.totalScreens = totalScreens;
-        this.totalSeats = totalSeats;
+        this.totalHalls = totalHalls;
+
     }
 }
