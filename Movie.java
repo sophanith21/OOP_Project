@@ -6,7 +6,7 @@ public class Movie {
     private int duration;
     private String genre;
     private double rating;
-    private ShowTime[] showTimes;
+    private Showtime[] showTimes;
     private int showTimeCount;
     private static int numberOfMovies = 0;
 
@@ -17,7 +17,7 @@ public class Movie {
         this.duration = duration;
         this.genre = genre;
         this.rating = 0.0;
-        this.showTimes = new ShowTime[maxShowTimes];
+        this.showTimes = new Showtime[maxShowTimes];
         this.showTimeCount = 0;
         
         numberOfMovies ++;

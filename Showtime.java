@@ -4,7 +4,7 @@ public class Showtime {
     private String time;
     private double pricePerTicket;
 
-    public ShowTime(String showTimeID, String date, String time, double pricePerTicket) {
+    public Showtime(String showTimeID, String date, String time, double pricePerTicket) {
             this.showTimeID = showTimeID;
             this.date = date;
             this.time = time;
