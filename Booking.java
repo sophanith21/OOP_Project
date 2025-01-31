@@ -17,7 +17,7 @@ public class Booking {
         this.user =  user;
         this.hall =  hall;
         this.movie = movie;
-        this.seat =  new Seat[totalSeat];
+        this.seat =  seat;
         this.payment =  payment;
     }
 }
