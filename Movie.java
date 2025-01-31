@@ -1,5 +1,4 @@
-public class Movie {
-    
+public class Movie {   
     private String movieID;
     private String hallID;
     private String title;
@@ -8,7 +7,7 @@ public class Movie {
     private double rating;
     private ShowTime[] showTimes;
     private int showTimeCount;
-    private static int numberOfMovies = 0;
+    public static int numberOfMovies = 0;
 
     Movie (String movieID, String hallID, String title, int duration, String genre, int maxShowTimes) {
         this.movieID = movieID;
