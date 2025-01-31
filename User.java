@@ -4,10 +4,9 @@ public class User {
     private String email;
     private String password;
     private boolean isLoggedIn;
-    private String resetCode = "";
+    private String resetCode = null;
 
-
-    User (String userID, String password, String email) {
+    public User (String userID, String password, String email) {
         this.userID = userID;
         this.password = password;
         this.email = email;
