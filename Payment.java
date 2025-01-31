@@ -5,7 +5,7 @@ public class Payment {
     private double paymentAmount;
     private String paymentMethod;
     private String status;
-    private String transactionID;
+    private String transactionID; //The ID of the transaction in the payment gateway
 
     public Payment(String userId, String paymentId, String paymentDate, double paymentAmount, String paymentMethod, String status, String transactionID) {
         this.userId = userId;
