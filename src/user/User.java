@@ -1,4 +1,4 @@
-
+package src.user;
 public class User implements Authentication {
 
     protected String userName;
