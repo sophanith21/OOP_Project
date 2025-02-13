@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class Booking {//need to be array
+public class Booking {
     private String bookingId;
-    private String reserveTime;// need to reserve the time 
+    private String reserveTime; 
     private String movieId;
-    private String [] seatId; //4a 4b need to be array
-    private int totalSeat; //4
+    private String [] seatId;
+    private int totalSeat;
     private double totalPrice;
     private String paymentId;
-    //booking and payment need array
+
     private static ArrayList<Booking> listOfBookings = new ArrayList<>();
 
     public Booking(String bookingId, String reserveTime, String movieId, String[] seatId, int totalSeat,
