@@ -3,6 +3,7 @@ package src.cinema;
 import java.util.Objects;
 
 public class Seat {
+    protected String seatType;
     private String status; // "Booked", "Available", or "Occupied"
     private String userId; // Stores user ID if booked
     private int hallId; // Hall ID
@@ -13,6 +14,7 @@ public class Seat {
     public static int seatTaken = 0; // Tracks booked seats
 
     public Seat(int hallId, int rowNumber, int seatNum) {
+        this.seatType = "Regular";
         this.hallId = hallId;
         this.rowNumber = rowNumber;
         this.seatId = rowNumber + "-" + seatNum;
@@ -98,17 +100,12 @@ public class Seat {
         return Objects.equals(seatId, other.seatId) && hallId == other.hallId;
     }
 
-    
     @Override
     public String toString() {
-        return "Seat [" +
-               "seatId=" + seatId +
-               ", status=" + status +
-               ", hallId=" + hallId +
-               ", price=" + price +
-               (userId.isEmpty() ? "" : ", userId=" + userId) +
-               ", showtimeId=" + showtimeId +
-               ", rowNumber=" + rowNumber +
-               "]";
+        return "Seat [seatType=" + seatType + ", status=" + status + ", userId=" + userId + ", hallId=" + hallId
+                + ", price=" + price + ", showtimeId=" + showtimeId + ", seatId=" + seatId + ", rowNumber=" + rowNumber
+                + "]\n";
     }
+
+    
 }
