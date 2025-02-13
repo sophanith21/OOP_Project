@@ -1,4 +1,7 @@
 package src.user;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 public class User implements Authentication {
 
     protected String userName;
@@ -6,7 +9,9 @@ public class User implements Authentication {
     protected String userEmail;
     protected String userPassword;
     protected boolean isLoggedIn;
+    public static ArrayList <User> users = new ArrayList<>(); //store admin and customer obj
 
+    //useful for creating obj with pre-populated data like loading obj from file
     public User(String name, String phone, String email, String password) {
         
         this.userName = name;
@@ -14,7 +19,11 @@ public class User implements Authentication {
         this.userEmail = email;
         this.userPassword = password;
         this.isLoggedIn = false;
+
     }
+
+    //default constructor for registeration
+    public User () {}
 
     protected boolean verifyPassword(String password) {
         return this.userPassword.equals(password);
@@ -22,6 +31,19 @@ public class User implements Authentication {
 
     private boolean isValidPhoneNumber(String number) {
         return number.length() >= 8 && number.length() <= 9 && number.charAt(0) == '0' && number.matches("[0-9]+");
+    }
+
+    private boolean isValidEmail(String email) {
+        return email.contains("@") && email.contains(".");
+    }
+
+    private boolean isEmailTaken(String email) {
+        for (User user : users) {
+            if (user.userEmail.equals(email)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getName () {
@@ -95,5 +117,40 @@ public class User implements Authentication {
     public void logout() {
         isLoggedIn = false;
         System.out.println("Logged out.");
+    }
+
+    public void register() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Name: ");
+        this.userName = scanner.nextLine();
+
+        System.out.print("Enter Phone Number: ");
+        String phone = scanner.nextLine();
+        if (!isValidPhoneNumber(phone)) {
+            System.out.println("Invalid phone number format!");
+            return;
+        }
+        this.userPhoneNumber = phone;
+
+        System.out.print("Enter Email: ");
+        String email = scanner.nextLine();
+        if (!isValidEmail(email)) {
+            System.out.println("Invalid email format!");
+            return;
+        }
+        if (isEmailTaken(email)) {
+            System.out.println("Email is already taken.");
+            return;
+        }
+        this.userEmail = email;
+
+        System.out.print("Enter Password: ");
+        this.userPassword = scanner.nextLine();
+
+        // Add user to the list of registered users
+        users.add(this);
+
+        System.out.println("Registration successful!");
     }
 }

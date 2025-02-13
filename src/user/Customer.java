@@ -16,6 +16,11 @@ public class Customer extends User{
         this.bookings = new ArrayList<>();
     }
 
+    public Customer () {
+        super();
+        this.bookings = new ArrayList<>();
+    }
+
     public String getID () {
         return id;
     }
@@ -40,5 +45,11 @@ public class Customer extends User{
                 ", isLoggedIn=" + isLoggedIn +
                 ", numberOfBookings=" + bookings.size() +
                 '}';
+    }
+
+    @Override
+    public void register () {
+        this.id = "A" + (++totalCustomers);
+        super.register(); 
     }
 }

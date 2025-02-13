@@ -13,7 +13,11 @@ public class Admin extends User{
         super(name, phone, email, password);
         this.id = "A" + (++totalAdmins); 
         this.movies = new ArrayList<>();
-        
+    }
+
+    public Admin () {
+        super();
+        this.movies = new ArrayList<>();
     }
 
     public String getID () {
@@ -40,5 +44,11 @@ public class Admin extends User{
                 ", isLoggedIn=" + isLoggedIn +
                 ", numberOfMovies=" + movies.size() +
                 '}';
+    }
+
+    @Override
+    public void register () {
+        this.id = "A" + (++totalAdmins);
+        super.register(); 
     }
 }

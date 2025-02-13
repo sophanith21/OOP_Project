@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import src.cinema.Cinema;
 import src.cinema.Hall;
+import src.user.Admin;
+import src.user.Customer;
+import src.user.User;
 
 public class Main{
     public static void main(String[] args){
