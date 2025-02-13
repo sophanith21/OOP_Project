@@ -1,3 +1,7 @@
+package src.booking;
+import src.cinema.*;
+import src.user.*;
+
 public class Booking {
     private int bookingId;
     private int totalSeat;

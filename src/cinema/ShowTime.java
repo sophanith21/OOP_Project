@@ -1,3 +1,4 @@
+package src.cinema;
 public class ShowTime {
     private int showTimeID;
     private String date;

@@ -1,6 +1,7 @@
+package src.cinema;
 public class Movie {   
     private String movieID;
-    private String hallID;
+    private int hallID;
     private String title;
     private int duration;
     private String genre;
@@ -9,7 +10,7 @@ public class Movie {
     private int showTimeCount;
     public static int numberOfMovies = 0;
 
-    public Movie (String movieID, String hallID, String title, int duration, String genre, int maxShowTimes) {
+    public Movie (String movieID, int hallID, String title, int duration, String genre, int maxShowTimes) {
         this.movieID = movieID;
         this.hallID = hallID;
         this.title = title;
