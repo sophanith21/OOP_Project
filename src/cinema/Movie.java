@@ -16,7 +16,7 @@ public class Movie {
         this.title = title;
         this.duration = duration;
         this.genre = genre;  
-        this.ratings = new ArrayList<>(); // means no rating
+        this.ratings = new ArrayList<>(); 
         this.showTimes = new ArrayList<>();
     }
 

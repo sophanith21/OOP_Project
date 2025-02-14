@@ -1,6 +1,7 @@
 package src.user;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 public class User implements Authentication {
 
@@ -50,22 +51,18 @@ public class User implements Authentication {
         return userName;
     }
 
-    public String getEmail ( String password ) {
-        if (verifyPassword(password)) {
+    public String getEmail () {
+        if (isLoggedIn) {
             return userEmail;
-        } else {
-            System.out.println("Access denied: Incorrect password.");
-            return null;
         }
+        return null;
     }
 
-    public String getPhoneNumber ( String password ) {
-        if (verifyPassword(password)) {
+    public String getPhoneNumber () {
+        if (isLoggedIn) {
             return userPhoneNumber;
-        } else {
-            System.out.println("Access denied: Incorrect password.");
-            return null;
         }
+        return null;
     }
 
     public void setName(String newName, String password) {
@@ -119,6 +116,7 @@ public class User implements Authentication {
         System.out.println("Logged out.");
     }
 
+    @Override
     public void register() {
         Scanner scanner = new Scanner(System.in);
 
@@ -153,4 +151,57 @@ public class User implements Authentication {
 
         System.out.println("Registration successful!");
     }
+
+    @Override
+    public String toString() {
+        return "User [userName=" + userName + ", userPhoneNumber=" + userPhoneNumber + ", userEmail=" + userEmail
+                + ", isLoggedIn=" + isLoggedIn + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        result = prime * result + ((userPhoneNumber == null) ? 0 : userPhoneNumber.hashCode());
+        result = prime * result + ((userEmail == null) ? 0 : userEmail.hashCode());
+        result = prime * result + ((userPassword == null) ? 0 : userPassword.hashCode());
+        result = prime * result + (isLoggedIn ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (userName == null) {
+            if (other.userName != null)
+                return false;
+        } else if (!userName.equals(other.userName))
+            return false;
+        if (userPhoneNumber == null) {
+            if (other.userPhoneNumber != null)
+                return false;
+        } else if (!userPhoneNumber.equals(other.userPhoneNumber))
+            return false;
+        if (userEmail == null) {
+            if (other.userEmail != null)
+                return false;
+        } else if (!userEmail.equals(other.userEmail))
+            return false;
+        if (userPassword == null) {
+            if (other.userPassword != null)
+                return false;
+        } else if (!userPassword.equals(other.userPassword))
+            return false;
+        if (isLoggedIn != other.isLoggedIn)
+            return false;
+        return true;
+    }  
+    
 }
