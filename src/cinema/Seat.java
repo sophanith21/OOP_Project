@@ -1,6 +1,5 @@
 package src.cinema;
 
-import java.util.Objects;
 
 public class Seat {
     protected String seatType;
@@ -22,7 +21,7 @@ public class Seat {
         this.userId = "";
         this.showtimeId = "";
 
-        // Assign price based on row
+        // Assign price based on row (Haven't fix about VIP seats yet)
         if (rowNumber < 5) {
             this.price = 15.0;
         } else if (rowNumber < 10) {
@@ -86,25 +85,71 @@ public class Seat {
         return rowNumber;
     }
 
-    // Only compare seatId and hallId for uniqueness
-    @Override
-    public int hashCode() {
-        return Objects.hash(seatId, hallId);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Seat other = (Seat) obj;
-        return Objects.equals(seatId, other.seatId) && hallId == other.hallId;
-    }
-
     @Override
     public String toString() {
         return "Seat [seatType=" + seatType + ", status=" + status + ", userId=" + userId + ", hallId=" + hallId
                 + ", price=" + price + ", showtimeId=" + showtimeId + ", seatId=" + seatId + ", rowNumber=" + rowNumber
                 + "]\n";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((seatType == null) ? 0 : seatType.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+        result = prime * result + hallId;
+        long temp;
+        temp = Double.doubleToLongBits(price);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((showtimeId == null) ? 0 : showtimeId.hashCode());
+        result = prime * result + ((seatId == null) ? 0 : seatId.hashCode());
+        result = prime * result + rowNumber;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Seat other = (Seat) obj;
+        if (seatType == null) {
+            if (other.seatType != null)
+                return false;
+        } else if (!seatType.equals(other.seatType))
+            return false;
+        if (status == null) {
+            if (other.status != null)
+                return false;
+        } else if (!status.equals(other.status))
+            return false;
+        if (userId == null) {
+            if (other.userId != null)
+                return false;
+        } else if (!userId.equals(other.userId))
+            return false;
+        if (hallId != other.hallId)
+            return false;
+        if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+            return false;
+        if (showtimeId == null) {
+            if (other.showtimeId != null)
+                return false;
+        } else if (!showtimeId.equals(other.showtimeId))
+            return false;
+        if (seatId == null) {
+            if (other.seatId != null)
+                return false;
+        } else if (!seatId.equals(other.seatId))
+            return false;
+        if (rowNumber != other.rowNumber)
+            return false;
+        return true;
     }
 
     

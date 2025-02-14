@@ -118,7 +118,7 @@ public class User implements Authentication {
         isLoggedIn = false;
         System.out.println("Logged out.");
     }
-
+    
     public void register() {
         Scanner scanner = new Scanner(System.in);
 
@@ -153,4 +153,5 @@ public class User implements Authentication {
 
         System.out.println("Registration successful!");
     }
+    
 }
