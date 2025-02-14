@@ -23,12 +23,12 @@ public class ShowTime {
     private void setMovieId(String movieId) { this.movieId = movieId; }
     private void setHallId(String hallId) { this.hallId = hallId; }
 
-    public void setShowTime(){
+    public void setShowTime(int hallId){
         Scanner scan = new Scanner(System.in);
         System.out.print("Set movie id: ");
         String movie = scan.nextLine();
-        System.out.print("Set hall id: ");
-        String hall = scan.nextLine();
+        // System.out.print("Set hall id: ");
+        // String hall = scan.nextLine();
         System.out.print("Set start time: ");
         String start = scan.nextLine();
         System.out.print("Set end time: ");
@@ -39,7 +39,7 @@ public class ShowTime {
         setStartTime(start);
         setEndTime(end);
         setMovieId(movie);
-        setHallId(hall);
+        //setHallId(hall);
         setShowTimeId(show);
         scan.close();
     }
