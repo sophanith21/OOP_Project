@@ -5,7 +5,7 @@ public class Hall {
     private int hallId;
     private int maxSeats;
     private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
-    private ShowTime showTime;
+    private ArrayList<ShowTime> showTimes;
     private String status = "Closed"; // Open, Closed, Full, Maintenances
     private static int numberOfHalls = 0;
     private static int rowsPerHall = 10;
@@ -50,15 +50,14 @@ public class Hall {
         return seats;
     }
 
-    public ShowTime getShowTime() {
-        return showTime;
+    public ArrayList<ShowTime> getShowTimes() {
+        return showTimes;
     }
 
-    public void setShowTime(ShowTime showTime) {
-        this.showTime = showTime;
+    public void addShowTime(ShowTime showTime) {
+        showTime.setShowTime(hallId);
+        this.showTimes.add(showTime);
     }
-
-    
 
     @Override
     public int hashCode() {
@@ -66,7 +65,6 @@ public class Hall {
         int result = 1;
         result = prime * result + hallId;
         result = prime * result + maxSeats;
-        result = prime * result + ((showTime == null) ? 0 : showTime.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
         return result;
     }
@@ -84,11 +82,6 @@ public class Hall {
             return false;
         if (maxSeats != other.maxSeats)
             return false;
-        if (showTime == null) {
-            if (other.showTime != null)
-                return false;
-        } else if (!showTime.equals(other.showTime))
-            return false;
         if (status == null) {
             if (other.status != null)
                 return false;
@@ -99,12 +92,10 @@ public class Hall {
 
     @Override
     public String toString() {
-
-        return "Hall [hallId=" + hallId +
-               ", maxSeats=" + maxSeats +
-               ", showTime=" + showTime +
-               ", status=" + status + "]";
+        return "Hall [hallId=" + hallId + ", maxSeats=" + maxSeats + ", status=" + status + "]";
     }
+
+    
 
     
     

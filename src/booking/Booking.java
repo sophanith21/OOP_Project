@@ -12,37 +12,49 @@ public class Booking {
     private String [] seatId;
     private int totalSeat;
     private double totalPrice;
-    private String paymentId;
+    private  Payment payment;
+    private Customer customer;
+    private String bookingType;
 
     private static ArrayList<Booking> listOfBookings = new ArrayList<>();
 
     public Booking(String bookingId, String reserveTime, String movieId, String[] seatId, int totalSeat,
-            double totalPrice, String paymentId) {
+            double totalPrice, Payment payment, String bookingType) {
         this.bookingId = bookingId;
         this.reserveTime = reserveTime;
         this.movieId = movieId;
         this.seatId = seatId;
         this.totalSeat = totalSeat;
         this.totalPrice = totalPrice;
-        this.paymentId = paymentId;
+        this.payment = payment;
+        this.bookingType = bookingType;
     }
-
     private String getBookingId() { return bookingId; }
     private String getReserveTime() { return reserveTime; }
     private String getMovieId() { return movieId; }
     private String[] getSeatId() { return seatId; }
     private int getTotalSeat() { return totalSeat; }
     private double getTotalPrice() { return totalPrice; }
-    private String getPaymentId() { return paymentId; }
+    private Payment getPayment() { return payment; }
+    public String getBookingType() { return bookingType; }
 
+    
+    
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((bookingId == null) ? 0 : bookingId.hashCode());
+        result = prime * result + ((reserveTime == null) ? 0 : reserveTime.hashCode());
         result = prime * result + ((movieId == null) ? 0 : movieId.hashCode());
         result = prime * result + Arrays.hashCode(seatId);
-        result = prime * result + ((paymentId == null) ? 0 : paymentId.hashCode());
+        result = prime * result + totalSeat;
+        long temp;
+        temp = Double.doubleToLongBits(totalPrice);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((payment == null) ? 0 : payment.hashCode());
+        result = prime * result + ((customer == null) ? 0 : customer.hashCode());
+        result = prime * result + ((bookingType == null) ? 0 : bookingType.hashCode());
         return result;
     }
     @Override
@@ -59,6 +71,11 @@ public class Booking {
                 return false;
         } else if (!bookingId.equals(other.bookingId))
             return false;
+        if (reserveTime == null) {
+            if (other.reserveTime != null)
+                return false;
+        } else if (!reserveTime.equals(other.reserveTime))
+            return false;
         if (movieId == null) {
             if (other.movieId != null)
                 return false;
@@ -66,10 +83,24 @@ public class Booking {
             return false;
         if (!Arrays.equals(seatId, other.seatId))
             return false;
-        if (paymentId == null) {
-            if (other.paymentId != null)
+        if (totalSeat != other.totalSeat)
+            return false;
+        if (Double.doubleToLongBits(totalPrice) != Double.doubleToLongBits(other.totalPrice))
+            return false;
+        if (payment == null) {
+            if (other.payment != null)
                 return false;
-        } else if (!paymentId.equals(other.paymentId))
+        } else if (!payment.equals(other.payment))
+            return false;
+        if (customer == null) {
+            if (other.customer != null)
+                return false;
+        } else if (!customer.equals(other.customer))
+            return false;
+        if (bookingType == null) {
+            if (other.bookingType != null)
+                return false;
+        } else if (!bookingType.equals(other.bookingType))
             return false;
         return true;
     }
@@ -82,14 +113,15 @@ public class Booking {
                 + "\nSeat Id: " + Arrays.toString(getSeatId()) 
                 + "\ntotalSeat: " + getTotalSeat()
                 + "\ntotalPrice: $ " + getTotalPrice()
-                + "\nPayment Id: " + getPaymentId() + "\n";
+                + "\nPayment : " + getPayment()
+                + "\nBooking type: " + getBookingType() + "\n";
     }
 
     public void displayinfo(String name, String phoneNum){
-        if (name.equals("12345") && phoneNum.equals("12345")) {
+        if (name.equals(customer.getName()) && phoneNum.equals(customer.getPhoneNumber(phoneNum))) {
             System.out.println(toString());
         } else{
-            System.out.println("Invalid customer info!");
+            System.out.println("No record of this customer info!");
         }
     }
     
