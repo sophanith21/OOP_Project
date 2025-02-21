@@ -94,9 +94,4 @@ public class Hall {
     public String toString() {
         return "Hall [hallId=" + hallId + ", maxSeats=" + maxSeats + ", status=" + status + "]";
     }
-
-    
-
-    
-    
 }
