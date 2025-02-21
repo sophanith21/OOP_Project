@@ -1,28 +1,26 @@
 package src.user;
+
 import src.booking.Booking;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Scanner;
+import java.util.Set;
 public class Customer extends User{
 
-    private static int totalCustomers = 0;
     private String id;
     private String role = "Customer";
-    private ArrayList <Booking> bookings;
+    private Set<Booking> bookings = new HashSet<>(); //each booking must be unique
  
-    //register
-    public Customer (String name, String phone, String email, String password) {
+    public Customer (String name, String phone, String email, String password, String id) {
 
         super(name, phone, email, password);
-        this.id = "C" + (++totalCustomers);
-        this.bookings = new ArrayList<>();
+        this.id = id;
+        this.bookings = new HashSet<>();
     }
 
-    public Customer () {
-        super();
-        this.bookings = new ArrayList<>(); //initial obj for bookings to reference, so we can use .size()
-    }
-
-    public String getID () {
+    @Override
+    public String getUserID() {
         return id;
     }
 
@@ -30,24 +28,8 @@ public class Customer extends User{
         return role;
     }
 
-    public static int getTotalCustomers () {
-        return totalCustomers;
-    }
-
     public ArrayList<Booking> getBookings() {
         return new ArrayList<>(bookings);  
-    }
-
-    @Override
-    public void register () {
-        this.id = "C" + (++totalCustomers);
-        super.register(); 
-    }
-
-    @Override
-    public String toString() {
-        return "Customer [userName=" + userName + ", id=" + id + ", userPhoneNumber=" + userPhoneNumber + ", role="
-                + role + ", userEmail=" + userEmail + ", isLoggedIn=" + isLoggedIn + "]";
     }
 
     @Override
@@ -87,4 +69,9 @@ public class Customer extends User{
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Customer [Name=" + userName + ", PhoneNumber=" + userPhoneNumber + ", ID=" + id + ", Email="
+                + userEmail + ", isLoggedIn=" + isLoggedIn + "]";
+    }
 }

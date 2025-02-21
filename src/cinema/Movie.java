@@ -1,5 +1,8 @@
 package src.cinema;
+
+//import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 public class Movie {
     
     public static int numberOfMovies = 0;
@@ -7,8 +10,7 @@ public class Movie {
     private String title;
     private int duration;
     private String genre;
-    private ArrayList<Double> ratings;
-    private ArrayList <ShowTime> showTimes;
+    //private HashSet <ShowTime> showTimes; // no duplicated showtime // order doesn't matter
 
     public Movie (String title, int duration, String genre) {
 
@@ -16,8 +18,7 @@ public class Movie {
         this.title = title;
         this.duration = duration;
         this.genre = genre;  
-        this.ratings = new ArrayList<>(); 
-        this.showTimes = new ArrayList<>();
+        //this.showTimes = new HashSet<>();
     }
 
     public String getMovieID () {
@@ -36,35 +37,62 @@ public class Movie {
         return genre;
     }
 
-    public double getRating() {
-        if (ratings.isEmpty()) {
-            return -1.0; // No rating yet
-        }
-        double sum = 0;
-        for (double rating : ratings) {
-            sum += rating;
-        }
-        return sum / ratings.size();
-    }
-
-    public ArrayList <ShowTime> getShowTime () {
-        return new ArrayList<>(showTimes);
-    }
+    /*public HashSet <ShowTime> getShowTime () {
+        return new HashSet<>(showTimes);
+    }*/
 
     public static int getTotalMovies() {
         return numberOfMovies;
     }
 
     @Override
-    public String toString() {
-        return "Movie{" +
-                "ID='" + movieID + '\'' +
-                ", Title='" + title + '\'' +
-                ", Genre='" + genre + '\'' +
-                ", Duration=" + duration +
-                " minutes, Average Rating=" + (ratings.isEmpty() ? "Not Yet Rated" : getRating()) +
-                ", Total Showtimes=" + showTimes.size() +
-                '}';
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((movieID == null) ? 0 : movieID.hashCode());
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + duration;
+        result = prime * result + ((genre == null) ? 0 : genre.hashCode());
+        //result = prime * result + ((showTimes == null) ? 0 : showTimes.hashCode());
+        return result;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Movie other = (Movie) obj;
+        if (movieID == null) {
+            if (other.movieID != null)
+                return false;
+        } else if (!movieID.equals(other.movieID))
+            return false;
+        if (title == null) {
+            if (other.title != null)
+                return false;
+        } else if (!title.equals(other.title))
+            return false;
+        if (duration != other.duration)
+            return false;
+        if (genre == null) {
+            if (other.genre != null)
+                return false;
+        } else if (!genre.equals(other.genre))
+            return false;
+        /*if (showTimes == null) {
+            if (other.showTimes != null)
+                return false;
+        } else if (!showTimes.equals(other.showTimes))
+            return false;
+        return true;*/
+    }
+
+    @Override
+    public String toString() {
+        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + duration + ", genre=" + genre +"]";
+    }
 };
