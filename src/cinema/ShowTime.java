@@ -7,21 +7,33 @@ public class ShowTime {
     private String showTimeId;
     private String startTime;
     private String endTime;
-    private ArrayList<Movie> movie;
-    private int hallId;
+    private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
+    private Movie movie;
+    public static int rowsPerHall = 10;
+    public static int seatsPerRow = 20;
 
-    public ShowTime(String showTimeId, String startTime, String endTime, ArrayList<Movie> movie, int hallId) {
+    public ShowTime( int hallId) {
         this.showTimeId = showTimeId;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.movie = new ArrayList<>();
-        this.hallId = hallId;
+
+        for(int i = 0; i < rowsPerHall; i++){
+
+            seats.add(new ArrayList<>());
+
+            for(int j = 0; j < seatsPerRow; j++){
+                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
+                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, false, false));
+                } else {
+                    seats.get(i).add(new Seat(hallId,i+1,j+1));
+                }
+            }
+        }
     }
     private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; }
     private void setStartTime(String startTime) { this.startTime = startTime; }
     private void setEndTime(String endTime) { this.endTime = endTime; }
-    private int setHallId(int hallId) { return hallId; }
-    private ArrayList<Movie> getMovies(){ return movie;}
+    private Movie getMovies(){ return movie;}
 
 
     
@@ -33,7 +45,6 @@ public class ShowTime {
         result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
         result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
         result = prime * result + ((movie == null) ? 0 : movie.hashCode());
-        result = prime * result + hallId;
         return result;
     }
     @Override
@@ -65,11 +76,9 @@ public class ShowTime {
                 return false;
         } else if (!movie.equals(other.movie))
             return false;
-        if (hallId != other.hallId)
-            return false;
         return true;
     }
-    public void setShowTime(int hallId){
+    public void setShowTime(){
         Scanner scan = new Scanner(System.in);
         System.out.print("Set start time: ");
         String start = scan.nextLine();

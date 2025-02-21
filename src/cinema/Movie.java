@@ -7,8 +7,7 @@ public class Movie {
     private String title;
     private int duration;
     private String genre;
-    private ArrayList<Double> ratings;
-    private ArrayList <ShowTime> showTimes;
+
 
     public Movie (String title, int duration, String genre) {
 
@@ -16,8 +15,6 @@ public class Movie {
         this.title = title;
         this.duration = duration;
         this.genre = genre;  
-        this.ratings = new ArrayList<>(); // means no rating
-        this.showTimes = new ArrayList<>();
     }
 
     public String getMovieID () {

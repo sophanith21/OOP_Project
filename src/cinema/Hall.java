@@ -4,31 +4,13 @@ import java.util.ArrayList;
 public class Hall {
     private int hallId;
     private int maxSeats;
-    private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
     private ArrayList<ShowTime> showTimes;
     private String status = "Closed"; // Open, Closed, Full, Maintenances
     private static int numberOfHalls = 0;
-    private static int rowsPerHall = 10;
-    private static int seatsPerRow = 20;
     
     public Hall(){
         this.hallId = ++numberOfHalls;
-        for(int i = 0; i < rowsPerHall; i++){
-
-            seats.add(new ArrayList<>());
-
-            for(int j = 0; j < seatsPerRow; j++){
-                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
-                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, false, false));
-                } else {
-                    seats.get(i).add(new Seat(hallId,i+1,j+1));
-                }
-            }
-        }
-    }
-
-    public int getMaxSeat(){
-        return maxSeats;
+        
     }
 
     public void setStatus(String status){
@@ -46,17 +28,19 @@ public class Hall {
         return maxSeats;
     }
 
-    public ArrayList<ArrayList<Seat>> getSeats() {
-        return seats;
+
+    public void addShowTime() {
+        showTimes.add(new ShowTime(hallId));
+        showTimes.get(showTimes.size()-1).setShowTime();
     }
 
-    public ArrayList<ShowTime> getShowTimes() {
-        return showTimes;
-    }
-
-    public void addShowTime(ShowTime showTime) {
-        showTime.setShowTime(hallId);
-        this.showTimes.add(showTime);
+    public void showDetails() {
+        System.out.println();
+        System.out.println("ID: " + hallId);
+        System.out.println("Status: " + status);
+        for (ShowTime showTime : showTimes) {
+            System.out.println(showTime);
+        }
     }
 
     @Override

@@ -25,8 +25,10 @@ public class Cinema {
         
     }
 
-    public ArrayList<Hall> getHalls(){
-        return halls;
+    public void showHalls() {
+        for(int i = 0; i<halls.size();i++) {
+            halls.get(i).showDetails();
+        }
     }
 
     public String getName() {
