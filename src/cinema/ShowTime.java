@@ -1,5 +1,7 @@
 package src.cinema;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,21 +19,6 @@ public class ShowTime {
         this.startTime = startTime;
         this.endTime = endTime;
 
-        for(int i = 0; i < rowsPerHall; i++){
-
-            seats.add(new ArrayList<>());
-
-            for(int j = 0; j < seatsPerRow; j++){
-                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
-                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, false, false));
-                } else {
-                    seats.get(i).add(new Seat(hallId,i+1,j+1));
-                }
-            }
-        }
-    }
-
-    public ShowTime(){
         for(int i = 0; i < rowsPerHall; i++){
 
             seats.add(new ArrayList<>());
@@ -94,49 +81,45 @@ public class ShowTime {
             return false;
         return true;
     }
-    public void setShowTime(){
-        Scanner scan = new Scanner(System.in);
+    public void setShowTime(Scanner scan){
         while(true){
-            System.out.println("Do you want to add show time?(yes/no): ");
+            System.out.print("Do you want to add show time?(yes/no): ");
             String choose = scan.nextLine();
             if(choose.equals("no")){break;}
-            System.out.print("Set show time id: ");
+            System.out.print("\nSet show time id: ");
             String show = scan.nextLine();            
-            System.out.print("Set start time: ");
+            System.out.print("\nSet start time: ");
             String start = scan.nextLine();
-            System.out.print("Set end time: ");
+            System.out.print("\nSet end time: ");
             String end = scan.nextLine();
 
+            LocalTime startTIme = LocalTime.parse(start);
+            LocalTime endTime = LocalTime.parse(end);
+            Duration duration = Duration.between(startTIme, endTime);
+            int durationMinute = (int)duration.toMinutes();
             setStartTime(start);
             setEndTime(end);
             setShowTimeId(show);
             
             System.out.println("Add movie title: ");
             String title = scan.nextLine();
-            System.out.println("Add movie's duration: ");
-            int duration = scan.nextInt();
-            scan.nextLine();
             System.out.println("Add genre: ");
             String genre = scan.nextLine();
 
-            Movie movie = new Movie(title, duration, genre);
+            this.movie = new Movie(title, durationMinute, genre);
             System.out.println("Movie has been added: " + movie.getTitle());
             System.out.println("Show time has been set successfully!");
-            scan.close();
         }
+        scan.close();
     }
 
     @Override
     public String toString() {
-        return "Show Time ID: " + getShowTimeId() + "\n"
-                + "Start Time: " + getStartTime() + "\n"
-                + "End Time: " + getEndTime() + "\n"
-                + "Hall ID: " + getHallId() + "\n"
-                + "Movies of halls:\n"
-                + "\nTitle: " + getMovie().getTitle() + "\n"
-                + "Duration: " + getMovie().getDuration() + " minutes\n"
-                + "Genre: " + getMovie().getGenre() + "\n";
+        return "ShowTime [showTimeId=" + showTimeId + ", startTime=" + startTime + ", endTime=" + endTime + ", movie="
+                + movie + "]";
     }
+
+   
     
 
 }

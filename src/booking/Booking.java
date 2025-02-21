@@ -117,8 +117,8 @@ public class Booking {
                 + "\nBooking type: " + getBookingType() + "\n";
     }
 
-    public void displayinfo(String name, String phoneNum){
-        if (name.equals(customer.getName()) && phoneNum.equals(customer.getPhoneNumber(phoneNum))) {
+    public void displayinfo(String name){
+        if (name.equals(customer.getName())) {
             System.out.println(toString());
         } else{
             System.out.println("No record of this customer info!");

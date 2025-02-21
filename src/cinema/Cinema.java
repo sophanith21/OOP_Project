@@ -1,5 +1,6 @@
 package src.cinema;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Cinema { 
     private final String name;
@@ -23,6 +24,15 @@ public class Cinema {
             }
         }
         
+    }
+
+    public void addShowTime()
+    {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Hall ID to add showTime: ");
+        String hallId = scan.nextLine();
+        System.out.println();
+        halls.get(Integer.parseInt(hallId)).addShowTime(scan);
     }
 
     public void showHalls() {

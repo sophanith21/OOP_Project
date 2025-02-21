@@ -18,8 +18,6 @@ public class Movie {
         this.title = title;
         this.duration = duration;
         this.genre = genre;  
-        this.ratings = new ArrayList<>(); // means no rating
-        this.showTimes = new ArrayList<>();
     }
 
     public String getMovieID () {
@@ -54,9 +52,10 @@ public class Movie {
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         result = prime * result + duration;
         result = prime * result + ((genre == null) ? 0 : genre.hashCode());
-        //result = prime * result + ((showTimes == null) ? 0 : showTimes.hashCode());
         return result;
     }
+
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -84,12 +83,7 @@ public class Movie {
                 return false;
         } else if (!genre.equals(other.genre))
             return false;
-        /*if (showTimes == null) {
-            if (other.showTimes != null)
-                return false;
-        } else if (!showTimes.equals(other.showTimes))
-            return false;
-        return true;*/
+        return true;
     }
 
     @Override
