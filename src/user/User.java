@@ -1,134 +1,72 @@
 package src.user;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
-public abstract class User {
 
-    protected String userName;
-    protected String userPhoneNumber;
-    protected String userEmail;
-    protected String userPassword;
-    protected boolean isLoggedIn;
+public class User {
+    private int id;
+    private String username;
+    private String password; 
+    private String email;
+    private String phone;
+    private String role; // "CUSTOMER" or "ADMIN"
 
-    public User(String name, String phone, String email, String password) {
-        
-        this.userName = name;
-        this.userPhoneNumber = phone;
-        this.userEmail = email;
-        this.userPassword = password;
-        this.isLoggedIn = false;
+    public User(int id, String username, String email,  String phone, String password, String role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
     }
 
-    public boolean verifyPassword(String password) {
-        return this.userPassword.equals(password);
+    public int getID () {
+        return id;
     }
 
-    public boolean isValidPhoneNumber(String number) {
-        return number.length() >= 8 && number.length() <= 9 && number.charAt(0) == '0' && number.matches("[0-9]+");
+    public String getRole () {
+        return role;
     }
 
-    public boolean isValidEmail(String email) {
-        return email.contains("@") && email.contains(".");
+    public String getUsername () {
+        return username;
     }
 
-    public abstract String getUserID (); //admin and customer implement this method
-
-    public String getName () {
-        return userName;
+    public void displayUser() {
+        System.out.println("Id: " + id);
+        System.out.println("Username: " + username);
+        System.out.println("Email: " + email);
+        System.out.println("Phone: " + phone);
+        System.out.println("Role: " + role);
+        System.out.println("----------------------");
     }
 
-    public String getEmail () {
-        if (isLoggedIn) {
-            return userEmail;
-        }
-        return null;
-    }
+   // toString()
+   @Override
+   public String toString() {
+       return "User{" +
+               "userId=" + id +
+               ", username='" + username + '\'' +
+               ", email='" + email + '\'' +
+               ", phoneNumber='" + phone + '\'' +
+               ", role='" + role + '\'' +
+               '}';
+   }
 
-    public String getPhoneNumber () {
-        if (isLoggedIn) {
-            return userPhoneNumber;
-        }
-        return null;
-    }
+   @Override
+    public boolean equals(Object obj) { // object we compare to the current object.
+        if (this == obj) return true; // this: refer to the current instance of the object that calls the equals() method
+        if (obj == null || getClass() != obj.getClass()) return false; 
 
-    public void setName(String newName, String password) {
-        if (!isLoggedIn) {
-            System.out.println("Please log in first.");
-            return;
-        }
-        if (!verifyPassword(password)) {
-            System.out.println("Incorrect password.");
-            return;
-        }
-        
-        if (newName == null || newName.trim().isEmpty()) {
-            System.out.println("Name cannot be empty.");
-            return;
-        }
-        this.userName = newName;
-        System.out.println("Name updated successfully.");
-    }
+        User user = (User) obj; // Cast to User
 
-    public void setPhone(String 
-    phone) { 
-        if (isLoggedIn) {
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter your password to update password: ");
-            String inputPassword = scanner.nextLine();
-            
-            if (verifyPassword(inputPassword)) {
-                this.userPhoneNumber = phone;
-                System.out.println("Phone number updated successfully.");
-            } else {
-                System.out.println("Incorrect password. Phone number update failed.");
-            }
-        } else {
-            System.out.println("You must be logged in to update your phone number.");
-        }
+        return Objects.equals(username, user.username) &&
+               Objects.equals(email, user.email) &&
+               Objects.equals(phone, user.phone);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-        result = prime * result + ((userPhoneNumber == null) ? 0 : userPhoneNumber.hashCode());
-        result = prime * result + ((userEmail == null) ? 0 : userEmail.hashCode());
-        result = prime * result + ((userPassword == null) ? 0 : userPassword.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        User other = (User) obj;
-        if (userName == null) {
-            if (other.userName != null)
-                return false;
-        } else if (!userName.equals(other.userName))
-            return false;
-        if (userPhoneNumber == null) {
-            if (other.userPhoneNumber != null)
-                return false;
-        } else if (!userPhoneNumber.equals(other.userPhoneNumber))
-            return false;
-        if (userEmail == null) {
-            if (other.userEmail != null)
-                return false;
-        } else if (!userEmail.equals(other.userEmail))
-            return false;
-        if (userPassword == null) {
-            if (other.userPassword != null)
-                return false;
-        } else if (!userPassword.equals(other.userPassword))
-            return false;
-        return true;
+        return Objects.hash(username, email, phone);
     }
 }

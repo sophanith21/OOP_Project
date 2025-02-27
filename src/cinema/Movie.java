@@ -1,6 +1,5 @@
 package src.cinema;
 
-//import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashSet;
 public class Movie {
@@ -10,7 +9,6 @@ public class Movie {
     private String title;
     private int duration;
     private String genre;
-    //private HashSet <ShowTime> showTimes; // no duplicated showtime // order doesn't matter
 
     public Movie (String title, int duration, String genre) {
 
@@ -18,7 +16,6 @@ public class Movie {
         this.title = title;
         this.duration = duration;
         this.genre = genre;  
-        //this.showTimes = new HashSet<>();
     }
 
     public String getMovieID () {
@@ -37,10 +34,6 @@ public class Movie {
         return genre;
     }
 
-    /*public HashSet <ShowTime> getShowTime () {
-        return new HashSet<>(showTimes);
-    }*/
-
     public static int getTotalMovies() {
         return numberOfMovies;
     }
@@ -53,7 +46,6 @@ public class Movie {
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         result = prime * result + duration;
         result = prime * result + ((genre == null) ? 0 : genre.hashCode());
-        //result = prime * result + ((showTimes == null) ? 0 : showTimes.hashCode());
         return result;
     }
 
@@ -83,16 +75,11 @@ public class Movie {
                 return false;
         } else if (!genre.equals(other.genre))
             return false;
-        /*if (showTimes == null) {
-            if (other.showTimes != null)
-                return false;
-        } else if (!showTimes.equals(other.showTimes))
-            return false;
-        return true;*/
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + duration + ", genre=" + genre +"]";
+        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + duration + ", genre=" + genre + "]";
     }
 };

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Hall {
     private int hallId;
-    private int maxSeats;
+    //private int maxSeats;
     private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
     private ArrayList<ShowTime> showTimes;
     private String status = "Closed"; // Open, Closed, Full, Maintenances
