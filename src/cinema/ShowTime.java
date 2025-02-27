@@ -1,5 +1,7 @@
 package src.cinema;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,21 +9,16 @@ public class ShowTime {
     private String showTimeId;
     private String startTime;
     private String endTime;
-    private Movie movie;
-    private int hallId;
     private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
-    private static int rowsPerHall = 10;
-    private static int seatsPerRow = 20;
-    
-    public ShowTime(int hallId) {
+    private Movie movie;
+    public static int rowsPerHall = 10;
+    public static int seatsPerRow = 20;
+
+    public ShowTime( int hallId) {
         this.showTimeId = showTimeId;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.movie = movie;
-        this.hallId = hallId;
-    }
 
-    public ShowTime(){
         for(int i = 0; i < rowsPerHall; i++){
 
             seats.add(new ArrayList<>());
@@ -39,16 +36,10 @@ public class ShowTime {
     private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; }
     private void setStartTime(String startTime) { this.startTime = startTime; }
     private void setEndTime(String endTime) { this.endTime = endTime; }
-    private void setMovie(Movie movie) { this.movie = movie; }
-    private void setHallId(int hallId) { this.hallId = hallId; }
-    
-    private String getShowTimeId() { return showTimeId; }
-    private String getStartTime() { return startTime; }
-    private String getEndTime() { return endTime; }
-    private Movie getMovie() { return movie; }
-    private int getHallId() { return hallId; }
-    public ArrayList<ArrayList<Seat>> getSeats() { return seats; }
+    private Movie getMovies(){ return movie;}
 
+
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -57,7 +48,6 @@ public class ShowTime {
         result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
         result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
         result = prime * result + ((movie == null) ? 0 : movie.hashCode());
-        result = prime * result + hallId;
         return result;
     }
     @Override
@@ -89,54 +79,47 @@ public class ShowTime {
                 return false;
         } else if (!movie.equals(other.movie))
             return false;
-        if (hallId != other.hallId)
-            return false;
         return true;
     }
-
-    private void setShowTime(int hallId){
-        Scanner scan = new Scanner(System.in);
+    public void setShowTime(Scanner scan){
         while(true){
-            System.out.println("Do you want to add show time?(yes/no): ");
+            System.out.print("Do you want to add show time?(yes/no): ");
             String choose = scan.nextLine();
             if(choose.equals("no")){break;}
-            System.out.print("Set show time id: ");
+            System.out.print("\nSet show time id: ");
             String show = scan.nextLine();            
-            System.out.print("Set start time: ");
+            System.out.print("\nSet start time: ");
             String start = scan.nextLine();
-            System.out.print("Set end time: ");
+            System.out.print("\nSet end time: ");
             String end = scan.nextLine();
 
+            LocalTime startTIme = LocalTime.parse(start);
+            LocalTime endTime = LocalTime.parse(end);
+            Duration duration = Duration.between(startTIme, endTime);
+            int durationMinute = (int)duration.toMinutes();
             setStartTime(start);
             setEndTime(end);
             setShowTimeId(show);
             
             System.out.println("Add movie title: ");
             String title = scan.nextLine();
-            System.out.println("Add movie's duration: ");
-            int duration = scan.nextInt();
-            scan.nextLine();
             System.out.println("Add genre: ");
             String genre = scan.nextLine();
 
-            Movie movie = new Movie(title, duration, genre);
+            this.movie = new Movie(title, durationMinute, genre);
             System.out.println("Movie has been added: " + movie.getTitle());
             System.out.println("Show time has been set successfully!");
-            scan.close();
         }
+        scan.close();
     }
 
     @Override
     public String toString() {
-        return "Show Time ID: " + getShowTimeId() + "\n"
-                + "Start Time: " + getStartTime() + "\n"
-                + "End Time: " + getEndTime() + "\n"
-                + "Hall ID: " + getHallId() + "\n"
-                + "Movies of halls:\n"
-                + "\nTitle: " + getMovie().getTitle() + "\n"
-                + "Duration: " + getMovie().getDuration() + " minutes\n"
-                + "Genre: " + getMovie().getGenre() + "\n";
+        return "ShowTime [showTimeId=" + showTimeId + ", startTime=" + startTime + ", endTime=" + endTime + ", movie="
+                + movie + "]";
     }
+
+   
     
 
 }

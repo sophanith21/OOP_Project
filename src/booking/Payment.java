@@ -2,14 +2,15 @@ package src.booking;
 import java.util.Objects;
 
 public class Payment { 
-    private final String userId;
-    private final String paymentId;
-    private final String paymentDate;
-    private final double paymentAmount;
-    private final String paymentMethod;
-    private final String status;
-    private final String transactionID;
+    private String userId;
+    private String paymentId;
+    private String paymentDate;
+    private double paymentAmount;
+    private String paymentMethod;
+    private String status;
+    private String transactionID;
 
+    //Payment constructor: To be modified
     public Payment(String userId, String paymentId, String paymentDate, double paymentAmount, 
                    String paymentMethod, String status, String transactionID) {
         this.userId = userId;
