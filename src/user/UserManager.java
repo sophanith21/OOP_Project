@@ -15,11 +15,12 @@ public class UserManager {
     private HashSet<String> emails = new HashSet<>();
     private HashSet<String> phones = new HashSet<>();
     private int nextId = 1; 
+    private User loggedInUser = null; // Track the currently logged-in user
+    private int loginAttempts = 0; // Track login attempts
 
     //public UserManager() {}
 
-    // Register method
-    public boolean register(String username, String email, String password, String phone) {
+    public boolean addAdmin(String username, String email, String password, String phone) {
         try {
             // Validate input fields
             validateInput(username, email, phone, password);
@@ -35,9 +36,41 @@ public class UserManager {
                 throw new InvalidUserException("Phone number already exists.");
             }
 
-            User newUser = new User(nextId++, username, email, phone, password, "CUSTOMER");
+            Admin newAdmin = new Admin(nextId++, username, email, phone, password);
             
-            users.put(username, newUser);
+            users.put(username, newAdmin);
+            emails.add(email);
+            phones.add(phone);
+
+            System.out.println("Admin Added successful.");
+            return true;
+
+        } catch (InvalidUserException e) {
+            System.out.println("Admin added failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Register method
+    public boolean registerCustomer(String username, String email, String password, String phone, double walletBalance, String membershipLevel) {
+        try {
+            // Validate input fields
+            validateInput(username, email, phone, password);
+
+            // Check for duplicate username, email, or phone
+            if (users.containsKey(username)) {
+                throw new InvalidUserException("Username already exists.");
+            }
+            if (emails.contains(email)) {
+                throw new InvalidUserException("Email already exists.");
+            }
+            if (phones.contains(phone)) {
+                throw new InvalidUserException("Phone number already exists.");
+            }
+
+            Customer newCustomer = new Customer(nextId++, username, email, phone, password, membershipLevel, walletBalance);
+            
+            users.put(username, newCustomer);
             emails.add(email);
             phones.add(phone);
 
@@ -48,6 +81,55 @@ public class UserManager {
             System.out.println("Registration failed: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean login() {
+        if (loggedInUser != null) {
+            System.out.println("A user is already logged in. Please log out first.");
+            return false;
+        }
+    
+        Scanner scanner = new Scanner(System.in);
+    
+        while (loginAttempts < 3) {
+            System.out.print("Enter username: ");
+            String username = scanner.nextLine();
+    
+            System.out.print("Enter password: ");
+            String password = scanner.nextLine();
+    
+            if (!users.containsKey(username)) {
+                loginAttempts++;
+                System.out.println("Login failed: Username not found. Attempts left: " + (3 - loginAttempts));
+                continue; // Skip to the next iteration
+            }
+    
+            User user = users.get(username);
+            if (!user.verifyPassword(password)) {
+                loginAttempts++;
+                System.out.println("Login failed: Incorrect password. Attempts left: " + (3 - loginAttempts));
+                continue; // Skip to the next iteration
+            }
+    
+            loggedInUser = user;
+            loginAttempts = 0; // Reset login attempts on successful login
+            System.out.println("Login successful. Welcome, " + user.getUsername() + "!");
+            return true;
+        }
+    
+        System.out.println("Too many failed login attempts. Please try again later.");
+        return false;
+    }
+
+    // Logout method
+    public void logout() {
+        if (loggedInUser == null) {
+            System.out.println("No user is currently logged in.");
+            return;
+        }
+
+        System.out.println("Logout successful. Goodbye, " + loggedInUser.getUsername() + "!");
+        loggedInUser = null;
     }
 
     // Validate the user input
@@ -97,6 +179,11 @@ public class UserManager {
         for (User user : users.values()) {
             user.displayUser();
         }
+    }
+
+    // Get the currently logged-in user
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
 }
 

@@ -10,21 +10,28 @@ import java.util.Set;
 public class Customer extends User{
 
     private double walletBalance;
-    private Set<String> bookingIds = new LinkedHashSet<>();  //only store booking id instead of entire booking objects
-    //uniqueness, fast lookups, and order preservation
- 
+    private String membershipLevel;
+    private Set<String> bookingIds = new LinkedHashSet<>();  
+
     // Constructor
-    public Customer(int userId, String username, String password, String email, String fullName, 
-                    String phoneNumber, LocalDate dateOfBirth, LocalDateTime registrationDate, 
-                    String role, double walletBalance) {
-        super(userId, username, password, email, fullName, phoneNumber, dateOfBirth, "CUSTOMER");
+    public Customer(int id, String username, String email, String phone, String password, String membershipLevel, double walletBalance) {
+        super(id, username, email, phone, password, "CUSTOMER"); 
         this.walletBalance = walletBalance;
+        this.membershipLevel = membershipLevel;
+    }
+
+    @Override
+    public void displayUser() {
+        super.displayUser();
+        System.out.println("Wallet Balance: " + walletBalance);
+        System.out.println("Membership Level: " + membershipLevel);
+        System.out.println("--------------------------------------");
     }
 
     @Override
     public String toString() {
         return super.toString() + ", Customer{" +
                 "walletBalance='" + walletBalance + '\'' +
-                ", bookingIds=" + bookingIds + '}';
+                ", membershipLevel=" + membershipLevel + '}';
     }
 }

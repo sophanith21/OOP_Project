@@ -6,20 +6,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 public class Admin extends User{
 
-    private String adminCode;
-
-    public Admin(String username, String password, String email, String fullName, 
-                 String phoneNumber,String adminCode, String position) {
-        super(userId, username, password, email,phoneNumber,"ADMIN");
-        this.adminCode = adminCode;
+    public Admin(int id, String username, String email, String phone, String password) {
+        super(id, username, email, phone, password, "ADMIN"); // Role is set to "ADMIN"
     }
 
     @Override
-    public String toString() {
-        return super.toString() + ", Admin{" +
-                "adminCode='" + adminCode + '\'' +
-                '}';
+    public void displayUser() {
+        super.displayUser();
+        System.out.println("--------------------------------------");
     }
 
-    
+
+
 }

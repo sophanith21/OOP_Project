@@ -32,13 +32,16 @@ public class User {
         return username;
     }
 
+    public boolean verifyPassword(String inputPassword) {
+        return this.password.equals(inputPassword);
+    }
+
     public void displayUser() {
         System.out.println("Id: " + id);
         System.out.println("Username: " + username);
         System.out.println("Email: " + email);
         System.out.println("Phone: " + phone);
         System.out.println("Role: " + role);
-        System.out.println("----------------------");
     }
 
    // toString()
