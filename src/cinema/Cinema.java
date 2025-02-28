@@ -3,9 +3,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Cinema { 
-    private final String name;
-    private final String location;
-    private final int totalHalls;
+    private String name;
+    private String location;
+    private int totalHalls;
     ArrayList<Hall> halls;
     public Cinema(String name, String location, int totalHalls) {
         this.name = name;
@@ -51,6 +51,20 @@ public class Cinema {
 
     public int getTotalHalls() {
         return totalHalls;
+    }
+
+    
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setTotalHalls(int totalHalls) {
+        this.totalHalls = totalHalls;
     }
 
     

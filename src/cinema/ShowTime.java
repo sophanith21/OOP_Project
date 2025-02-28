@@ -15,9 +15,9 @@ public class ShowTime {
     public static int seatsPerRow = 20;
 
     public ShowTime( int hallId) {
-        this.showTimeId = showTimeId;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.showTimeId = null;
+        this.startTime = null;
+        this.endTime = null;
 
         for(int i = 0; i < rowsPerHall; i++){
 
@@ -36,7 +36,6 @@ public class ShowTime {
     private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; }
     private void setStartTime(String startTime) { this.startTime = startTime; }
     private void setEndTime(String endTime) { this.endTime = endTime; }
-    private Movie getMovies(){ return movie;}
 
 
     

@@ -2,7 +2,7 @@ package src.cinema;
 
 
 public class Seat {
-    protected String seatType;
+    private String seatType;
     private String status; // "Booked", "Available", or "Occupied"
     private String userId; // Stores user ID if booked
     private int hallId; // Hall ID
@@ -12,8 +12,11 @@ public class Seat {
     private int rowNumber; // Row number
     public static int seatTaken = 0; // Tracks booked seats
 
-    public Seat(int hallId, int rowNumber, int seatNum) {
-        this.seatType = "Regular";
+    public Seat(int hallId, int rowNumber, int seatNum, String seatType ) {
+        if(seatType == null) {
+            seatType = "Regular";
+        }
+        this.seatType = seatType;
         this.hallId = hallId;
         this.rowNumber = rowNumber;
         this.seatId = rowNumber + "-" + seatNum;
@@ -21,13 +24,10 @@ public class Seat {
         this.userId = "";
         this.showtimeId = "";
 
-        // Assign price based on row (Haven't fix about VIP seats yet)
-        if (rowNumber < 5) {
+        if (seatType == "VIP") {
             this.price = 15.0;
-        } else if (rowNumber < 10) {
-            this.price = 10.0;
         } else {
-            this.price = 5.0; // Default price for other rows
+            this.price = 10.0;
         }
     }
 

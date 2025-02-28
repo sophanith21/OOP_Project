@@ -5,21 +5,37 @@ public class VIPSeat extends Seat {
     private boolean hasFoodService;
 
     public VIPSeat(int hallId,int rowNumber,int seatNum,boolean hasRecliner,boolean hasFoodService){
-        super(hallId,rowNumber,seatNum);
-        this.seatType = "VIP";
+        super(hallId,rowNumber,seatNum, "VIP");
         this.hasRecliner = hasRecliner;
         this.hasFoodService = hasFoodService;
     }
 
-    public boolean hasRecliner(){
+    
+    
+    public boolean isHasRecliner() {
         return hasRecliner;
     }
 
-    public boolean hasFoodService(){
+
+
+    public void setHasRecliner(boolean hasRecliner) {
+        this.hasRecliner = hasRecliner;
+    }
+
+
+
+    public boolean isHasFoodService() {
         return hasFoodService;
     }
 
-    
+
+
+    public void setHasFoodService(boolean hasFoodService) {
+        this.hasFoodService = hasFoodService;
+    }
+
+
+
     @Override
     public int hashCode() {
         final int prime = 31;

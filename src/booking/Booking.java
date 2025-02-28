@@ -1,5 +1,4 @@
 package src.booking;
-import src.cinema.*;
 import src.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
