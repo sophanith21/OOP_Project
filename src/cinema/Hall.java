@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class Hall {
     private int hallId;
+    //private int maxSeats;
+    private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
     private int maxSeats;
     private ArrayList<ShowTime> showTimes;
     private String status = "Closed"; // Open, Closed, Full, Maintenances

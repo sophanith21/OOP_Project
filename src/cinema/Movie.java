@@ -1,6 +1,5 @@
 package src.cinema;
 
-//import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashSet;
 public class Movie {
@@ -10,7 +9,6 @@ public class Movie {
     private String title;
     private int duration;
     private String genre;
-
 
     public Movie (String title, int duration, String genre) {
 
@@ -35,10 +33,6 @@ public class Movie {
     public String getGenre () {
         return genre;
     }
-
-    /*public HashSet <ShowTime> getShowTime () {
-        return new HashSet<>(showTimes);
-    }*/
 
     public static int getTotalMovies() {
         return numberOfMovies;
@@ -88,6 +82,6 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + duration + ", genre=" + genre +"]";
+        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + duration + ", genre=" + genre + "]";
     }
 };
