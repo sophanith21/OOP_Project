@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 public class Booking {
     private String bookingId;
-    public String reserveTime; 
+    public String reserveTime; //This should be changed to ShowTimeId instead
     private String movieId;
     public HashSet <String> seatId; //More efficient than Array and won't allow duplication
     private int totalSeat;

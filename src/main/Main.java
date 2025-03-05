@@ -13,10 +13,14 @@ import src.user.UserManager;
 
 public class Main{
     public static void main(String[] args){
+        int choice = -1;
+        while(choice != 0)
+        {
+            
+        }
         Cinema cinema = new Cinema("Legend","TK",5);
         cinema.iniHall();
-        cinema.addShowTime();
-        cinema.showHalls();
+        cinema.saveData("src/main/Data/Cinema_Data.txt");
 
     }
 }

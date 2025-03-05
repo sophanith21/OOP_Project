@@ -36,7 +36,7 @@ public class VIPSeat extends Seat {
 
     @Override
     public String toString() {
-        return super.toString() + "VIPSeat [service=" + service + "]";
+        return super.toString() + "," + service;
     }
 
 }

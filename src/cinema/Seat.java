@@ -6,8 +6,10 @@ import src.booking.Booking;
 
 public class Seat {
     private String seatType;            // "Regular", "VIP"
-    private String status;              // "Booked", "Available", or "Occupied"
-    private ArrayList <Booking> booked; // Stores user ID and showtimeID that has booked or occupied the seat
+    public ArrayList <Booking> booked; // Stores user ID and showtimeID that has booked or occupied the seat
+    
+    //No status field because status is dependent on the ShowTime, so logic is written in getStatus() instead
+
     private final int hallId;           // Hall ID
     private double price;               // Seat price
     private final String seatId;        // Unique seat identifier (row-seat)
@@ -17,7 +19,6 @@ public class Seat {
         this.seatType = "Regular";
         this.hallId = hallId;
         this.seatId = rowNumber + "-" + seatNum;
-        this.status = "Available";
         booked = new ArrayList<>();
 
         if (seatType == "VIP") {
@@ -30,7 +31,6 @@ public class Seat {
         this.seatType = seatType;
         this.hallId = hallId;
         this.seatId = rowNumber + "-" + seatNum;
-        this.status = "Available";
         booked = new ArrayList<>();
 
         if (seatType == "VIP") {
@@ -52,12 +52,17 @@ public class Seat {
         this.seatType = seatType;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public String getStatus(String showTime) {
+        if(!booked.isEmpty()) {
+            for(int i = 0; i< booked.size(); i++) {
+                if(booked.get(i).reserveTime.equals(showTime)){
+                    return "Booked";
+                } else {
+                    return "Available";
+                }
+            }
+        }
+        return "Available";
     }
 
     public String getBookingsInfo() {
@@ -121,8 +126,8 @@ public class Seat {
     }
     @Override
     public String toString() {
-        return "Seat [seatType=" + seatType + ", booked=" + getBookingsInfo() + ", hallId=" + hallId + ", price=" + price
-                + ", seatId=" + seatId + "]";
+        return "Seat: " + seatType + "," + hallId + "," + price
+                + "," + seatId;
     }
     
     
