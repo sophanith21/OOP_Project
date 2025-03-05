@@ -11,26 +11,13 @@ public class ShowTime {
     private String endTime;
     private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
     private Movie movie;
-    public static int rowsPerHall = 10;
-    public static int seatsPerRow = 20;
+    
 
     public ShowTime( int hallId) {
         this.showTimeId = null;
         this.startTime = null;
         this.endTime = null;
 
-        for(int i = 0; i < rowsPerHall; i++){
-
-            seats.add(new ArrayList<>());
-
-            for(int j = 0; j < seatsPerRow; j++){
-                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
-                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, ""));
-                } else {
-                    seats.get(i).add(new Seat(hallId,i+1,j+1,"Regular"));
-                }
-            }
-        }
     }
 
     private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; }

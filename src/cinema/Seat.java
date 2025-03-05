@@ -1,27 +1,37 @@
 package src.cinema;
 
+import java.util.ArrayList;
+
+import src.booking.Booking;
 
 public class Seat {
-    private String seatType;
-    private String status; // "Booked", "Available", or "Occupied"
-    private String userId; // Stores user ID if booked
-    private int hallId; // Hall ID
-    private double price; // Seat price
-    private String showtimeId; // Showtime ID
-    private int rowNumber;
-    private int seatNum;
-    private String seatId; // Unique seat identifier (row-seat)
-    public static int seatTaken = 0; // Tracks booked seats
+    private String seatType;            // "Regular", "VIP"
+    private String status;              // "Booked", "Available", or "Occupied"
+    private ArrayList <Booking> booked; // Stores user ID and showtimeID that has booked or occupied the seat
+    private final int hallId;           // Hall ID
+    private double price;               // Seat price
+    private final String seatId;        // Unique seat identifier (row-seat)
+    public static int seatTaken = 0;    // Tracks booked seats
+    
+    public Seat(int hallId, int rowNumber, int seatNum){
+        this.seatType = "Regular";
+        this.hallId = hallId;
+        this.seatId = rowNumber + "-" + seatNum;
+        this.status = "Available";
+        booked = new ArrayList<>();
 
+        if (seatType == "VIP") {
+            this.price = 15.0d;
+        } else {
+            this.price = 10.0d;
+        }
+    }
     public Seat(int hallId, int rowNumber, int seatNum, String seatType ) {
         this.seatType = seatType;
         this.hallId = hallId;
-        this.rowNumber = rowNumber;
-        this.seatNum = seatNum;
         this.seatId = rowNumber + "-" + seatNum;
         this.status = "Available";
-        this.userId = "";
-        this.showtimeId = "";
+        booked = new ArrayList<>();
 
         if (seatType == "VIP") {
             this.price = 15.0d;
@@ -34,7 +44,11 @@ public class Seat {
         return seatType;
     }
 
-    public void setSeatType(String seatType) {
+    public void setSeatType(String seatType) { //Though rare in a fixed VIP seat hall structure, if the object is VIP
+                                               //but seatType is "Regular", the issue will be handled in ShowTimes
+        if(!seatType.equals("Regular") && !seatType.equals("VIP")){
+            throw new IllegalArgumentException("Invalid seatType: " + seatType);
+        }
         this.seatType = seatType;
     }
 
@@ -46,20 +60,32 @@ public class Seat {
         this.status = status;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getBookingsInfo() {
+        if(booked.isEmpty())
+        {
+            System.out.println("Empty booking information");
+            return "Empty booking information";
+        }
+        String temp = "Show Times that have this seat booked: \n";
+        for(int i = 0 ; i < booked.size(); i++){
+            temp = temp + i + ". " + booked.get(i).reserveTime + "\n";
+        }
+        return temp;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void addBookedSeat(Booking newBook) {
+        if(!booked.contains(newBook)){
+            if(newBook.seatId.contains(this.seatId)){
+                booked.add(newBook);
+            } else {
+                System.out.println("This new booked seat's ID is different from this seat");
+            }
+        }
+        
     }
 
     public int getHallId() {
         return hallId;
-    }
-
-    public void setHallId(int hallId) {
-        this.hallId = hallId;
     }
 
     public double getPrice() {
@@ -70,23 +96,11 @@ public class Seat {
         this.price = price;
     }
 
-    public String getShowtimeId() {
-        return showtimeId;
-    }
-
-    public void setShowtimeId(String showtimeId) {
-        this.showtimeId = showtimeId;
-    }
 
     public String getSeatId() {
         return seatId;
     }
-
-    public void setSeatId(String seatId) {
-        this.seatId = seatId;
-    }
-
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -98,11 +112,6 @@ public class Seat {
         Seat other = (Seat) obj;
         if (hallId != other.hallId)
             return false;
-        if (showtimeId == null) {
-            if (other.showtimeId != null)
-                return false;
-        } else if (!showtimeId.equals(other.showtimeId))
-            return false;
         if (seatId == null) {
             if (other.seatId != null)
                 return false;
@@ -110,11 +119,14 @@ public class Seat {
             return false;
         return true;
     }
-
     @Override
     public String toString() {
-        return "Seat [seatType=" + seatType + ", status=" + status + ", userId=" + userId + ", hallId=" + hallId
-                + ", price=" + price + ", showtimeId=" + showtimeId + ", seatId=" + seatId + "]";
+        return "Seat [seatType=" + seatType + ", booked=" + getBookingsInfo() + ", hallId=" + hallId + ", price=" + price
+                + ", seatId=" + seatId + "]";
     }
+    
+    
+
+    
     
 }

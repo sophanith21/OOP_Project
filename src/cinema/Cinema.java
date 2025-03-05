@@ -1,13 +1,16 @@
 package src.cinema;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Cinema { 
     public String name;
     public String location;
     public int totalHalls;
-    public ArrayList <Hall> halls = new ArrayList<>();
+    public ArrayList <Hall> halls;
     public Cinema(String name, String location, int totalHalls) {
+        if(totalHalls < 1){
+            throw new IllegalArgumentException("Total hall must be 1 or more"); //Should be handle in main (object creation)
+        }
+        halls = new ArrayList<>();
         this.name = name;
         this.location = location;
         this.totalHalls = totalHalls;
@@ -27,7 +30,8 @@ public class Cinema {
 
     @Override
     public String toString() {
-        return "Cinema [name=" + name + ", location=" + location + ", totalHalls=" + totalHalls + "]";
+        return "Cinema [name=" + name + ", location=" + location + ", totalHalls=" + totalHalls + ", halls=" + halls
+                + "]";
     }
 
     

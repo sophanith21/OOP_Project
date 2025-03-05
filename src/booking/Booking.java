@@ -2,13 +2,14 @@ package src.booking;
 import src.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 
 public class Booking {
     private String bookingId;
-    private String reserveTime; 
+    public String reserveTime; 
     private String movieId;
-    private String [] seatId;
+    public HashSet <String> seatId; //More efficient than Array and won't allow duplication
     private int totalSeat;
     private double totalPrice;
     private  Payment payment;
@@ -116,12 +117,11 @@ public class Booking {
                 + "\nBooking type: " + getBookingType() + "\n";
     }
 
-    public void displayinfo(String name){
-        if (name.equals(customer.getName())) {
-            System.out.println(toString());
-        } else{
-            System.out.println("No record of this customer info!");
-        }
-    }
-    
+    // public void displayinfo(String name){
+    //     if (name.equals(customer.getName())) {
+    //         System.out.println(toString());
+    //     } else{
+    //         System.out.println("No record of this customer info!");
+    //     }
+    // }
 }
