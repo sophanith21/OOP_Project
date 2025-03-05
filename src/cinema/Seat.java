@@ -8,12 +8,16 @@ public class Seat {
     private int hallId; // Hall ID
     private double price; // Seat price
     private String showtimeId; // Showtime ID
+    private int rowNumber;
+    private int seatNum;
     private String seatId; // Unique seat identifier (row-seat)
     public static int seatTaken = 0; // Tracks booked seats
 
     public Seat(int hallId, int rowNumber, int seatNum, String seatType ) {
         this.seatType = seatType;
         this.hallId = hallId;
+        this.rowNumber = rowNumber;
+        this.seatNum = seatNum;
         this.seatId = rowNumber + "-" + seatNum;
         this.status = "Available";
         this.userId = "";
