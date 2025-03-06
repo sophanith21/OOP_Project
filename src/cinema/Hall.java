@@ -22,23 +22,11 @@ public class Hall implements DataPersistence{
         showTimes = new ArrayList<>();
         seats = new ArrayList<>();
         status = "Open";
-        for(int i = 0; i < rowsPerHall; i++){
-
-            seats.add(new ArrayList<>());
-
-            for(int j = 0; j < seatsPerRow; j++){
-                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
-                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, ""));
-                } else {
-                    seats.get(i).add(new Seat(hallId,i+1,j+1));
-                }
-            }
-        }
     }
 
     public static void saveAll(String fileName,ArrayList <Hall> halls){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("Hall ID,Status");
+            writer.write("HallID,Status\n");
             for (Hall hall : halls){
                 writer.write(hall.getHallId() + "," + hall.getStatus());
                 writer.write("\n");
@@ -80,6 +68,25 @@ public class Hall implements DataPersistence{
     @Override
     public void loadData(String fileName){
         throw new UnsupportedOperationException("Use loadAll instead");
+    }
+
+    public void iniSeats(){
+        for(int i = 0; i < rowsPerHall; i++){
+
+            seats.add(new ArrayList<>());
+
+            for(int j = 0; j < seatsPerRow; j++){
+                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
+                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, ""));
+                } else {
+                    seats.get(i).add(new Seat(hallId,i+1,j+1));
+                }
+            }
+        }
+    }
+
+    public void iniSeats(ArrayList<ArrayList<Seat>> seats) {
+        this.seats = seats;
     }
 
     public void setStatus(String status){

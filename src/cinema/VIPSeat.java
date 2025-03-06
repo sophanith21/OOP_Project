@@ -1,19 +1,24 @@
 package src.cinema;
 
 public class VIPSeat extends Seat {
-    private String service;
+    private String services;
+
+    public VIPSeat(String seatType,int hallId,String seatId,double price,String services) { //Use mainly for loading data
+        super(seatType, hallId, seatId, price);
+        this.services = services;
+    }
 
     public VIPSeat(int hallId,int rowNumber,int seatNum,String service){
         super(hallId,rowNumber,seatNum, "VIP");
-        this.service = service;
+        this.services = service;
     }
 
-    public String getService() {
-        return service;
+    public String getServices() {
+        return services;
     }
 
     public void setService(String service) {
-        this.service = service;
+        this.services = service;
     }
 
 
@@ -26,17 +31,17 @@ public class VIPSeat extends Seat {
         if (getClass() != obj.getClass())
             return false;
         VIPSeat other = (VIPSeat) obj;
-        if (service == null) {
-            if (other.service != null)
+        if (services == null) {
+            if (other.services != null)
                 return false;
-        } else if (!service.equals(other.service))
+        } else if (!services.equals(other.services))
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "," + service;
+        return super.toString() + "," + services;
     }
 
 }

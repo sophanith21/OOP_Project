@@ -13,6 +13,9 @@ public class Cinema implements DataPersistence{
     public int totalHalls;
     public ArrayList <Hall> halls;
 
+    public Cinema(String fileName) { //For loading data in object creation
+        loadData(fileName);
+    }
     public Cinema(String name, String location, int totalHalls) {
         if(totalHalls < 1){
             throw new IllegalArgumentException("Total hall must be 1 or more"); //Should be handle in main (object creation)
@@ -25,7 +28,7 @@ public class Cinema implements DataPersistence{
     @Override
     public void saveData(String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))){
-            writer.write("name,location,total halls");
+            writer.write("name,location,totalHalls\n");
             writer.write(name + "," + location + "," + totalHalls);
             System.out.println("Cinema data saved successfully");
         } catch (IOException e) {
@@ -61,6 +64,10 @@ public class Cinema implements DataPersistence{
             }
         }
         
+    }
+
+    public void iniHall(ArrayList<Hall> halls){
+        this.halls = halls;
     }
 
     @Override
