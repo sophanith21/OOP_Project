@@ -1,64 +1,155 @@
 package src.cinema;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
-public class Seat {
-    protected String seatType;
-    private String status; // "Booked", "Available", or "Occupied"
-    private String userId; // Stores user ID if booked
-    private int hallId; // Hall ID
-    private double price; // Seat price
-    private String showtimeId; // Showtime ID
-    private String seatId; // Unique seat identifier (row-seat)
-    private int rowNumber; // Row number
-    public static int seatTaken = 0; // Tracks booked seats
+import src.booking.Booking;
 
-    public Seat(int hallId, int rowNumber, int seatNum) {
+public class Seat implements DataPersistence{
+    private String seatType;            // "Regular", "VIP"
+    public ArrayList <Booking> booked;  // Stores user ID and showtimeID that has booked or occupied the seat
+    
+    //No status field because status is dependent on the ShowTime, so logic is written in getStatus() instead
+
+    private int hallId;                 // Hall ID
+    private double price;               // Seat price
+    private String seatId;              // Unique seat identifier (row-seat)
+    public static int seatTaken = 0;    // Tracks booked seats (To be implemented)
+    
+    public Seat(int hallId, int rowNumber, int seatNum){
         this.seatType = "Regular";
         this.hallId = hallId;
-        this.rowNumber = rowNumber;
         this.seatId = rowNumber + "-" + seatNum;
-        this.status = "Available";
-        this.userId = "";
-        this.showtimeId = "";
+        booked = new ArrayList<>();
 
-        // Assign price based on row (Haven't fix about VIP seats yet)
-        if (rowNumber < 5) {
-            this.price = 15.0;
-        } else if (rowNumber < 10) {
-            this.price = 10.0;
+        if (seatType.equals( "VIP")) {
+            this.price = 15.0d;
         } else {
-            this.price = 5.0; // Default price for other rows
+            this.price = 10.0d;
         }
     }
 
-    // Update seat status and track booked count
-    public void setStatus(String status) {
-        if (this.status.equals("Booked") && !status.equals("Booked")) {
-            seatTaken--; // Decrement when unbooking
-        } else if (!this.status.equals("Booked") && status.equals("Booked")) {
-            seatTaken++; // Increment when booking
+    public Seat(String seatType,int hallId,String seatId,double price) { //Use mainly for loading data
+        this.seatType = seatType;
+        this.hallId = hallId;
+        this.seatId = seatId;
+        this.price = price;
+    }
+
+    public Seat(int hallId, int rowNumber, int seatNum, String seatType ) {
+        this.seatType = seatType;
+        this.hallId = hallId;
+        this.seatId = rowNumber + "-" + seatNum;
+        booked = new ArrayList<>();
+
+        if (seatType == "VIP") {
+            this.price = 15.0d;
+        } else {
+            this.price = 10.0d;
         }
-        this.status = status;
     }
 
-    public String getStatus() {
-        return status;
+    public static void saveAll(String fileName,ArrayList<Seat> seats){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write("Seat Type,Hall ID,Seat ID,Price,Services");
+            for(Seat seat: seats) {
+                if(seat instanceof VIPSeat) {
+                    VIPSeat vipseat = (VIPSeat) seat;
+                    writer.write(vipseat.getSeatType() + "," + vipseat.getHallId() + "," + vipseat.getSeatId() + "," + vipseat.getPrice() + "," + vipseat.getService() );
+                } else {
+                    writer.write(seat.getSeatType() + "," + seat.getHallId() + "," + seat.getSeatId() + "," + seat.getPrice() );
+                }
+                writer.write("\n");
+            }
+            System.out.println("Seat's data saved successfully");
+        } catch (IOException e) {
+            System.out.println("An error occured");
+            e.printStackTrace();
+        }
     }
 
-    public String getUserId() {
-        return userId;
+    public static ArrayList<Seat> loadAll(String fileName) {
+        ArrayList<Seat> seats = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader (new FileReader(fileName))) {
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String [] data = line.split(",");
+                Seat seat = new Seat(data[0], Integer.parseInt(data[1]), data[2],Double.parseDouble(data[3]));
+                seats.add(seat);
+            }
+            System.out.println("All Seats loaded successfully");
+        } catch (IOException e){
+            System.out.println("An error occured while loading seats");
+            e.printStackTrace();
+        }
+        return seats;
+    } 
+    @Override
+    public void saveData(String fileName) {
+        throw new UnsupportedOperationException("Use saveAll instead");
+    }
+    
+    @Override
+    public void loadData(String fileName){
+        throw new UnsupportedOperationException("Use loadAll instead");
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getSeatType() {
+        return seatType;
+    }
+
+    public void setSeatType(String seatType) { //Though rare in a fixed VIP seat hall structure, if the object is VIP
+                                               //but seatType is "Regular", the issue will be handled in ShowTimes
+        if(!seatType.equals("Regular") && !seatType.equals("VIP")){
+            throw new IllegalArgumentException("Invalid seatType: " + seatType);
+        }
+        this.seatType = seatType;
+    }
+
+    public String getStatus(String showTime) {
+        if(!booked.isEmpty()) {
+            for(int i = 0; i< booked.size(); i++) {
+                if(booked.get(i).reserveTime.equals(showTime)){
+                    return "Booked";
+                } else {
+                    return "Available";
+                }
+            }
+        }
+        return "Available";
+    }
+
+    public String getBookingsInfo() {
+        if(booked.isEmpty())
+        {
+            System.out.println("Empty booking information");
+            return "Empty booking information";
+        }
+        String temp = "Show Times that have this seat booked: \n";
+        for(int i = 0 ; i < booked.size(); i++){
+            temp = temp + i + ". " + booked.get(i).reserveTime + "\n";
+        }
+        return temp;
+    }
+
+    public void addBookedSeat(Booking newBook) {
+        if(!booked.contains(newBook)){
+            if(newBook.seatId.contains(this.seatId)){
+                booked.add(newBook);
+            } else {
+                System.out.println("This new booked seat's ID is different from this seat");
+            }
+        }
+        
     }
 
     public int getHallId() {
         return hallId;
-    }
-
-    public void setHallId(int hallId) {
-        this.hallId = hallId;
     }
 
     public double getPrice() {
@@ -69,46 +160,11 @@ public class Seat {
         this.price = price;
     }
 
-    public String getShowtimeId() {
-        return showtimeId;
-    }
-
-    public void setShowtimeId(String showtimeId) {
-        this.showtimeId = showtimeId;
-    }
 
     public String getSeatId() {
         return seatId;
     }
-
-    public int getRowNumber() {
-        return rowNumber;
-    }
-
-    @Override
-    public String toString() {
-        return "Seat [seatType=" + seatType + ", status=" + status + ", userId=" + userId + ", hallId=" + hallId
-                + ", price=" + price + ", showtimeId=" + showtimeId + ", seatId=" + seatId + ", rowNumber=" + rowNumber
-                + "]\n";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((seatType == null) ? 0 : seatType.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-        result = prime * result + hallId;
-        long temp;
-        temp = Double.doubleToLongBits(price);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + ((showtimeId == null) ? 0 : showtimeId.hashCode());
-        result = prime * result + ((seatId == null) ? 0 : seatId.hashCode());
-        result = prime * result + rowNumber;
-        return result;
-    }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -118,39 +174,19 @@ public class Seat {
         if (getClass() != obj.getClass())
             return false;
         Seat other = (Seat) obj;
-        if (seatType == null) {
-            if (other.seatType != null)
-                return false;
-        } else if (!seatType.equals(other.seatType))
-            return false;
-        if (status == null) {
-            if (other.status != null)
-                return false;
-        } else if (!status.equals(other.status))
-            return false;
-        if (userId == null) {
-            if (other.userId != null)
-                return false;
-        } else if (!userId.equals(other.userId))
-            return false;
         if (hallId != other.hallId)
-            return false;
-        if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
-            return false;
-        if (showtimeId == null) {
-            if (other.showtimeId != null)
-                return false;
-        } else if (!showtimeId.equals(other.showtimeId))
             return false;
         if (seatId == null) {
             if (other.seatId != null)
                 return false;
         } else if (!seatId.equals(other.seatId))
             return false;
-        if (rowNumber != other.rowNumber)
-            return false;
         return true;
     }
-
+    @Override
+    public String toString() {
+        return "Seat: " + seatType + "," + hallId + "," + price
+                + "," + seatId;
+    }  
     
 }

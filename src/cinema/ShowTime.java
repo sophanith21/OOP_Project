@@ -11,45 +11,21 @@ public class ShowTime {
     private String endTime;
     private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
     private Movie movie;
-    public static int rowsPerHall = 10;
-    public static int seatsPerRow = 20;
+    
 
     public ShowTime( int hallId) {
-        this.showTimeId = showTimeId;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.showTimeId = null;
+        this.startTime = null;
+        this.endTime = null;
 
-        for(int i = 0; i < rowsPerHall; i++){
-
-            seats.add(new ArrayList<>());
-
-            for(int j = 0; j < seatsPerRow; j++){
-                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
-                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, false, false));
-                } else {
-                    seats.get(i).add(new Seat(hallId,i+1,j+1));
-                }
-            }
-        }
     }
 
     private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; }
     private void setStartTime(String startTime) { this.startTime = startTime; }
     private void setEndTime(String endTime) { this.endTime = endTime; }
-    private Movie getMovies(){ return movie;}
 
 
     
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((showTimeId == null) ? 0 : showTimeId.hashCode());
-        result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
-        result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
-        result = prime * result + ((movie == null) ? 0 : movie.hashCode());
-        return result;
-    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -81,7 +57,8 @@ public class ShowTime {
             return false;
         return true;
     }
-    public void setShowTime(Scanner scan){
+    public void setShowTime(){
+        Scanner scan = new Scanner(System.in);
         while(true){
             System.out.print("Do you want to add show time?(yes/no): ");
             String choose = scan.nextLine();
