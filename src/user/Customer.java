@@ -1,37 +1,30 @@
 package src.user;
 
-import src.booking.Booking;
-
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Scanner;
-import java.util.Set;
+
 public class Customer extends User{
 
     private double walletBalance;
     private String membershipLevel;
-    private Set<String> bookingIds = new LinkedHashSet<>();  
+    Scanner sc = new Scanner(System.in);
 
-    // Constructor
-    public Customer(int id, String username, String email, String phone, String password, String membershipLevel, double walletBalance) {
+    public Customer(int id, String username, String email, String phone, String password) {
         super(id, username, email, phone, password, "CUSTOMER"); 
-        this.walletBalance = walletBalance;
-        this.membershipLevel = membershipLevel;
+        this.walletBalance = 0.0;
+        this.membershipLevel = "basic";
     }
 
-    @Override
-    public void displayUser() {
-        super.displayUser();
-        System.out.println("Wallet Balance: " + walletBalance);
-        System.out.println("Membership Level: " + membershipLevel);
-        System.out.println("--------------------------------------");
+    public String getMembershipLevel () {
+        return membershipLevel;
+    }
+
+    public double getBalace () {
+        return walletBalance;
     }
 
     @Override
     public String toString() {
-        return super.toString() + ", Customer{" +
-                "walletBalance='" + walletBalance + '\'' +
-                ", membershipLevel=" + membershipLevel + '}';
+        return super.toString() + "," + walletBalance + "," + membershipLevel;
     }
+
 }

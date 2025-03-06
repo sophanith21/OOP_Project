@@ -7,49 +7,22 @@ public class Movie {
     public static int numberOfMovies = 0;
     private String movieID;
     private String title;
-    private int duration;
+    private int durationMinutes;
     private String genre;
 
-    public Movie (String title, int duration, String genre) {
+    public Movie (String title, int durationMinutes, String genre) {
 
         this.movieID = "M" + (++numberOfMovies);
         this.title = title;
-        this.duration = duration;
+        this.durationMinutes = durationMinutes;
         this.genre = genre;  
     }
 
-    public String getMovieID () {
-        return movieID;
-    }
-
-    public String getTitle () {
-        return title;
-    }
-
-    public int getDuration () {
-        return duration;
-    }
-
-    public String getGenre () {
-        return genre;
-    }
-
-    public static int getTotalMovies() {
-        return numberOfMovies;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((movieID == null) ? 0 : movieID.hashCode());
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
-        result = prime * result + duration;
-        result = prime * result + ((genre == null) ? 0 : genre.hashCode());
-        return result;
-    }
-
-    
+    public String getTitle() { return title; }
+    public String getGenre() { return genre; }
+    public int getDurationMinutes() { return durationMinutes; }
+    public String getMovieID () { return movieID; }
+    public static int getTotalMovies() { return numberOfMovies; }
 
     @Override
     public boolean equals(Object obj) {
@@ -70,7 +43,7 @@ public class Movie {
                 return false;
         } else if (!title.equals(other.title))
             return false;
-        if (duration != other.duration)
+        if (durationMinutes != other.durationMinutes)
             return false;
         if (genre == null) {
             if (other.genre != null)
@@ -82,6 +55,6 @@ public class Movie {
 
     @Override
     public String toString() {
-        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + duration + ", genre=" + genre + "]";
+        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + durationMinutes + ", genre=" + genre + "]";
     }
 };

@@ -1,7 +1,6 @@
 package src.main;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.*;
 
 import src.cinema.Cinema;
