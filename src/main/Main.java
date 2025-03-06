@@ -1,11 +1,12 @@
 package src.main;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.*;
 
 import src.cinema.Cinema;
 import src.cinema.Hall;
+import src.exception.EmptyInputException;
+import src.exception.InvalidInputException;
 import src.user.Admin;
 import src.user.Customer;
 import src.user.User;
@@ -17,6 +18,6 @@ public class Main{
         cinema.iniHall();
         cinema.addShowTime();
         cinema.showHalls();
-
+        
     }
 }
