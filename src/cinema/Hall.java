@@ -1,7 +1,12 @@
 package src.cinema;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class Hall {
+public class Hall implements DataPersistence{
     private int hallId;
     public static int maxSeats = 200;
     public ArrayList<ShowTime> showTimes;    //Stores info about the movie according to the specific showtimes
@@ -29,6 +34,52 @@ public class Hall {
                 }
             }
         }
+    }
+
+    public static void saveAll(String fileName,ArrayList <Hall> halls){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write("Hall ID,Status");
+            for (Hall hall : halls){
+                writer.write(hall.getHallId() + "," + hall.getStatus());
+                writer.write("\n");
+            }
+            
+            System.out.println("Hall's data saved successfully");
+        } catch (IOException e) {
+            System.out.println("An error occured");
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList <Hall> loadAll(String fileName) {
+        ArrayList<Hall> halls = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                Hall hall = new Hall();
+                hall.hallId = Integer.parseInt(data[0]);
+                hall.status = data[1];
+                halls.add(hall);
+            }
+            System.out.println("All halls loaded successfully");
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading halls");
+            e.printStackTrace();
+        }
+        return halls;
+    }
+    
+
+    @Override
+    public void saveData(String fileName) {
+        throw new UnsupportedOperationException("Use saveAll instead");
+    }
+
+    @Override
+    public void loadData(String fileName){
+        throw new UnsupportedOperationException("Use loadAll instead");
     }
 
     public void setStatus(String status){

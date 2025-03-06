@@ -13,7 +13,7 @@ public class Booking {
     private int totalSeat;
     private double totalPrice;
     private  Payment payment;
-    private Customer customer;
+    public Customer customer;
     private String bookingType;
 
     private static ArrayList<Booking> listOfBookings = new ArrayList<>();

@@ -1,10 +1,13 @@
 package src.cinema;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import src.booking.Booking;
-public class Cinema { 
+import java.util.Arrays;
+
+public class Cinema implements DataPersistence{ 
     public String name;
     public String location;
     public int totalHalls;
@@ -19,30 +22,11 @@ public class Cinema {
         this.location = location;
         this.totalHalls = totalHalls;
     }
-
+    @Override
     public void saveData(String fileName) {
-        try {
-            BufferedWriter writer = new BufferedWriter(
-                new FileWriter(fileName)
-            );
-            writer.write("Cinema: " + name + "," + location + "," + totalHalls + "\n");
-            for (Hall hall : halls){
-                writer.write("Hall: " + hall.getHallId() + ","+ hall.getStatus() + "\n");
-                for(int i = 0; i < Hall.rowsPerHall; i++){
-                    for(int j = 0; j < Hall.seatsPerRow; j++){
-                        writer.write(hall.seats.get(i).get(j).toString() + "\n");
-                        if(!hall.seats.get(i).get(j).booked.isEmpty()){
-                            for(Booking book: hall.seats.get(i).get(j).booked){
-                                writer.write(book.toString());
-                            }
-                        }
-                    }
-                }
-                for(ShowTime show : hall.showTimes) {
-                    writer.write(show.toString());
-                }
-            }
-            writer.close();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))){
+            writer.write("name,location,total halls");
+            writer.write(name + "," + location + "," + totalHalls);
             System.out.println("Cinema data saved successfully");
         } catch (IOException e) {
             System.out.println("An error occured");
@@ -50,6 +34,23 @@ public class Cinema {
         }
         
     }
+
+    @Override
+    public void loadData(String fileName){
+        try (BufferedReader reader = new BufferedReader (new FileReader(fileName))){ 
+            String line;
+            reader.readLine();
+            line = reader.readLine();
+            ArrayList <String> data = new ArrayList<>(Arrays.asList(line.split(",")));
+            this.name = data.get(0);
+            this.location = data.get(1);
+            this.totalHalls = Integer.parseInt(data.get(2));
+        } catch (IOException e){
+            System.out.println("An error occured");
+            e.printStackTrace();
+        }
+    }
+
     public void iniHall()
     {
         if(halls.isEmpty())
