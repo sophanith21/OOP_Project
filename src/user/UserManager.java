@@ -10,42 +10,60 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InvalidClassException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserManager implements Authentication {
     private static Scanner scanner = new Scanner(System.in);
     private static HashSet<User> users = new HashSet<>();
     private int nextId = 1;
-    private User loggedInUser = null; // Track the currently logged-in user
-    private static final String FILE_NAME = "users.csv";
+    private User loggedInUser = null; 
 
-    public void register(String username, String password, String email, String phone) throws InvalidUserDetailsException, DuplicateUserException {
+    @Override
+    public void register(String username, String password, String email, String phone, double walletBalance, String membershipLevel) throws InvalidUserDetailsException, DuplicateUserException {
+        //InvalidUserDetailsException: ensures no empty, no wrong format
+        
         if (username == null || username.trim().isEmpty()) {
             throw new InvalidUserDetailsException("Username cannot be empty.");
         }
         if (password == null || password.length() < 8) {
             throw new InvalidUserDetailsException("Password must be at least 8 characters long.");
         }
-        if (email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+        if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
             throw new InvalidUserDetailsException("Invalid email format.");
         }
-        if (phone != null && phone.matches("^\\+?[0-9]{10,15}$")) {
+        if (phone == null || !phone.matches("^[0-9]{9,10}$")) {
             throw new InvalidUserDetailsException("Invalid phone number format.");
         }
+        if (walletBalance < 0) {
+            throw new InvalidUserDetailsException("Wallet balance cannot be negative.");
+        }
 
-        Customer customer = new Customer(nextId++, username, password, email, phone);
+        // Validate membership level (must be Silver, Gold, or Platinum)
+        List<String> validMembershipLevels = Arrays.asList("Silver", "Gold", "Platinum");
+        if (!validMembershipLevels.contains(membershipLevel)) {
+            throw new InvalidUserDetailsException("Invalid membership level. Choose Silver, Gold, or Platinum.");
+        }
 
+        // Hash password before storing
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        // Create Customer object
+        Customer customer = new Customer(nextId++, username, hashedPassword, email, phone, walletBalance, membershipLevel);
+
+        // Check for duplicates (Set uses equals())
         if (!users.add(customer)) {
             throw new DuplicateUserException("Duplicate entry: Username, email, or phone is already registered.");
         }
-
+        
         System.out.println("Customer registered successfully: " + customer);
     }
     
     @Override
-    public User login(String username, String password)
-            throws UserNotFoundException, InvalidCredentialsException {
+    public User login(String username, String password) throws UserNotFoundException, InvalidCredentialsException {
 
         for (User user : users) {
             if (user.getUsername().equalsIgnoreCase(username)) {
@@ -62,9 +80,9 @@ public class UserManager implements Authentication {
     }
 
     @Override
-    public boolean logout(String username) {
+    public boolean logout(User u) {
         for (User user : users) {
-            if (user.getUsername().equalsIgnoreCase(username)) {
+            if (user.getUsername().equalsIgnoreCase(u.username)) {
                 if (user.isLoggedIn()) {
                     user.setLoggedIn(false);
                     System.out.println("Logout successful for customer: " + user.getUsername());
@@ -76,7 +94,7 @@ public class UserManager implements Authentication {
             }
         }
     
-        System.out.println("Username not found: " + username);
+        System.out.println("Username not found: " + u.username);
         return false;
     }
 
@@ -84,65 +102,62 @@ public class UserManager implements Authentication {
         return users;
     }
 
-
-
-    /*public void writeUsersToFile (){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (User user : users.values()) {
-                writer.write(user + "\n");
-               
+    public void saveData(List<User> users, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (User user : users) {
+                writer.write(user.toString());
+                writer.newLine();  
             }
-            System.out.println("Users written successfully.");
         } catch (IOException e) {
-            System.out.println(" Error writing users: " + e.getMessage());
+            e.printStackTrace();  
         }
     }
+
     
-    public void loadUsersFromFile() {
-        users.clear(); // Clear existing users before loading
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+    
+    public List<User> loadData(String fileName) {
+        List<User> users = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                try {
-                    String[] parts = line.split(",");
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String email = parts[2];
-                    String phone = parts[3];
-                    String role = parts[4];
-
-                    if (role.equals("CUSTOMER")) {
-                        double balance = Double.parseDouble(parts[5]);
-                        String membership = parts[6];
-                        Customer user = new Customer(id, name, email, phone, role, membership, balance);
-                        users.put(name,user);
-                    } else if (role.equals("ADMIN")) {
-                        int managedHallId = Integer.parseInt(parts[5]);
-                        Admin user = new Admin(id, name, email, phone, role, managedHallId);
-                        users.put(name, user);
-                    }
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Skipping invalid data: " + line);
-                }
-            }
-            System.out.println("Users loaded successfully.");
-            int totalAdmins = 0;
-            int totalCustomers = 0;
-            for (User u: users.values()) {
-                if (u instanceof Admin){
-                    totalAdmins++;
-                }else if (u instanceof Customer){
-                    totalCustomers ++;
-                }
                 
-            }
-            System.out.println("Total Admins: " + totalAdmins);
-            System.out.println("Total Customers: " + totalCustomers);
+                String[] userDetails = line.split(",");
+                int id = Integer.parseInt(userDetails[0]);
+                String username = userDetails[1];
+                String email = userDetails[2];
+                String password = userDetails[3];
+                String phone = userDetails[4];
+                String role = userDetails[5];
 
+                if (role.equals("CUSTOMER")) {
+                    double balance = Double.parseDouble(userDetails[6]);
+                    String membership = userDetails[6];
+                    Customer user = new Customer(id, username, email, phone, role, balance, membership);
+                    users.add(user);
+                } else if (role.equals("ADMIN")) {
+                    int managedHallId = Integer.parseInt(userDetails[5]);
+                    Admin user = new Admin(id, username, email, phone, role, managedHallId);
+                    users.add(user);
+                }
+            }
         } catch (FileNotFoundException e) {
             System.out.println("File not found. No users loaded.");
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
-    }  */ 
+        return users;
+    }
+
+    public void displayAllUsers() {
+        if (users.isEmpty()) {
+            System.out.println("No users registered.");
+            return;
+        }
+    
+        System.out.println("Registered Users:");
+        for (User user : users) {
+            System.out.println(user);
+        }
+    }
+ 
 }

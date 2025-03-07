@@ -6,7 +6,7 @@ import src.exception.InvalidUserDetailsException;
 import src.exception.UserNotFoundException;
 
 interface Authentication {
-    void register (String username, String email, String password, String phone) throws InvalidUserDetailsException, DuplicateUserException;
+    void register(String username, String password, String email, String phone, double walletBalance, String membershipLevel) throws InvalidUserDetailsException, DuplicateUserException;
     User login(String username, String password) throws UserNotFoundException, InvalidCredentialsException;
-    boolean logout(String username);
+    boolean logout(User user);
 }
