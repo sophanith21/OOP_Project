@@ -30,12 +30,14 @@ public class Payment {
     public String getStatus() { return status; }
     public String getTransactionID() { return transactionID; }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, paymentId, paymentDate, paymentAmount, 
-                            paymentMethod, status, transactionID);
-    }
-    
+    private void setUserId(String userId) { this.userId = userId; }
+    private void setPaymentId(String paymentId) { this.paymentId = paymentId; }
+    private void setPaymentDate(String paymentDate) { this.paymentDate = paymentDate; }
+    private void setPaymentAmount(double paymentAmount) { this.paymentAmount = paymentAmount; }
+    private void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    private void setStatus(String status) { this.status = status; }
+    private void setTransactionID(String transactionID) { this.transactionID = transactionID; }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -48,6 +50,26 @@ public class Payment {
                Objects.equals(paymentMethod, other.paymentMethod) &&
                Objects.equals(status, other.status) &&
                Objects.equals(transactionID, other.transactionID);
+    }
+
+    public void paymentAmout(double paymentAmount){
+        if (paymentAmount <= 0) {
+            throw new IllegalArgumentException("Payment amount must be greater than zero.");
+        }
+        else {
+            System.out.println("Payment amount is valid");
+        }
+    }
+
+    public void paymentMethod(String paymentMethod){
+        if (!paymentMethod.equalsIgnoreCase("Credit Card") && 
+            !paymentMethod.equalsIgnoreCase("QR") && 
+            !paymentMethod.equalsIgnoreCase("Cash")) {
+            throw new IllegalArgumentException("Invalid payment method. Only Credit Card, Debit Card, or Cash are allowed.");
+        }
+        else{
+            System.out.println("Payment method is valid");
+        }
     }
 
     @Override
