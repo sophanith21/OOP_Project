@@ -23,7 +23,7 @@ public class FileIOTest{
         Hall.saveAll("src/main/Test/Halls.csv", cinema.halls);
         
         for(Hall hall : cinema.halls){
-            hall.iniSeats(Seat.loadAll("src/main/Data/Seats.csv"));
+            hall.initSeats(Seat.loadAll("src/main/Data/Seats.csv"));
             Seat.saveAll("src/main/Test/Seats.csv", hall.seats);
         }
     }

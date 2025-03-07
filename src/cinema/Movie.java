@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import src.DataControl.DataPersistence;
 public class Movie implements DataPersistence {
     
     public static int numberOfMovies = 0;

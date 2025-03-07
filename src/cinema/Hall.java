@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import src.DataControl.DataPersistence;
+
 public class Hall implements DataPersistence{
     private int hallId;
     public static int maxSeats = 200;
@@ -70,13 +72,13 @@ public class Hall implements DataPersistence{
         throw new UnsupportedOperationException("Use loadAll instead");
     }
 
-    public void iniSeats(){
+    public void initSeats(){
         for(int i = 0; i < rowsPerHall; i++){
-
-            seats.add(new ArrayList<>());
+            ArrayList <Seat> newSeats = new ArrayList<>();
+            seats.add(newSeats);
 
             for(int j = 0; j < seatsPerRow; j++){
-                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){   
+                if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){
                     seats.get(i).add(new VIPSeat(hallId, i+1, j+1, ""));
                 } else {
                     seats.get(i).add(new Seat(hallId,i+1,j+1));
@@ -85,7 +87,7 @@ public class Hall implements DataPersistence{
         }
     }
 
-    public void iniSeats(ArrayList<ArrayList<Seat>> seats) {
+    public void initSeats(ArrayList<ArrayList<Seat>> seats) {
         this.seats = seats;
     }
 
@@ -97,6 +99,10 @@ public class Hall implements DataPersistence{
     }
     public String getStatus(){
         return status;
+    }
+
+    public void setHallId(int hallId){
+        this.hallId = hallId;
     }
 
     public int getHallId() {

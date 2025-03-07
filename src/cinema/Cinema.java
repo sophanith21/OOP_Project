@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Cinema implements DataPersistence{ 
+import src.DataControl.DataPersistence;
+
+public class Cinema implements DataPersistence{
     public String name;
     public String location;
     public int totalHalls;

@@ -1,4 +1,4 @@
-package src.cinema;
+package src.DataControl;
 import java.util.ArrayList;
 
 public interface DataPersistence {

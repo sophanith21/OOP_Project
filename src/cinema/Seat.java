@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import src.DataControl.DataPersistence;
 import src.booking.Booking;
 
 public class Seat implements DataPersistence{
@@ -158,7 +158,7 @@ public class Seat implements DataPersistence{
     public String getStatus(String showTime) {
         if(!booked.isEmpty()) {
             for(int i = 0; i< booked.size(); i++) {
-                if(booked.get(i).reserveTime.equals(showTime)){
+                if(booked.get(i).ShowTimeId.equals(showTime)){
                     return "Booked";
                 } else {
                     return "Available";
@@ -176,7 +176,7 @@ public class Seat implements DataPersistence{
         }
         String temp = "Show Times that have this seat booked: \n";
         for(int i = 0 ; i < booked.size(); i++){
-            temp = temp + i + ". " + booked.get(i).reserveTime + "\n";
+            temp = temp + i + ". " + booked.get(i).ShowTimeId + "\n";
         }
         return temp;
     }
@@ -227,10 +227,12 @@ public class Seat implements DataPersistence{
             return false;
         return true;
     }
+
     @Override
     public String toString() {
-        return "Seat: " + seatType + "," + hallId + "," + price
-                + "," + seatId;
-    }  
+        return "Seat [seatType=" + seatType + ", booked=" + (booked.isEmpty() ? "Empty":booked) + ", hallId=" + hallId + ", price=" + price
+                + ", seatId=" + seatId + "]";
+    }
+     
     
 }
