@@ -1,44 +1,84 @@
 package src.DBConnection;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
+import java.sql.Statement;
+
+import com.mysql.cj.exceptions.CJCommunicationsException;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+
+import java.sql.ResultSet;
 
 public class DBConnection {
 
-    // Database credentials
+    private static Connection connection = null;
     private static final String URL = "jdbc:mysql://localhost:3307/cinema_management";
-    private static final String USER = "root";
+    private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
-    // Singleton instance
-    private static Connection connection;
-
-    // Private constructor to prevent instantiation
-    private DBConnection() {}
-
-    // Method to establish a connection
-    public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
+    // Establish the connection
+    public static Connection getConnection() {
+        if (connection == null) {
             try {
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw new SQLException("Failed to connect to the database", e);
+                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                System.out.println("Connected to MySQL successfully!");
+            }catch (CJCommunicationsException e) {
+                System.out.println("please check ur db server");
+               
+            }
+            catch (CommunicationsException e) {
+                System.out.println("please check ur db server");
+                
+            }
+            catch (SQLSyntaxErrorException e) {
+                System.out.println("Connection failed!");
+                
+            }
+            catch (SQLException e) {
+                System.out.println("Connection failed!");
+                
             }
         }
         return connection;
     }
 
-    // Method to close the connection
-    public static void closeConnection() {
+    // Execute a query (SELECT)
+    public static ResultSet executeQuery(String query) {
         try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
+            Statement statement = getConnection().createStatement();
+            return statement.executeQuery(query);
         } catch (SQLException e) {
+            System.out.println("Query execution failed!");
             e.printStackTrace();
         }
+        return null;
     }
-}
 
+    // Execute an update (INSERT, UPDATE, DELETE)
+    public static int executeUpdate(String query) {
+        try {
+            Statement statement = getConnection().createStatement();
+            return statement.executeUpdate(query);
+        } catch (SQLException e) {
+            System.out.println("Update execution failed!");
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // Close the connection
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+                connection = null;
+                System.out.println("Connection closed.");
+            } catch (SQLException e) {
+                System.out.println("Failed to close the connection!");
+                e.printStackTrace();
+            }
+        }
+    }
+    
+}

@@ -18,15 +18,7 @@ public class Main{
         // {
             
         // }
-        Cinema cinema = new Cinema("src/main/Data/Cinema.csv");
-        cinema.saveData("src/main/Test/Cinema.csv");
-        cinema.iniHall(Hall.loadAll("src/main/Data/Halls.csv"));
-        Hall.saveAll("src/main/Test/Halls.csv", cinema.halls);
         
-        for(Hall hall : cinema.halls){
-            hall.iniSeats(Seat.loadAll("src/main/Data/Seats.csv"));
-            Seat.saveAll("src/main/Test/Seats.csv", hall.seats);
-        }
         
 
     }
