@@ -53,42 +53,86 @@ public class Seat implements DataPersistence{
         }
     }
 
-    public static void saveAll(String fileName,ArrayList<Seat> seats){
+    public static void saveAll(String fileName, ArrayList<ArrayList<Seat>> seats) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("Seat Type,Hall ID,Seat ID,Price,Services");
-            for(Seat seat: seats) {
-                if(seat instanceof VIPSeat) {
-                    VIPSeat vipseat = (VIPSeat) seat;
-                    writer.write(vipseat.getSeatType() + "," + vipseat.getHallId() + "," + vipseat.getSeatId() + "," + vipseat.getPrice() + "," + vipseat.getService() );
-                } else {
-                    writer.write(seat.getSeatType() + "," + seat.getHallId() + "," + seat.getSeatId() + "," + seat.getPrice() );
+            writer.write("SeatType,HallID,SeatID,Price,Services\n");
+            
+            for (ArrayList<Seat> row : seats) {
+                for (Seat seat : row) {
+                    if (seat.getSeatType().equals("VIP")) {
+                        VIPSeat vipseat = (VIPSeat) seat;
+                        writer.write(vipseat.getSeatType() + "," + vipseat.getHallId() + "," +
+                                     vipseat.getSeatId() + "," + vipseat.getPrice() + "," +
+                                     vipseat.getServices() + "\n");
+                    } else {
+                        writer.write(seat.getSeatType() + "," + seat.getHallId() + "," +
+                                     seat.getSeatId() + "," + seat.getPrice() + "\n");
+                    }
                 }
-                writer.write("\n");
             }
-            System.out.println("Seat's data saved successfully");
+            System.out.println("Seat data saved successfully.");
         } catch (IOException e) {
-            System.out.println("An error occured");
+            System.out.println("An error occurred while saving seats.");
             e.printStackTrace();
         }
     }
+    
 
-    public static ArrayList<Seat> loadAll(String fileName) {
-        ArrayList<Seat> seats = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader (new FileReader(fileName))) {
-            reader.readLine();
+    public static ArrayList<ArrayList<Seat>> loadAll(String fileName) {
+        ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            reader.readLine(); // Skip header
             String line;
+            ArrayList<Seat> currentRow = new ArrayList<>();
+    
+            int lastRow = -1; // Track row changes
             while ((line = reader.readLine()) != null) {
-                String [] data = line.split(",");
-                Seat seat = new Seat(data[0], Integer.parseInt(data[1]), data[2],Double.parseDouble(data[3]));
-                seats.add(seat);
+                String[] data = line.split(",");
+                int hallId = Integer.parseInt(data[1]);
+                String seatId = data[2];
+                double price = Double.parseDouble(data[3]);
+    
+                String[] seatParts = seatId.split("-");
+                int rowNumber = Integer.parseInt(seatParts[0]);
+    
+                Seat seat;
+                if (data[0].equals("VIP")) {
+                    String services = "";
+                    for(int i = 4 ; i < data.length ; i++) {
+                        services += data[i];
+                    }
+                    seat = new VIPSeat(seatId, hallId, seatId, price, services);
+                } else {
+                    seat = new Seat(seatId, hallId, seatId, price);
+                }
+    
+                // Check if we are moving to a new row
+                if (rowNumber != lastRow) {
+                    if (!currentRow.isEmpty()) {
+                        seats.add(currentRow);
+                    }
+                    currentRow = new ArrayList<>();
+                    lastRow = rowNumber;
+                }
+    
+                currentRow.add(seat);
             }
-            System.out.println("All Seats loaded successfully");
-        } catch (IOException e){
-            System.out.println("An error occured while loading seats");
+    
+            // Add the last row if not empty
+            if (!currentRow.isEmpty()) {
+                seats.add(currentRow);
+            }
+    
+            System.out.println("All Seats loaded successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading seats.");
             e.printStackTrace();
         }
+    
         return seats;
-    } 
+    }
+    
     @Override
     public void saveData(String fileName) {
         throw new UnsupportedOperationException("Use saveAll instead");
