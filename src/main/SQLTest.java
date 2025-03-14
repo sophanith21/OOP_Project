@@ -35,6 +35,7 @@ public class SQLTest {
         }
         return cinema;
     }
+    public static 
     public static void main(String[] args) {
         // Test the DB connection using DBConnection class
         Connection conn = DBConnection.getConnection();
