@@ -10,38 +10,54 @@ import java.util.HashSet;
 import java.util.List;
 
 import src.DataControl.DataPersistence;
+
 public class Movie implements DataPersistence {
-    
+
     public static int numberOfMovies = 0;
     private String movieID;
     private String title;
     private int durationMinutes;
     private String genre;
 
-    public Movie (String title, int durationMinutes, String genre) {
+    public Movie(String title, int durationMinutes, String genre) {
 
         this.movieID = "M" + (++numberOfMovies);
         this.title = title;
         this.durationMinutes = durationMinutes;
-        this.genre = genre;  
+        this.genre = genre;
     }
 
-    public String getTitle() { return title; }
-    public String getGenre() { return genre; }
-    public int getDurationMinutes() { return durationMinutes; }
-    public String getMovieID () { return movieID; }
-    public static int getTotalMovies() { return numberOfMovies; }
+    public String getTitle() {
+        return title;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public String getMovieID() {
+        return movieID;
+    }
+
+    public static int getTotalMovies() {
+        return numberOfMovies;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        
-        Movie other = (Movie) obj; 
-        return movieID.equals(other.movieID);  
+
+        Movie other = (Movie) obj;
+        return movieID.equals(other.movieID);
     }
 
     @Override
     public String toString() {
-        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + durationMinutes + ", genre=" + genre + "]";
+        return "Movie [movieID=" + movieID + ", title=" + title + ", duration=" + durationMinutes + ", genre=" + genre
+                + "]";
     }
 
     @Override
@@ -56,13 +72,13 @@ public class Movie implements DataPersistence {
         throw new UnsupportedOperationException("Unimplemented method 'loadData'");
     }
 
-    public static void saveAll (List <Movie> movies, String fileName) {
+    public static void writeMoviesToFile(ArrayList<Movie> movies, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Movie movie : movies) {
                 writer.write(movie.getMovieID() + "," +
-                             movie.getTitle() + "," +
-                             movie.getDurationMinutes() + "," +
-                             movie.getGenre());
+                        movie.getTitle() + "," +
+                        movie.getDurationMinutes() + "," +
+                        movie.getGenre());
                 writer.newLine();
             }
             System.out.println("Data saved to " + fileName);
@@ -72,7 +88,7 @@ public class Movie implements DataPersistence {
         }
     }
 
-    public static List<Movie> loadAll(String fileName) {
+    public static List<Movie> readMoviesFromFile(String fileName) {
         List<Movie> movies = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -84,7 +100,7 @@ public class Movie implements DataPersistence {
                     int durationMinutes = Integer.parseInt(movieData[2]);
                     String genre = movieData[3];
                     Movie movie = new Movie(title, durationMinutes, genre);
-                    
+
                     movie.movieID = movieID;
                     movies.add(movie);
                 }

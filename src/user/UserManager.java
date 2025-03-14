@@ -1,163 +1,184 @@
 package src.user;
 
-import src.*;
-import src.exception.*;
+import src.exception.UserNotFoundException;
+import src.exception.InvalidCredentialsException;
+import src.exception.UserAlreadyExistsException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 
 public class UserManager implements Authentication {
-    private static Scanner scanner = new Scanner(System.in);
-    private static HashSet<User> users = new HashSet<>();
-    private int nextId = 1;
-    private User loggedInUser = null; 
+    public static Map<String, User> users = new HashMap<>();
+    public static int nextId  =1;
+
+    public static int getNextId() {
+        return nextId;
+    }
+
+    // Setter method for nextId
+    public static void setNextId(int nextId) {
+        UserManager.nextId = nextId;
+    }
+
+    /*
+     * public boolean updateUsername(String oldUsername, String newUsername) {
+     * if (users.containsKey(newUsername)) {
+     * System.out.println("Username already exist.");
+     * return false;
+     * }
+     * 
+     * User user = users.remove(oldUsername); // Remove the old entry
+     * if (user != null) {
+     * user.setUsername(newUsername); // Update the username
+     * users.put(newUsername, user); // Add the new entry
+     * System.out.println("Username updated successfully.");
+     * return true;
+     * } else {
+     * System.out.println("User not found.");
+     * return false;
+     * }
+     * 
+     * }
+     */
 
     @Override
-    public void register(String username, String password, String email, String phone, double walletBalance, String membershipLevel) throws InvalidUserDetailsException, DuplicateUserException {
-        //InvalidUserDetailsException: ensures no empty, no wrong format
-        
-        if (username == null || username.trim().isEmpty()) {
-            throw new InvalidUserDetailsException("Username cannot be empty.");
-        }
-        if (password == null || password.length() < 8) {
-            throw new InvalidUserDetailsException("Password must be at least 8 characters long.");
-        }
-        if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            throw new InvalidUserDetailsException("Invalid email format.");
-        }
-        if (phone == null || !phone.matches("^[0-9]{9,10}$")) {
-            throw new InvalidUserDetailsException("Invalid phone number format.");
-        }
-        if (walletBalance < 0) {
-            throw new InvalidUserDetailsException("Wallet balance cannot be negative.");
+    public User login(String username, String password) throws InvalidCredentialsException{
+        if (!users.containsKey(username)) {
+            throw new InvalidCredentialsException("User not found!");
+        } 
+
+        User user = users.get(username);
+        if(!user.verifyPassword(password)) {
+            throw new InvalidCredentialsException("Incorrect password");
         }
 
-        // Validate membership level (must be Silver, Gold, or Platinum)
-        List<String> validMembershipLevels = Arrays.asList("Silver", "Gold", "Platinum");
-        if (!validMembershipLevels.contains(membershipLevel)) {
-            throw new InvalidUserDetailsException("Invalid membership level. Choose Silver, Gold, or Platinum.");
-        }
-
-        // Hash password before storing
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        // Create Customer object
-        Customer customer = new Customer(nextId++, username, hashedPassword, email, phone, walletBalance, membershipLevel);
-
-        // Check for duplicates (Set uses equals())
-        if (!users.add(customer)) {
-            throw new DuplicateUserException("Duplicate entry: Username, email, or phone is already registered.");
-        }
-        
-        System.out.println("Customer registered successfully: " + customer);
+        System.out.println("Login successfully. Welcome " + username);
+        return user;
     }
     
-    @Override
-    public User login(String username, String password) throws UserNotFoundException, InvalidCredentialsException {
 
-        for (User user : users) {
-            if (user.getUsername().equalsIgnoreCase(username)) {
-                if (user.verifyPassword(password)) {
-                    System.out.println("Login successful for customer: " + user.getUsername());
-                    return user;
-                } else {
-                    throw new InvalidCredentialsException("Incorrect password.");
-                }
+    @Override
+    public void logout(String username) throws UserNotFoundException {
+        if (users.containsKey(username)) {
+            System.out.println("User " + username + " logged out.");
+        } else {
+            throw new UserNotFoundException("User " + username + " not found.");
+        }
+    }
+
+    @Override
+    public void register(User user) throws UserAlreadyExistsException {
+        for (User existingUser : users.values()) {
+            // Check if any user already exists with the same username or email
+            if (existingUser.getUsername().equals(user.getUsername()) || existingUser.getEmail().equals(user.getEmail())) {
+                throw new UserAlreadyExistsException("User with username or email already exists.");
             }
         }
 
-        throw new UserNotFoundException("Username not found.");
+        // Assign a unique ID to the new user
+        user.setId(nextId++);
+        users.put(user.getUsername(), user);
+        System.out.println("User " + user.getUsername() + " registered successfully.");
     }
 
-    @Override
-    public boolean logout(User u) {
-        for (User user : users) {
-            if (user.getUsername().equalsIgnoreCase(u.username)) {
-                if (user.isLoggedIn()) {
-                    user.setLoggedIn(false);
-                    System.out.println("Logout successful for customer: " + user.getUsername());
-                    return true;
-                } else {
-                    System.out.println("Customer is not logged in: " + user.getUsername());
-                    return false;
-                }
-            }
-        }
-    
-        System.out.println("Username not found: " + u.username);
-        return false;
-    }
 
-    public HashSet<User> getUsers() {
-        return users;
-    }
-
-    public void saveData(List<User> users, String fileName) {
+    public static void writeUsersToFile(String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            for (User user : users) {
+            for (User user : users.values()) {
                 writer.write(user.toString());
-                writer.newLine();  
+                writer.newLine();
             }
+            System.out.println("Users saved successfully.");
         } catch (IOException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }
     }
 
-    
-    
-    public List<User> loadData(String fileName) {
-        List<User> users = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+    public static Map<String, User> readUsersFromFile(String filename) {
+        users.clear(); // Clear existing users before loading new ones
+        int maxId = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                
-                String[] userDetails = line.split(",");
-                int id = Integer.parseInt(userDetails[0]);
-                String username = userDetails[1];
-                String email = userDetails[2];
-                String password = userDetails[3];
-                String phone = userDetails[4];
-                String role = userDetails[5];
+                String[] userData = line.split(",");
+    
+                if (userData.length < 6) { 
+                    System.err.println("Skipping invalid entry: " + line);
+                    continue; // Skip invalid data
+                }
 
-                if (role.equals("CUSTOMER")) {
-                    double balance = Double.parseDouble(userDetails[6]);
-                    String membership = userDetails[6];
-                    Customer user = new Customer(id, username, email, phone, role, balance, membership);
-                    users.add(user);
-                } else if (role.equals("ADMIN")) {
-                    int managedHallId = Integer.parseInt(userDetails[5]);
-                    Admin user = new Admin(id, username, email, phone, role, managedHallId);
-                    users.add(user);
+                int id;
+                try {
+                    id = Integer.parseInt(userData[0]);
+                    if (id > maxId) {
+                        maxId = id;
+                    } // Track highest ID
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid ID format, skipping: " + userData[0]);
+                    continue;
+                }
+
+                String username = userData[1];
+                String email = userData[2];
+                String hashedPassword = userData[3];
+                String phone = userData[4];
+                String role = userData[5];
+    
+                User user = null;
+                // If role is ADMIN
+                if (role.equals("ADMIN")) {
+                    List<Integer> managedHalls = new ArrayList<>();
+                    if (userData.length > 6) {
+                        String[] hallsArray = userData[6].split(";");
+                        for (String hall : hallsArray) {
+                            try {
+                                managedHalls.add(Integer.parseInt(hall));
+                            } catch (NumberFormatException e) {
+                                System.err.println("Skipping invalid hall ID: " + hall);
+                            }
+                        }
+                    }
+                    user = new Admin(id, username, email, hashedPassword, phone, managedHalls, true);
+                    users.put(user.getUsername(), user);
+    
+                } else if (role.equals("CUSTOMER")) {
+                    if (userData.length < 9) {
+                        System.err.println("Skipping incomplete customer entry: " + line);
+                        continue;
+                    }
+    
+                    double walletBalance;
+                    try {
+                        walletBalance = Double.parseDouble(userData[6]);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing wallet balance: " + userData[6]);
+                        walletBalance = 0.0; // Default to 0 if invalid
+                    }
+    
+                    String membershipLevel = userData[7];
+                    String favoriteGenre = userData[8];
+    
+                    user = new Customer(id, username, email, hashedPassword, phone, walletBalance, membershipLevel, favoriteGenre, true);
+                    users.put(user.getUsername(), user);
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found. No users loaded.");
+            UserManager.setNextId(maxId + 1);
+            System.out.println("Users loaded successfully.");
         } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+            e.printStackTrace();
         }
         return users;
     }
 
-    public void displayAllUsers() {
-        if (users.isEmpty()) {
-            System.out.println("No users registered.");
-            return;
-        }
-    
-        System.out.println("Registered Users:");
-        for (User user : users) {
-            System.out.println(user);
-        }
+    /** Get the users map for operations */
+    public static Map<String, User> getUsers() {
+        return users;
     }
- 
 }
