@@ -1,14 +1,12 @@
 package src.cinema;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import src.DBConnection.DBConnection;
 import src.DataControl.DataPersistence;
 
 public class Movie implements DataPersistence {
@@ -18,13 +16,54 @@ public class Movie implements DataPersistence {
     private String title;
     private int durationMinutes;
     private String genre;
+    private String showTimeId;
+    //For loading data from database
+    public Movie(String movieID, String title, int durationMinutes, String genre,String showTimeId) {
+        this.movieID = movieID;
+        this.title = title;
+        this.durationMinutes = durationMinutes;
+        this.genre = genre;
+    }
 
+    // For when adding new movie
     public Movie(String title, int durationMinutes, String genre) {
 
         this.movieID = "M" + (++numberOfMovies);
         this.title = title;
         this.durationMinutes = durationMinutes;
         this.genre = genre;
+    }
+
+    public static void saveAll(Movie movie){
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            if (conn != null) {
+                System.out.println("Database connection test successful!");
+
+                String query = "INSERT INTO movies (movieID, title, durationMinutes,genre,showTimeId)" +
+                "VALUES (?, ?, ?, ?, ?)" +
+                "ON DUPLICATE KEY UPDATE" + 
+                "showTimeId = VALUES(showTimeId)";
+
+                // Use PreparedStatement to prevent SQL injection
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, movie.getMovieID());    
+                pstmt.setString(2, movie.getTitle() );   
+                pstmt.setInt(3, movie.getDurationMinutes());    
+                pstmt.setString(4, movie.getGenre());
+                pstmt.setString(5, movie.getShowTimeId());
+                pstmt.executeUpdate();
+
+                // Close resources
+                pstmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection test failed!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getTitle() {
@@ -41,6 +80,10 @@ public class Movie implements DataPersistence {
 
     public String getMovieID() {
         return movieID;
+    }
+
+    public String getShowTimeId() {
+        return showTimeId;
     }
 
     public static int getTotalMovies() {
@@ -60,56 +103,18 @@ public class Movie implements DataPersistence {
                 + "]";
     }
 
-    @Override
-    public void saveData(String fileName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveData'");
+    public static ArrayList<ShowTime> loadAll() {
+        throw new UnsupportedOperationException("Use loadAll in hall instead");
     }
 
     @Override
-    public void loadData(String fileName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadData'");
+    public void saveData() {
+        throw new UnsupportedOperationException("Use saveAll instead");
     }
 
-    public static void writeMoviesToFile(ArrayList<Movie> movies, String fileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            for (Movie movie : movies) {
-                writer.write(movie.getMovieID() + "," +
-                        movie.getTitle() + "," +
-                        movie.getDurationMinutes() + "," +
-                        movie.getGenre());
-                writer.newLine();
-            }
-            System.out.println("Data saved to " + fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error while saving data to " + fileName);
-        }
+    @Override
+    public void loadData(){
+        throw new UnsupportedOperationException("Use loadAll instead");
     }
 
-    public static List<Movie> readMoviesFromFile(String fileName) {
-        List<Movie> movies = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] movieData = line.split(",");
-                if (movieData.length == 4) {
-                    String movieID = movieData[0];
-                    String title = movieData[1];
-                    int durationMinutes = Integer.parseInt(movieData[2]);
-                    String genre = movieData[3];
-                    Movie movie = new Movie(title, durationMinutes, genre);
-
-                    movie.movieID = movieID;
-                    movies.add(movie);
-                }
-            }
-            System.out.println("Data loaded from " + fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error while loading data from " + fileName);
-        }
-        return movies;
-    }
 };

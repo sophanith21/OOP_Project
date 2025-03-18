@@ -1,16 +1,24 @@
 package src.booking;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 
-public class Payment { 
+import src.DBConnection.DBConnection;
+import src.DataControl.DataPersistence;
+
+public class Payment implements DataPersistence{ 
     private String userId;
     private String paymentId;
     private String paymentDate;
     private double paymentAmount;
     private String paymentMethod;
     private String status;
-    private String transactionID;
+    private String transactionId;
 
-    //Payment constructor: To be modified
     public Payment(String userId, String paymentId, String paymentDate, double paymentAmount, 
                    String paymentMethod, String status, String transactionID) {
         this.userId = userId;
@@ -19,7 +27,7 @@ public class Payment {
         this.paymentAmount = paymentAmount;
         this.paymentMethod = paymentMethod;
         this.status = status;
-        this.transactionID = transactionID;
+        this.transactionId = transactionID;
     }
 
     public String getUserId() { return userId; }
@@ -28,7 +36,7 @@ public class Payment {
     public double getPaymentAmount() { return paymentAmount; }
     public String getPaymentMethod() { return paymentMethod; }
     public String getStatus() { return status; }
-    public String getTransactionID() { return transactionID; }
+    public String getTransactionID() { return transactionId; }
 
     private void setUserId(String userId) { this.userId = userId; }
     private void setPaymentId(String paymentId) { this.paymentId = paymentId; }
@@ -36,7 +44,7 @@ public class Payment {
     private void setPaymentAmount(double paymentAmount) { this.paymentAmount = paymentAmount; }
     private void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
     private void setStatus(String status) { this.status = status; }
-    private void setTransactionID(String transactionID) { this.transactionID = transactionID; }
+    private void setTransactionID(String transactionID) { this.transactionId = transactionID; }
 
     @Override
     public boolean equals(Object obj) {
@@ -49,7 +57,7 @@ public class Payment {
                Objects.equals(paymentAmount, other.paymentAmount) &&
                Objects.equals(paymentMethod, other.paymentMethod) &&
                Objects.equals(status, other.status) &&
-               Objects.equals(transactionID, other.transactionID);
+               Objects.equals(transactionId, other.transactionId);
     }
 
     public void paymentAmout(double paymentAmount){
@@ -72,10 +80,85 @@ public class Payment {
         }
     }
 
+     public static void saveAll(ArrayList <Payment> payments){
+        try {
+            Connection conn = DBConnection.getConnection();
+    
+            if (conn != null) {
+                System.out.println("Database connection successful!");
+                String query = "INSERT INTO payments " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE" +
+                "status = VALUES(status)";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+
+                for (Payment paymt : payments) {
+                    pstmt.setString(1, paymt.getUserId());
+                    pstmt.setString(2, paymt.getPaymentId());
+                    pstmt.setString(3, paymt.getPaymentDate());
+                    pstmt.setDouble(4, paymt.getPaymentAmount());
+                    pstmt.setString(5, paymt.getPaymentMethod());
+                    pstmt.setString(6, paymt.getStatus());
+                    pstmt.setString(7, paymt.getTransactionID());
+                    pstmt.executeUpdate();
+                }
+
+                pstmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection failed!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static ArrayList<Payment> loadAll() {
+        ArrayList <Payment> payments = new ArrayList<>();
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            if (conn != null) {
+                System.out.println("Database connection successful!");
+                String query = "SELECT * FROM payments ";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet set = pstmt.executeQuery();
+                while (set.next()){
+                    Payment pay = new Payment(
+                        set.getString("userId"), 
+                        set.getString("paymentId"), 
+                        set.getString("paymentDate"),
+                        set.getInt("paymentAmount"),
+                        set.getString("paymentMethod"), 
+                        set.getString("status"), 
+                        set.getString("transactionId")
+                    );
+                    payments.add(pay);
+                }
+
+                pstmt.close();
+                conn.close();
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return payments;
+    }
+
+    @Override
+    public void saveData(){
+        throw new UnsupportedOperationException("Use saveAll instead");
+    }
+
+    @Override
+    public void loadData(){
+        throw new UnsupportedOperationException("Use loadAll instead");
+    }
+
     @Override
     public String toString() {
         return "Payment [userId=" + userId + ", paymentId=" + paymentId + ", paymentDate=" + paymentDate
                 + ", paymentAmount=" + paymentAmount + ", paymentMethod=" + paymentMethod + ", status=" + status
-                + ", transactionID=" + transactionID + "]";
+                + ", transactionID=" + transactionId + "]";
     }
 }

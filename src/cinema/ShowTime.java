@@ -1,18 +1,33 @@
 package src.cinema;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ShowTime {
+import src.DBConnection.DBConnection;
+import src.DataControl.DataPersistence;
+
+public class ShowTime implements DataPersistence{
     private String showTimeId;
+    private int hallId;
     private String startTime;
     private String endTime;
-    private ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
     private Movie movie;
-    
+    //For loading data
+    public ShowTime(String showTimeId, String startTime, String endTime, Movie movie, int hallId) {
+        this.showTimeId = showTimeId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.movie = movie;
+        this.hallId = hallId;
+    }
 
+    // For when creating new ShowTime
     public ShowTime( int hallId) {
         this.showTimeId = null;
         this.startTime = null;
@@ -20,10 +35,78 @@ public class ShowTime {
 
     }
 
-    private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; }
+    
+
+    public String getShowTimeId() {
+        return showTimeId;
+    }
+
+    public int getHallId() {
+        return hallId;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    private void setShowTimeId(String showTimeId) { this.showTimeId = showTimeId; } // ? why are they private ?
     private void setStartTime(String startTime) { this.startTime = startTime; }
     private void setEndTime(String endTime) { this.endTime = endTime; }
 
+    public static void saveAll(ArrayList <ShowTime> showTimes){
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            if (conn != null) {
+                System.out.println("Database connection test successful!");
+
+                String query = "INSERT INTO showTimes (showTimeId, startTime, endTime,movieId,hallId)" +
+                "VALUES (?, ?, ?, ?, ?)" +
+                "ON DUPLICATE KEY UPDATE" + 
+                "startTime = VALUES(startTime), endTime = VALUES(endTime), movieId = VALUES(movieId)";
+
+                // Use PreparedStatement to prevent SQL injection
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                for (ShowTime showTime : showTimes) {
+                    pstmt.setString(1, showTime.getShowTimeId());    
+                    pstmt.setString(2, showTime.getStartTime());   
+                    pstmt.setString(3, showTime.getEndTime());    
+                    pstmt.setString(4, showTime.movie.getMovieID());
+                    pstmt.setInt(5, showTime.getHallId());
+                    pstmt.executeUpdate();
+                    Movie.saveAll(showTime.movie);
+                }
+
+                // Close resources
+                pstmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection test failed!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+
+    public static ArrayList<ShowTime> loadAll() {
+        throw new UnsupportedOperationException("Use loadAll in hall instead");
+    }
+
+    @Override
+    public void saveData() {
+        throw new UnsupportedOperationException("Use saveAll instead");
+    }
+
+    @Override
+    public void loadData(){
+        throw new UnsupportedOperationException("Use loadAll instead");
+    }
 
     
     @Override

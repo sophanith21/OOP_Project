@@ -1,6 +1,12 @@
 package src.user;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
+
+import src.DBConnection.DBConnection;
 
 public class Customer extends User {
 
@@ -61,6 +67,96 @@ public class Customer extends User {
         System.out.println("2. Update Membership Level");
         System.out.println("3. View Favorite Genre");
         System.out.println("4. Log Out");
+    }
+
+    @Override
+    public void saveData() {
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            if (conn != null) {
+                System.out.println("Database connection test successful!");
+
+                // Correct query using placeholders
+                String query = "INSERT INTO users (id, username, hashedPassword, email, phone, role, walletBalance, membershipLevel, favoriteGenre)" + 
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)" + 
+                "ON DUPLICATE KEY UPDATE" + 
+                "username = VALUES(username)," +
+                "hashedPassword = VALUES(hashedPassword)," +
+                "email = VALUES(email)," +
+                "phone = VALUES(phone)," +
+                "role = VALUES(role)," +
+                "walletBalance = VALUES(walletBalance)," +
+                "membershipLevel = VALUES(membershipLevel)," +
+                "favoriteGenre = VALUES(favoriteGenre)";
+
+                // Use PreparedStatement to prevent SQL injection
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, id);
+                pstmt.setString(2, username);
+                pstmt.setString(3, email);
+                pstmt.setString(4, phone);
+                pstmt.setString(5, role);
+                pstmt.setDouble(6, walletBalance);
+                pstmt.setString(7, membershipLevel);
+                pstmt.setString(8, favoriteGenre);
+                
+                // Execute the Query
+                pstmt.executeQuery();
+
+                // Close resources
+                pstmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection test failed!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Load data by checking the current Customer object's username and password
+    @Override
+    public void loadData(){
+        try {
+            Connection conn = DBConnection.getConnection();
+
+            if (conn != null) {
+                boolean resultChecker = false;
+                System.out.println("Database connection test successful!");
+                String query = "SELECT * FROM users;";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet set = stmt.executeQuery();
+                while (set.next()){
+                    if(username == set.getString("username")) {
+                        if (hashedPassword == set.getString("hashedPassword")) {
+                            this.id = set.getInt("id");
+                            this.email = set.getString("email");
+                            this.phone = set.getString("phone");
+                            this.role = set.getString("role");
+                            this.walletBalance = set.getDouble("walletBalance");
+                            this.membershipLevel = set.getString("membershipLevel");
+                            this.favoriteGenre = set.getString("favoriteGenre");
+
+                            resultChecker = true;
+                        }
+                    }
+                }
+
+                if (resultChecker) {
+                    System.out.println("Log In successfully");
+                } else {
+                    System.out.println("Wrong Username or Password");
+                }
+                
+                stmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection test failed!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

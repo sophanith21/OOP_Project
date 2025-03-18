@@ -1,12 +1,14 @@
 package src.cinema;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import src.DBConnection.DBConnection;
 import src.DataControl.DataPersistence;
+import src.booking.Booking;
 
 public class Hall implements DataPersistence{
     private int hallId;
@@ -15,10 +17,12 @@ public class Hall implements DataPersistence{
     public ArrayList<ArrayList<Seat>> seats; //each seat has the id of all users accross all the existed showtimes
     private String status;                    // Open, Closed, Full, Maintenances
     private static int numberOfHalls = 0;
-    
+    private int managerId;
+
     public static int rowsPerHall = 10;
     public static int seatsPerRow = 20;
     
+    // For initialization for admin
     public Hall(){
         this.hallId = ++numberOfHalls;
         showTimes = new ArrayList<>();
@@ -26,49 +30,185 @@ public class Hall implements DataPersistence{
         status = "Open";
     }
 
-    public static void saveAll(String fileName,ArrayList <Hall> halls){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("HallID,Status\n");
-            for (Hall hall : halls){
-                writer.write(hall.getHallId() + "," + hall.getStatus());
-                writer.write("\n");
+    // For loading data
+    public Hall(int hallId, ArrayList<ShowTime> showTimes, ArrayList<ArrayList<Seat>> seats, String status, int managerId) {
+        this.hallId = hallId;
+        this.showTimes = showTimes;
+        this.seats = seats;
+        this.status = status;
+        this.managerId = managerId;
+    }
+
+
+    public static void saveAll(ArrayList<Hall> halls) {
+        try {
+            Connection conn = DBConnection.getConnection();
+    
+            if (conn != null) {
+                System.out.println("Database connection successful!");
+                String query = "INSERT INTO halls (hallId,status,managerId) " +
+                "VALUES (?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE status = VALUES(status)";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+    
+                for (Hall hall : halls) {
+                    pstmt.setInt(1, hall.hallId);
+                    pstmt.setString(2, hall.status);
+                    pstmt.setInt(3,hall.managerId);
+                    pstmt.executeUpdate();
+                    Seat.saveAll(hall.seats);
+                }
+    
+                pstmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection failed!");
             }
-            
-            System.out.println("Hall's data saved successfully");
-        } catch (IOException e) {
-            System.out.println("An error occured");
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static ArrayList <Hall> loadAll(String fileName) {
+    
+
+    public static ArrayList<Hall> loadAll() {
         ArrayList<Hall> halls = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            reader.readLine();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                Hall hall = new Hall();
-                hall.hallId = Integer.parseInt(data[0]);
-                hall.status = data[1];
-                halls.add(hall);
+        try {
+            Connection conn = DBConnection.getConnection();
+    
+            if (conn != null) {
+                System.out.println("Database connection successful!");
+                
+                // Step 1: Load all halls
+                String hallQuery = "SELECT * FROM halls";
+                PreparedStatement hallStmt = conn.prepareStatement(hallQuery);
+                ResultSet hallSet = hallStmt.executeQuery();
+    
+                while (hallSet.next()) {
+                    int hallId = hallSet.getInt("hallId");
+                    int managerId = hallSet.getInt("managerId");
+                    String status = hallSet.getString("status");
+    
+                    // Step 2: Load ShowTimes for this hall
+                    ArrayList<ShowTime> showTimes = new ArrayList<>();
+                    String showTimeQuery = "SELECT * FROM showtimes WHERE hallId = ?";
+                    PreparedStatement showTimeStmt = conn.prepareStatement(showTimeQuery);
+                    showTimeStmt.setInt(1, hallId);
+                    ResultSet showTimeSet = showTimeStmt.executeQuery();
+    
+                    while (showTimeSet.next()) {
+                        String showTimeId = showTimeSet.getString("showTimeId");
+                        String startTime = showTimeSet.getString("startTime");
+                        String endTime = showTimeSet.getString("endTime");
+
+                        // Step 3: Load a Movie for this showTime
+                        // This is just a false initialization
+                        Movie movie = new Movie(startTime, hallId, endTime);
+                        String movieQuery = "SELECT * FROM movies WHERE showTimeId = ?";
+                        PreparedStatement movieStmt = conn.prepareStatement(movieQuery);
+                        movieStmt.setString(1, showTimeId);
+                        ResultSet movieSet = movieStmt.executeQuery();
+    
+                        while (movieSet.next()) {
+                                movie = new Movie(
+                                movieSet.getString("movieId"),
+                                movieSet.getString("title"),
+                                movieSet.getInt("durationMinutes"),
+                                movieSet.getString("genre"),
+                                movieSet.getString("showTimeId")
+                            );
+                        }
+                        movieStmt.close();
+    
+                        // Create ShowTime object with movies
+                        ShowTime showTime = new ShowTime(showTimeId, startTime,endTime, movie,hallId);
+                        showTimes.add(showTime);
+                    }
+                    showTimeStmt.close();
+    
+                    // Step 4 load all seats for this hall
+                    ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
+                    for (int i = 0 ; i < 10 ; i++) {
+                        seats.add(new ArrayList<>());
+                    }
+                    String seatsQuery = "SELECT * FROM seats WHERE hallId = ?";
+                    PreparedStatement seatsStmt = conn.prepareStatement(seatsQuery);
+                    seatsStmt.setInt(1, hallId);
+                    ResultSet seatsSet = seatsStmt.executeQuery();
+
+                    while(seatsSet.next()) {
+                        String seatId = seatsSet.getString("seatId");
+                        String [] rowCol = (seatId.split("-"));
+                        int row = Integer.parseInt(rowCol[0]);
+                        int col = Integer.parseInt(rowCol[1]);
+                        ArrayList <Booking> bookings = new ArrayList<>();
+                        String bookQuery = "SELECT b.* FROM bookings b " +
+                       "JOIN booking_seat bs ON b.bookingId = bs.bookingId " +
+                       "WHERE bs.seatId = ?";
+                        PreparedStatement bookStmt = conn.prepareStatement(bookQuery);
+                        bookStmt.setString(1,seatId);
+                        ResultSet bookSet = bookStmt.executeQuery();
+
+                        while (bookSet.next()) {
+                            String bookingId = bookSet.getString("bookingId");
+                            String seatIdBookedQuery = "SELECT seatId FROM book_seat WHERE bookingId = ?";
+                            PreparedStatement seatIdBookedStmt = conn.prepareStatement(seatIdBookedQuery);
+                            seatIdBookedStmt.setString(1, bookingId);
+                            ResultSet seatIdbookedSet = seatIdBookedStmt.executeQuery();
+                            HashSet <String> seatIds = new HashSet<>();
+                
+                            while (seatIdbookedSet.next()) {
+                                seatIds.add(seatIdbookedSet.getString("seatId"));
+                            }
+
+                            Booking booked = new Booking(
+                                bookSet.getString("bookingId"),
+                                bookSet.getString("showTimeId"),
+                                bookSet.getString("movieId"),
+                                seatIds,
+                                bookSet.getDouble("totalPrice"),
+                                bookSet.getString("paymentId"),
+                                bookSet.getString("customerId"),
+                                bookSet.getString("bookingType")
+                            );
+                            bookings.add(booked);
+                        }
+                        Seat seat = new Seat(
+                            seatsSet.getString("seatType"),
+                            seatsSet.getInt("hallId"), 
+                            seatsSet.getString("seatId"),
+                            seatsSet.getDouble("price"),
+                            seatsSet.getString("services"),
+                            bookings
+                        );
+                        seats.get(row).add(col, seat);
+                    }
+                    seatsStmt.close();
+                    // Create Hall object with showTimes
+                    Hall hall = new Hall(hallId, showTimes, seats, status,managerId);
+                    halls.add(hall);
+                }
+    
+                hallStmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection failed!");
             }
-            System.out.println("All halls loaded successfully");
-        } catch (IOException e) {
-            System.out.println("An error occurred while loading halls");
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return halls;
     }
     
+    
 
     @Override
-    public void saveData(String fileName) {
+    public void saveData() {
         throw new UnsupportedOperationException("Use saveAll instead");
     }
 
     @Override
-    public void loadData(String fileName){
+    public void loadData(){
         throw new UnsupportedOperationException("Use loadAll instead");
     }
 
@@ -79,7 +219,7 @@ public class Hall implements DataPersistence{
 
             for(int j = 0; j < seatsPerRow; j++){
                 if((i >= 3 && i <= 6) && (j >= 8 && j <= 11)){
-                    seats.get(i).add(new VIPSeat(hallId, i+1, j+1, ""));
+                    seats.get(i).add(new Seat(hallId, i+1, j+1, "Elevated Seat"));
                 } else {
                     seats.get(i).add(new Seat(hallId,i+1,j+1));
                 }

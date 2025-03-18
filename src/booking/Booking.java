@@ -1,6 +1,9 @@
 package src.booking;
+import src.DataControl.DataPersistence;
+import src.cinema.Seat;
 import src.user.*;
-
+import src.DBConnection.DBConnection;
+import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.ArrayList;
@@ -9,65 +12,123 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.io.FileReader;
-import java.util.Scanner;
 
 
-public class Booking {
+public class Booking implements DataPersistence{
     private String bookingId;
     public String ShowTimeId; //This should be changed to ShowTimeId instead
     private String movieId;
-    public HashSet <String> seatId; //More efficient than Array and won't allow duplication
-    private int totalSeat;
+    public HashSet <String> seatIds; //More efficient than Array and won't allow duplication
     private double totalPrice;
-    private  Payment payment;
-    public Customer customer;
+    private String paymentId;
+    private String customerId;
     private String bookingType;
 
     private static ArrayList<Booking> listOfBookings = new ArrayList<>();
     //Constructor
-    public Booking(String bookingId, String ShowTimeId, String movieId, HashSet<String> seatId, int totalSeat,
-            double totalPrice, Payment payment, String bookingType) {
+    public Booking(String bookingId, String ShowTimeId, String movieId, HashSet<String> seatId, 
+            double totalPrice, String paymentId, String customerId, String bookingType) {
         this.bookingId = bookingId;
         this.ShowTimeId = ShowTimeId;
         this.movieId = movieId;
-        this.seatId = seatId;
-        this.totalSeat = totalSeat;
+        this.seatIds = seatId;
         this.totalPrice = totalPrice;
-        this.payment = payment;
+        this.paymentId = paymentId;
+        this.customerId = customerId;
         this.bookingType = bookingType;
     }
     public Booking() {
         this.bookingId = "";
         this.ShowTimeId = "";
         this.movieId = "";
-        this.seatId = new HashSet<>();
-        this.totalSeat = 0;
+        this.seatIds = new HashSet<>();
         this.totalPrice = 0.0;
-        this.payment = new Payment("user123", "pay123", "2025-03-06", 0.0, "method", "status", "transactionID");
+        this.paymentId = "";
         this.bookingType = "";
     }
+
+    public static void saveAll(ArrayList <Booking> bookings){
+        try {
+            Connection conn = DBConnection.getConnection();
     
+            if (conn != null) {
+                System.out.println("Database connection successful!");
+                String query = "INSERT INTO bookings " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE" +
+                "status = VALUES(status)";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+
+                for (Booking book : bookings) {
+                    pstmt.setString(1, book.getBookingId());
+                    pstmt.setString(2, book.getBookingType());
+                    pstmt.setString(3, book.getCustomerId());
+                    pstmt.setDouble(4, book.getTotalPrice());
+                    pstmt.setString(5, book.getPaymentId());
+                    pstmt.setString(6, book.getMovieId());
+                    pstmt.executeUpdate();
+
+                    HashSet <String> seatIds = book.getSeatId();
+                    String seatIdsBookedQuery = "INSERT INTO book_seat (bookingId,seatId)" +
+                    "VALUES (?,?)" + 
+                    "ON DUPLICATE KEY UPDATE" +
+                    "seatId = VALUES(seatId)";
+                    PreparedStatement seatIdBookedStmt = conn.prepareStatement(seatIdsBookedQuery);
+                    
+                    for (String seatId : seatIds) {
+                        seatIdBookedStmt.setString(1, book.getBookingId());
+                        seatIdBookedStmt.setString(2, seatId);
+                        seatIdBookedStmt.executeUpdate();
+                    }
+                    
+                }
+
+                pstmt.close();
+                conn.close();
+            } else {
+                System.out.println("Database connection failed!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static ArrayList<Booking> loadAll() {
+        throw new UnsupportedOperationException("Use loadAll of Hall instead");
+    }
+
+    @Override
+    public void saveData(){
+        throw new UnsupportedOperationException("Use saveAll instead");
+    }
+
+    @Override
+    public void loadData(){
+        throw new UnsupportedOperationException("Use loadAll instead");
+    }
+      
+
     //Getter
-    private String getBookingId() { return bookingId; }
-    private String getShowTimeId() { return ShowTimeId; }
-    private String getMovieId() { return movieId; }
-    private HashSet<String> getSeatId() { return seatId; }
-    private int getTotalSeat() { return totalSeat; }
-    private double getTotalPrice() { return totalPrice; }
-    private Payment getPayment() { return payment; }
-    private String getBookingType() { return bookingType; }
-    private Customer getCustomer() { return customer; }
+    public String getBookingId() { return bookingId; }
+    public String getShowTimeId() { return ShowTimeId; }
+    public String getMovieId() { return movieId; }
+    public HashSet<String> getSeatId() { return seatIds; }
+    public double getTotalPrice() { return totalPrice; }
+    public String getPaymentId() { return paymentId; }
+    public String getBookingType() { return bookingType; }
+    public String getCustomerId() { return customerId; }
     //Setter
     private void setBookingId(String bookingId) { this.bookingId = bookingId; }
     private void setShowTimeId(String ShowTimeId) { this.ShowTimeId = ShowTimeId; }
     private void setMovieId(String movieId) { this.movieId = movieId; }
-    private void setSeatId(HashSet<String> seatId) { this.seatId = seatId; }
-    private void setTotalSeat(int totalSeat) { this.totalSeat = totalSeat; }
+    private void setSeatIds(HashSet<String> seatId) { this.seatIds = seatId; }
     private void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
-    private void setPayment(Payment payment) { this.payment = payment; }
+    private void setPayment(String paymentId) { this.paymentId = paymentId; }
     private void setBookingType(String bookingType) { this.bookingType = bookingType; }
-    private void setCustomer(Customer customer) { this.customer = customer; }
+    private void setCustomer(String customerId) { this.customerId = customerId; }
 
     
     @Override
@@ -84,100 +145,16 @@ public class Booking {
                 return false;
         } else if (!bookingId.equals(other.bookingId))
             return false;
-        if (ShowTimeId == null) {
-            if (other.ShowTimeId != null)
-                return false;
-        } else if (!ShowTimeId.equals(other.ShowTimeId))
-            return false;
-        if (movieId == null) {
-            if (other.movieId != null)
-                return false;
-        } else if (!movieId.equals(other.movieId))
-            return false;
-        if (!seatId.equals(other.seatId))
-            return false;
-        if (customer == null) {
-            if (other.customer != null)
-                return false;
-        } else if (!customer.equals(other.customer))
-            return false;
-        if (bookingType == null) {
-            if (other.bookingType != null)
-                return false;
-        } else if (!bookingType.equals(other.bookingType))
-            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return    "Booking Id: " + getBookingId() 
-                + "\nReservation Time: " + getShowTimeId() 
-                + "\nMovie Id: " + getMovieId() 
-                + "\nSeat Id: " + getSeatId()
-                + "\ntotalSeat: " + getTotalSeat()
-                + "\ntotalPrice: $ " + getTotalPrice()
-                + "\nPayment : " + getPayment()
-                + "\nBooking type: " + getBookingType() + "\n";
+        return "Booking [bookingId=" + bookingId + ", ShowTimeId=" + ShowTimeId + ", movieId=" + movieId + ", seatIds="
+                + seatIds + ", totalPrice=" + totalPrice + ", paymentId=" + paymentId + ", customerId=" + customerId
+                + ", bookingType=" + bookingType + "]";
     }
-
-    public void writeToFile(String filename){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
-            writer.write("Bookingid,revserationtime,movieid,seatid,totalseat,totalprice,payment_amout,payment_type,payment_status,transaction_id,bookingtype\n");
-            for (Booking booking : listOfBookings) {
-            writer.write(booking.bookingId + "," 
-                        + booking.ShowTimeId + "," 
-                        + booking.movieId + "," 
-                        + booking.seatId + "," 
-                        + booking.totalSeat + "," 
-                        + booking.totalPrice + "," 
-                        + booking.payment.getPaymentAmount() 
-                        + ","+ booking.payment.getPaymentMethod() + "," 
-                        + booking.payment.getStatus() 
-                        + "," + booking.payment.getTransactionID() 
-                        + "," + booking.bookingType);
-            writer.write("\n");
-            }
-        } catch (Exception e) {
-            System.out.println("Error writing to file");
-        }
-    }
-
-    public static void readFromFile(String filename){
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            boolean isFirstLine = true;
-            while ((line = reader.readLine()) != null) {
-                if (isFirstLine) { // Skip header line
-                    isFirstLine = false;
-                    continue;
-                }
-                String[] datas = line.split(",");
-                if (datas.length != 11) continue; // Ensure correct format
-                
-                Booking booking = new Booking();
-                booking.setBookingId(datas[0]);
-                booking.setShowTimeId(datas[1]);
-                booking.setMovieId(datas[2]);
-                
-                HashSet<String> seatSet = new HashSet<>(Arrays.asList(datas[3].replace("[", "").replace("]", "").split(" ")));
-                booking.setSeatId(seatSet);
-                
-                booking.setTotalSeat(Integer.parseInt(datas[4]));
-                booking.setTotalPrice(Double.parseDouble(datas[5]));
-                
-                Payment payment = new Payment("user123", "pay123", "2025-03-06", Double.parseDouble(datas[6]), datas[7], datas[8], datas[9]);
-                booking.setPayment(payment);
-                
-                booking.setBookingType(datas[10]);
-                
-                listOfBookings.add(booking);
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading from file: " + e.getMessage());
-        }
-    }
-
+   
     public static void makeBooking() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter Booking ID: ");
@@ -216,10 +193,9 @@ public class Booking {
 
         System.out.print("Enter Booking Type: ");
         String bookingType = scanner.nextLine();
-
-        Booking newBooking = new Booking(bookingId, ShowTimeId, movieId, seatId, totalSeat, totalPrice, payment, bookingType);
-        newBooking.writeToFile("src/booking/Booking.txt");
-        listOfBookings.add(newBooking); // Add booking to the list
+        // Please fix this
+        //Booking newBooking = new Booking(bookingId, ShowTimeId, movieId, seatId, totalSeat, totalPrice, payment, bookingType);
+        //listOfBookings.add(newBooking); // Add booking to the list
     }
     private static void displayBookings() {
         for (Booking booking : listOfBookings) {
