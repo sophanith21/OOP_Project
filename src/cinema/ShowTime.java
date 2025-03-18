@@ -64,9 +64,9 @@ public class ShowTime implements DataPersistence{
             if (conn != null) {
                 System.out.println("Database connection test successful!");
 
-                String query = "INSERT INTO showTimes (showTimeId, startTime, endTime,movieId,hallId)" +
-                "VALUES (?, ?, ?, ?, ?)" +
-                "ON DUPLICATE KEY UPDATE" + 
+                String query = "INSERT INTO showTime (showTimeId, startTime, endTime,movieId,hallId)" +
+                "VALUES (?, ?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE " + 
                 "startTime = VALUES(startTime), endTime = VALUES(endTime), movieId = VALUES(movieId)";
 
                 // Use PreparedStatement to prevent SQL injection

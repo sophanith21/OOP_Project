@@ -41,9 +41,9 @@ public class Movie implements DataPersistence {
             if (conn != null) {
                 System.out.println("Database connection test successful!");
 
-                String query = "INSERT INTO movies (movieID, title, durationMinutes,genre,showTimeId)" +
-                "VALUES (?, ?, ?, ?, ?)" +
-                "ON DUPLICATE KEY UPDATE" + 
+                String query = "INSERT INTO movie (movieID, title, durationMinutes,genre,showTimeId) " +
+                "VALUES (?, ?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE " + 
                 "showTimeId = VALUES(showTimeId)";
 
                 // Use PreparedStatement to prevent SQL injection

@@ -1,15 +1,9 @@
 package src.cinema;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import src.DBConnection.DBConnection;
 import src.DataControl.DataPersistence;
@@ -20,7 +14,7 @@ public class Cinema implements DataPersistence{
     public int totalHalls;
     public ArrayList <Hall> halls;
 
-    public Cinema(String fileName) { //For loading data in object creation
+    public Cinema() { //For loading data in object creation
         loadData();
     }
     public Cinema(String name, String location, int totalHalls) {
@@ -74,7 +68,7 @@ public class Cinema implements DataPersistence{
 
             if (conn != null) {
                 System.out.println("Database connection test successful!");
-                String query = "SELECT * FROM cinemas;";
+                String query = "SELECT * FROM cinema";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet set = stmt.executeQuery();
                 this.name = set.getString("name");

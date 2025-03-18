@@ -86,9 +86,9 @@ public class Payment implements DataPersistence{
     
             if (conn != null) {
                 System.out.println("Database connection successful!");
-                String query = "INSERT INTO payments " +
+                String query = "INSERT INTO payment " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE" +
+                "ON DUPLICATE KEY UPDATE " +
                 "status = VALUES(status)";
                 PreparedStatement pstmt = conn.prepareStatement(query);
 
@@ -120,7 +120,7 @@ public class Payment implements DataPersistence{
 
             if (conn != null) {
                 System.out.println("Database connection successful!");
-                String query = "SELECT * FROM payments ";
+                String query = "SELECT * FROM payment ";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 ResultSet set = pstmt.executeQuery();
                 while (set.next()){

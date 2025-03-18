@@ -46,7 +46,7 @@ public class Hall implements DataPersistence{
     
             if (conn != null) {
                 System.out.println("Database connection successful!");
-                String query = "INSERT INTO halls (hallId,status,managerId) " +
+                String query = "INSERT INTO hall (hallId,status,managerId) " +
                 "VALUES (?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE status = VALUES(status)";
                 PreparedStatement pstmt = conn.prepareStatement(query);
@@ -80,7 +80,7 @@ public class Hall implements DataPersistence{
                 System.out.println("Database connection successful!");
                 
                 // Step 1: Load all halls
-                String hallQuery = "SELECT * FROM halls";
+                String hallQuery = "SELECT * FROM hall";
                 PreparedStatement hallStmt = conn.prepareStatement(hallQuery);
                 ResultSet hallSet = hallStmt.executeQuery();
     
@@ -91,7 +91,7 @@ public class Hall implements DataPersistence{
     
                     // Step 2: Load ShowTimes for this hall
                     ArrayList<ShowTime> showTimes = new ArrayList<>();
-                    String showTimeQuery = "SELECT * FROM showtimes WHERE hallId = ?";
+                    String showTimeQuery = "SELECT * FROM showtime WHERE hallId = ?";
                     PreparedStatement showTimeStmt = conn.prepareStatement(showTimeQuery);
                     showTimeStmt.setInt(1, hallId);
                     ResultSet showTimeSet = showTimeStmt.executeQuery();
@@ -104,7 +104,7 @@ public class Hall implements DataPersistence{
                         // Step 3: Load a Movie for this showTime
                         // This is just a false initialization
                         Movie movie = new Movie(startTime, hallId, endTime);
-                        String movieQuery = "SELECT * FROM movies WHERE showTimeId = ?";
+                        String movieQuery = "SELECT * FROM movie WHERE showTimeId = ?";
                         PreparedStatement movieStmt = conn.prepareStatement(movieQuery);
                         movieStmt.setString(1, showTimeId);
                         ResultSet movieSet = movieStmt.executeQuery();
@@ -131,7 +131,7 @@ public class Hall implements DataPersistence{
                     for (int i = 0 ; i < 10 ; i++) {
                         seats.add(new ArrayList<>());
                     }
-                    String seatsQuery = "SELECT * FROM seats WHERE hallId = ?";
+                    String seatsQuery = "SELECT * FROM seat WHERE hallId = ?";
                     PreparedStatement seatsStmt = conn.prepareStatement(seatsQuery);
                     seatsStmt.setInt(1, hallId);
                     ResultSet seatsSet = seatsStmt.executeQuery();
@@ -142,8 +142,8 @@ public class Hall implements DataPersistence{
                         int row = Integer.parseInt(rowCol[0]);
                         int col = Integer.parseInt(rowCol[1]);
                         ArrayList <Booking> bookings = new ArrayList<>();
-                        String bookQuery = "SELECT b.* FROM bookings b " +
-                       "JOIN booking_seat bs ON b.bookingId = bs.bookingId " +
+                        String bookQuery = "SELECT b.* FROM booking b " +
+                       "JOIN seatbooking bs ON b.bookingId = bs.bookingId " +
                        "WHERE bs.seatId = ?";
                         PreparedStatement bookStmt = conn.prepareStatement(bookQuery);
                         bookStmt.setString(1,seatId);
@@ -151,7 +151,7 @@ public class Hall implements DataPersistence{
 
                         while (bookSet.next()) {
                             String bookingId = bookSet.getString("bookingId");
-                            String seatIdBookedQuery = "SELECT seatId FROM book_seat WHERE bookingId = ?";
+                            String seatIdBookedQuery = "SELECT seatId FROM seatbooking WHERE bookingId = ?";
                             PreparedStatement seatIdBookedStmt = conn.prepareStatement(seatIdBookedQuery);
                             seatIdBookedStmt.setString(1, bookingId);
                             ResultSet seatIdbookedSet = seatIdBookedStmt.executeQuery();

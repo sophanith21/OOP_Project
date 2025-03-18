@@ -1,18 +1,14 @@
 package src.main;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.sql.ResultSet;
 
-import src.DBConnection.DBConnection;
-import src.cinema.Movie;
+import java.util.ArrayList;
+
+import src.user.Admin;
 
 public class SQLTest {
-    
-    
     public static void main(String[] args) {
-       
-        
+        Admin admin = new Admin(1, "admin", null, "123", null, new ArrayList<>(), true);
+        admin.loadData();
+        System.out.println(admin);
     }
 }

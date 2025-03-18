@@ -134,7 +134,7 @@ public class UserManager implements Authentication {
                 User user = null;
                 // If role is ADMIN
                 if (role.equals("ADMIN")) {
-                    List<Integer> managedHalls = new ArrayList<>();
+                    ArrayList<Integer> managedHalls = new ArrayList<>();
                     if (userData.length > 6) {
                         String[] hallsArray = userData[6].split(";");
                         for (String hall : hallsArray) {

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import src.DBConnection.DBConnection;
 
 public class Admin extends User {
@@ -46,9 +48,9 @@ public class Admin extends User {
                 System.out.println("Database connection test successful!");
 
                 // Correct query using placeholders
-                String query = "INSERT INTO users (id, username, hashedPassword, email, phone, role" + 
+                String query = "INSERT INTO user (id, username, hashedPassword, email, phone, role) " + 
                 "VALUES (?, ?, ?, ?, ?, ?)" + 
-                "ON DUPLICATE KEY UPDATE" + 
+                "ON DUPLICATE KEY UPDATE " + 
                 "username = VALUES(username)," +
                 "hashedPassword = VALUES(hashedPassword)," +
                 "email = VALUES(email)," +
@@ -59,12 +61,13 @@ public class Admin extends User {
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, id);
                 pstmt.setString(2, username);
-                pstmt.setString(3, email);
-                pstmt.setString(4, phone);
-                pstmt.setString(5, role);
+                pstmt.setString(3, hashedPassword);
+                pstmt.setString(4, email);
+                pstmt.setString(5, phone);
+                pstmt.setString(6, role);
 
-                // Execute the Query
-                pstmt.executeQuery();
+                // Execute the Update
+                pstmt.executeUpdate();
 
                 // Close resources
                 pstmt.close();
@@ -86,21 +89,21 @@ public class Admin extends User {
             if (conn != null) {
                 boolean resultChecker = false;
                 System.out.println("Database connection test successful!");
-                String query = "SELECT * FROM users;";
+                String query = "SELECT * FROM user";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet set = stmt.executeQuery();
                 while (set.next()){
-                    if(username == set.getString("username")) {
-                        if (hashedPassword == set.getString("hashedPassword")) {
+                    if(username.equals(set.getString("username"))) {
+                        if (hashedPassword.equals(set.getString("hashedPassword"))) {
                             this.id = set.getInt("id");
                             this.email = set.getString("email");
                             this.phone = set.getString("phone");
                             this.role = set.getString("role");
 
                             ArrayList <Integer> hallIds = new ArrayList<>();
-                            String hallIdsQuery = "SELECT halls.hallId FROM halls" +
-                            "JOIN users ON halls.managerId = users.id" +
-                            "WHERE users.id = ?";
+                            String hallIdsQuery = "SELECT hall.hallId FROM hall " +
+                            "JOIN user ON hall.managerId = user.id " +
+                            "WHERE user.id = ?";
                             PreparedStatement hallIdsStmt = conn.prepareStatement(hallIdsQuery);
                             hallIdsStmt.setInt(1, id);
                             ResultSet hallIdsSet = hallIdsStmt.executeQuery();

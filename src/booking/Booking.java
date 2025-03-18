@@ -56,7 +56,7 @@ public class Booking implements DataPersistence{
     
             if (conn != null) {
                 System.out.println("Database connection successful!");
-                String query = "INSERT INTO bookings " +
+                String query = "INSERT INTO booking " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE" +
                 "status = VALUES(status)";

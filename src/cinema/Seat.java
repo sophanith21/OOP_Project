@@ -62,7 +62,7 @@ public class Seat implements DataPersistence{
     
             if (conn != null) {
                 System.out.println("Database connection successful!");
-                String query = "INSERT INTO seats " +
+                String query = "INSERT INTO seat " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY " +
                 "UPDATE " +

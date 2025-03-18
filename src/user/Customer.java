@@ -78,9 +78,9 @@ public class Customer extends User {
                 System.out.println("Database connection test successful!");
 
                 // Correct query using placeholders
-                String query = "INSERT INTO users (id, username, hashedPassword, email, phone, role, walletBalance, membershipLevel, favoriteGenre)" + 
+                String query = "INSERT INTO user (id, username, hashedPassword, email, phone, role, walletBalance, membershipLevel, favoriteGenre)" + 
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)" + 
-                "ON DUPLICATE KEY UPDATE" + 
+                "ON DUPLICATE KEY UPDATE " + 
                 "username = VALUES(username)," +
                 "hashedPassword = VALUES(hashedPassword)," +
                 "email = VALUES(email)," +
@@ -124,7 +124,7 @@ public class Customer extends User {
             if (conn != null) {
                 boolean resultChecker = false;
                 System.out.println("Database connection test successful!");
-                String query = "SELECT * FROM users;";
+                String query = "SELECT * FROM user";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet set = stmt.executeQuery();
                 while (set.next()){
