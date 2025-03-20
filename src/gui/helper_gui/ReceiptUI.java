@@ -27,7 +27,8 @@ public class ReceiptUI extends BookingUI {
         // Create a new panel for the receipt
         JPanel receiptPanel = new JPanel();
         receiptPanel.setBounds(90, 50, 400, 300);
-        receiptPanel.setLayout(new GridLayout(7, 2, 10, 10)); // 7 rows, 2 columns, with gaps
+        receiptPanel.setBackground(new Color(0xFFF9E6));
+        receiptPanel.setLayout(new GridLayout(7, 2, 20, 20)); // 7 rows, 2 columns, with gaps
 
         // Add receipt details to the panel
         receiptPanel.add(new JLabel("Number of Seats:"));
@@ -50,9 +51,11 @@ public class ReceiptUI extends BookingUI {
 
         // Add a button to go back to the booking screen
         JButton backButton = new JButton("Back to Booking");
+        backButton.setBackground(new Color(0xFF3D00));
+        backButton.setForeground(new Color(0xFFF9E6));
         backButton.addActionListener(e -> {
             // Clear the receipt and show the booking screen again
-            updateCenterPanel(panelInner); // panelInner is the original booking panel
+            updateCenterPanel(panelBooking); // panelInner is the original booking panel
         });
         receiptPanel.add(backButton);
 

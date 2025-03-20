@@ -10,6 +10,7 @@ public class CustomerMovie extends FrameUI {
     protected JButton addMovie;
     protected JButton viewOwnHistory;
     protected JButton Exit;
+    protected JPanel cMoviepanel;
     
     CustomerMovie(User user) {
         // =====LEFT PANEL=====
@@ -54,10 +55,14 @@ public class CustomerMovie extends FrameUI {
         frame.repaint();
         frame.setVisible(true);
 
+        // Set layout manager to BorderLayout
+        panelCenter.setLayout(new BorderLayout(5, 5));
+
         // =====CENTER PANEL=====
-        panelCenter.setLayout(new BorderLayout(5,5));
-        panelCenter.setPreferredSize(new Dimension(400, 400));
-        panelCenter.setBackground(new Color(0xFFF9E6));
+        cMoviepanel = new JPanel();
+        cMoviepanel.setLayout(new BorderLayout(5,5));
+        cMoviepanel.setPreferredSize(new Dimension(400, 400));
+        cMoviepanel.setBackground(new Color(0xFFF9E6));
         
         // Movie List Panel with ScrollPane
         JPanel movieListPanel = new JPanel();
@@ -112,8 +117,9 @@ public class CustomerMovie extends FrameUI {
         JScrollPane scrollPane = new JScrollPane(movieListPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
-        panelCenter.add(scrollPane, BorderLayout.CENTER);
+        cMoviepanel.add(scrollPane, BorderLayout.CENTER);
         //Refresh frame
+        updateCenterPanel(cMoviepanel);
         frame.revalidate();
         frame.repaint();
         frame.setVisible(true);

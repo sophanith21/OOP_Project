@@ -73,10 +73,10 @@ public class FrameUI {
     }
     // Method to clear and update the Left panel
     protected void updateLeftPanel(JPanel newPanel) {
-        panelCenter.removeAll(); // Clear all existing components
-        panelCenter.add(newPanel, BorderLayout.WEST); // Add the new panel
-        panelCenter.revalidate(); // Refresh the layout
-        panelCenter.repaint(); // Redraw the panel
+        panelLeft.removeAll(); // Clear all existing components
+        panelLeft.add(newPanel, BorderLayout.WEST); // Add the new panel
+        panelLeft.revalidate(); // Refresh the layout
+        panelLeft.repaint(); // Redraw the panel
     }
     public static void main(String[] args) {
         new FrameUI();

@@ -5,47 +5,47 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class BookingUI extends FrameUI {
+public class BookingUI extends CustomerMovie {
     protected JTextField seatAmountField;
     protected JTextField seatIdField;
     protected JComboBox<String> bookingTypeComboBox;
     protected JLabel totalPriceLabel;
     protected JTextField paymentAmountField;
     protected JLabel changeLabel;
-    protected JPanel panelInner;
+    protected JPanel panelBooking;
 
     public BookingUI() {
-        panelInner = new JPanel();
-        panelInner.setBounds(90, 50, 400, 300); // Adjust these values as needed
-        panelInner.setBackground(new Color(0xFFF9E6));
+        panelBooking = new JPanel();
+        panelBooking.setBounds(90, 50, 400, 300); // Adjust these values as needed
+        panelBooking.setBackground(new Color(0xFFF9E6));
         // Set up the center panel for booking details
-        panelInner.setLayout(new GridLayout(7, 2, 20, 20)); // 7 rows, 2 columns, with gaps
+        panelBooking.setLayout(new GridLayout(7, 2, 20, 20)); // 7 rows, 2 columns, with gaps
 
         // Add components to the center panel
-        panelInner.add(new JLabel("Number of Seats:"));
+        panelBooking.add(new JLabel("Number of Seats:"));
         seatAmountField = new JTextField();
-        panelInner.add(seatAmountField);
+        panelBooking.add(seatAmountField);
 
-        panelInner.add(new JLabel("Seat ID:"));
+        panelBooking.add(new JLabel("Seat ID:"));
         seatIdField = new JTextField();
-        panelInner.add(seatIdField);
+        panelBooking.add(seatIdField);
 
-        panelInner.add(new JLabel("Booking Type:"));
+        panelBooking.add(new JLabel("Booking Type:"));
         String[] bookingTypes = {"Standard", "Premium", "VIP"};
         bookingTypeComboBox = new JComboBox<>(bookingTypes);
-        panelInner.add(bookingTypeComboBox);
+        panelBooking.add(bookingTypeComboBox);
 
-        panelInner.add(new JLabel("Total Price:"));
+        panelBooking.add(new JLabel("Total Price:"));
         totalPriceLabel = new JLabel("$0.00");
-        panelInner.add(totalPriceLabel);
+        panelBooking.add(totalPriceLabel);
 
-        panelInner.add(new JLabel("Payment Amount:"));
+        panelBooking.add(new JLabel("Payment Amount:"));
         paymentAmountField = new JTextField();
-        panelInner.add(paymentAmountField);
+        panelBooking.add(paymentAmountField);
 
-        panelInner.add(new JLabel("Change:"));
+        panelBooking.add(new JLabel("Change:"));
         changeLabel = new JLabel("$0.00");
-        panelInner.add(changeLabel);
+        panelBooking.add(changeLabel);
 
         // Add a button to calculate the total price and process payment
         JButton calculateButton = new JButton("Calculate Total");
@@ -57,7 +57,7 @@ public class BookingUI extends FrameUI {
                 calculateTotalPrice();
             }
         });
-        panelInner.add(calculateButton);
+        panelBooking.add(calculateButton);
 
         JButton payButton = new JButton("Pay");
         payButton.setBackground(new Color(0xFF3D00));
@@ -68,9 +68,12 @@ public class BookingUI extends FrameUI {
                 processPayment();
             }
         });
-        panelInner.add(payButton);
+        panelBooking.add(payButton);
+        
+        // Set layout manager to null to use absolute positioning
+        panelCenter.setLayout(null);
+        updateCenterPanel(panelBooking); // Add the booking panel to the center
 
-        panelCenter.add(panelInner, BorderLayout.CENTER);
         // Refresh the frame
         frame.revalidate();
         frame.repaint();
