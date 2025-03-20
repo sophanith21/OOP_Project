@@ -61,7 +61,7 @@ public class FrameUI {
         frame.add(panelBottom,BorderLayout.SOUTH);
         frame.setVisible(true);
 
-        ImageIcon icon = new ImageIcon("gui/image/image.png");
+        ImageIcon icon = new ImageIcon("src/gui/image/image.png");
         frame.setIconImage(icon.getImage());
     }
     // Method to clear and update the center panel
