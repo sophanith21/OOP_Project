@@ -1,4 +1,4 @@
-package src.booking;
+package booking;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
-import src.DBConnection.DBConnection;
-import src.DataControl.DataPersistence;
+import DBConnection.DBConnection;
+import DataControl.DataPersistence;
 
 public class Payment implements DataPersistence{ 
     private String userId;

@@ -1,8 +1,8 @@
-package src.booking;
-import src.DataControl.DataPersistence;
-import src.cinema.Seat;
-import src.user.*;
-import src.DBConnection.DBConnection;
+package booking;
+import DataControl.DataPersistence;
+import cinema.Seat;
+import user.*;
+import DBConnection.DBConnection;
 import java.sql.Connection;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

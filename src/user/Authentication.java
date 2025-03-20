@@ -1,8 +1,8 @@
-package src.user;
+package user;
 
-import src.exception.InvalidCredentialsException;
-import src.exception.UserAlreadyExistsException;
-import src.exception.UserNotFoundException;
+import exception.InvalidCredentialsException;
+import exception.UserAlreadyExistsException;
+import exception.UserNotFoundException;
 
 interface Authentication {
     User login(String username, String password) throws InvalidCredentialsException;

@@ -1,4 +1,4 @@
-package src.cinema;
+package cinema;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import src.DBConnection.DBConnection;
-import src.DataControl.DataPersistence;
-import src.booking.Booking;
+import DBConnection.DBConnection;
+import DataControl.DataPersistence;
+import booking.Booking;
 
 public class Hall implements DataPersistence{
     private int hallId;

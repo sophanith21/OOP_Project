@@ -1,4 +1,4 @@
-package src.cinema;
+package cinema;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +9,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import src.DBConnection.DBConnection;
-import src.DataControl.DataPersistence;
+import DBConnection.DBConnection;
+import DataControl.DataPersistence;
 
 public class ShowTime implements DataPersistence{
     private String showTimeId;

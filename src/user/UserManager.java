@@ -1,8 +1,8 @@
-package src.user;
+package user;
 
-import src.exception.UserNotFoundException;
-import src.exception.InvalidCredentialsException;
-import src.exception.UserAlreadyExistsException;
+import exception.UserNotFoundException;
+import exception.InvalidCredentialsException;
+import exception.UserAlreadyExistsException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

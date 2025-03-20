@@ -1,4 +1,4 @@
-package src.cinema;
+package cinema;
 
 
 import java.sql.Connection;
@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import src.DBConnection.DBConnection;
-import src.DataControl.DataPersistence;
+import DBConnection.DBConnection;
+import DataControl.DataPersistence;
 
 public class Movie implements DataPersistence {
 

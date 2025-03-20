@@ -1,4 +1,4 @@
-package src.DataControl;
+package DataControl;
 import java.util.ArrayList;
 
 public interface DataPersistence {

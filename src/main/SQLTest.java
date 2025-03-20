@@ -1,9 +1,9 @@
-package src.main;
+package main;
 
 
 import java.util.ArrayList;
 
-import src.user.Admin;
+import user.Admin;
 
 public class SQLTest {
     public static void main(String[] args) {

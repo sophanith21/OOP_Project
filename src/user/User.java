@@ -1,7 +1,7 @@
-package src.user;
+package user;
 import org.mindrot.jbcrypt.BCrypt;
 
-import src.DataControl.DataPersistence;
+import DataControl.DataPersistence;
 
 public abstract class User implements DataPersistence{
     protected int id;

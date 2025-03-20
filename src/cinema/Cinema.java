@@ -1,12 +1,12 @@
-package src.cinema;
+package cinema;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import src.DBConnection.DBConnection;
-import src.DataControl.DataPersistence;
+import DBConnection.DBConnection;
+import DataControl.DataPersistence;
 
 public class Cinema implements DataPersistence{
     public String name;

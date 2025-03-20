@@ -1,4 +1,4 @@
-package src.user;
+package user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import src.DBConnection.DBConnection;
+import DBConnection.DBConnection;
 
 public class Admin extends User {
     private ArrayList<Integer> managedHalls; // ad admin can manage multiple halls

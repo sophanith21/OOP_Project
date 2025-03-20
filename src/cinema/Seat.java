@@ -1,13 +1,13 @@
-package src.cinema;
+package cinema;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import src.DBConnection.DBConnection;
-import src.DataControl.DataPersistence;
-import src.booking.Booking;
+import DBConnection.DBConnection;
+import DataControl.DataPersistence;
+import booking.Booking;
 
 public class Seat implements DataPersistence{
     private String seatType;            // "Regular", "VIP"
