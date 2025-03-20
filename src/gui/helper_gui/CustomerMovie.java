@@ -1,4 +1,6 @@
-package gui;
+package gui.helper_gui;
+
+import user.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +11,7 @@ public class CustomerMovie extends FrameUI {
     protected JButton viewOwnHistory;
     protected JButton Exit;
     
-    CustomerMovie() {
+    CustomerMovie(User user) {
         // =====LEFT PANEL=====
         addMovie = new JButton();
         addMovie.setText("Add Movie");
@@ -19,7 +21,7 @@ public class CustomerMovie extends FrameUI {
         addMovie.setForeground(new Color(0xFFF9E6));
         addMovie.addActionListener(e -> {
             frame.dispose();
-            new CustomerMovie();
+            new CustomerMovie(user);
         });
 
         viewOwnHistory = new JButton();
@@ -39,7 +41,7 @@ public class CustomerMovie extends FrameUI {
         Exit.setForeground(new Color(0xFFF9E6));
         Exit.addActionListener(e -> {
             frame.dispose();
-            new LoginUI();
+            new LoginUI(user);
         });
 
 
@@ -118,6 +120,6 @@ public class CustomerMovie extends FrameUI {
 
     }
     public static void main(String[] args) {
-        new CustomerMovie();
+        //new CustomerMovie();
     }
 }

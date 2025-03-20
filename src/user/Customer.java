@@ -78,31 +78,38 @@ public class Customer extends User {
                 System.out.println("Database connection test successful!");
 
                 // Correct query using placeholders
-                String query = "INSERT INTO user (id, username, hashedPassword, email, phone, role, walletBalance, membershipLevel, favoriteGenre)" + 
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)" + 
+                String query = "INSERT INTO user (id, username, hashedPassword, email, phone, role) " + 
+                "VALUES (?, ?, ?, ?, ?, ?)" + 
                 "ON DUPLICATE KEY UPDATE " + 
                 "username = VALUES(username)," +
                 "hashedPassword = VALUES(hashedPassword)," +
                 "email = VALUES(email)," +
                 "phone = VALUES(phone)," +
-                "role = VALUES(role)," +
+                "role = VALUES(role)";
+                
+                String query2 = "INSERT INTO customer (id, walletBalance, membershipLevel, favoriteGenre) " +
+                "VALUES (?,?,?,?) " +
+                "ON DUPLICATE KEY UPDATE " + 
                 "walletBalance = VALUES(walletBalance)," +
                 "membershipLevel = VALUES(membershipLevel)," +
                 "favoriteGenre = VALUES(favoriteGenre)";
-
                 // Use PreparedStatement to prevent SQL injection
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, id);
                 pstmt.setString(2, username);
-                pstmt.setString(3, email);
-                pstmt.setString(4, phone);
-                pstmt.setString(5, role);
-                pstmt.setDouble(6, walletBalance);
-                pstmt.setString(7, membershipLevel);
-                pstmt.setString(8, favoriteGenre);
+                pstmt.setString(3, hashedPassword);
+                pstmt.setString(4, email);
+                pstmt.setString(5, phone);
+                pstmt.setString(6,role);
                 
+                PreparedStatement pstmt2 = conn.prepareStatement(query2);
+                pstmt2.setInt(1,id);
+                pstmt2.setDouble(2, walletBalance);
+                pstmt2.setString(3,membershipLevel);
+                pstmt2.setString(4, favoriteGenre);
                 // Execute the Query
-                pstmt.executeQuery();
+                pstmt.executeUpdate();
+                pstmt2.executeUpdate();
 
                 // Close resources
                 pstmt.close();

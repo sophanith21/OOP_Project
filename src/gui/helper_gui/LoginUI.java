@@ -1,4 +1,4 @@
-package gui;
+package gui.helper_gui;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import user.Customer;
+import user.User;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,6 +31,8 @@ public class LoginUI extends FrameUI implements ActionListener{
     protected JButton Login;
     protected JButton Register;
     protected JButton Exit;
+    //Data
+    private User user;
     public LoginUI() {
         // =====CENTER PANEL=====
         panelCenter.setPreferredSize(new Dimension(100, 100));
@@ -116,14 +121,19 @@ public class LoginUI extends FrameUI implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String user = username.getText();
         String pass = new String(password.getPassword());
-        if (user.equals("admin") && pass.equals("admin")) {
-            frame.dispose();
-        }else if(user.equals("customer") && pass.equals("customer")){
-            frame.dispose();
-            new CustomerMovie();
-        }else{
-            JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
+        this.user = new Customer(3,user, "", pass, "", 0,"","",true);
+        this.user.loadData();
+        if (!this.user.getEmail().isEmpty()){
+            if (user.equals("admin") && pass.equals("admin")) {
+                frame.dispose();
+            }else if(user.equals(this.user.getUsername()) && pass.equals(this.user.getPassword())){
+                frame.dispose();
+                new CustomerMovie(this.user);
+            }else{
+                JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
+        
     }
     public static void main(String[] args) {
         new LoginUI();

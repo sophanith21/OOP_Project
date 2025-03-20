@@ -1,4 +1,4 @@
-package gui;
+package gui.helper_gui;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

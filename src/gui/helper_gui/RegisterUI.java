@@ -1,4 +1,4 @@
-package gui;
+package gui.helper_gui;
 
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
@@ -6,6 +6,8 @@ import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
 import com.mysql.cj.log.Log;
+
+import user.Customer;
 
 import java.awt.Dimension;
 
@@ -92,6 +94,8 @@ public class RegisterUI extends LoginUI {
             String usernameText = username.getText();
             String passwordText = new String(password.getPassword());
             String reEnterText = new String(reEnterPassword.getPassword());
+            String emailText = email.getText();
+            String phoneNumber = phone.getText();
 
             if (usernameText.equals("") || passwordText.equals("") || reEnterText.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
@@ -100,6 +104,8 @@ public class RegisterUI extends LoginUI {
             } else {
                 // Register the user
                 System.out.println("Registering user...");
+                Customer customer= new Customer(3,usernameText,emailText,passwordText,phoneNumber,3,"Normal","Horror",true);
+                customer.saveData();
             }
         }
     }

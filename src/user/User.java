@@ -3,7 +3,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import DataControl.DataPersistence;
 
-public abstract class User implements DataPersistence{
+public class User implements DataPersistence{
     protected int id;
     protected String username;
     protected String hashedPassword;
@@ -24,6 +24,10 @@ public abstract class User implements DataPersistence{
             this.hashedPassword = BCrypt.hashpw(hashedPassword, BCrypt.gensalt()); // Hash only if it's a new user
         }
     }  
+
+    public String getPassword(){
+        return hashedPassword;
+    }
     
     public int getId () {
         return id;
@@ -71,6 +75,16 @@ public abstract class User implements DataPersistence{
 
     public boolean verifyPassword(String inputPassword) {
         return BCrypt.checkpw(inputPassword, this.hashedPassword);
+    }
+
+    @Override
+    public void loadData(){
+        throw new UnsupportedOperationException ("Do not use it");
+    }
+
+    @Override
+    public void saveData(){
+        throw new UnsupportedOperationException ("Do not use it");
     }
     
     /*

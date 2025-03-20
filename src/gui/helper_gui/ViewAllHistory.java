@@ -1,4 +1,4 @@
-package gui;
+package gui.helper_gui;
 
 public class ViewAllHistory extends CustomerHistory {
     public ViewAllHistory() {
