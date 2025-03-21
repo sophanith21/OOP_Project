@@ -1,5 +1,7 @@
 package gui.helper_gui;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -8,6 +10,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import cinema.Cinema;
+import cinema.Hall;
+import cinema.ShowTime;
 import user.Customer;
 import user.User;
 
@@ -72,9 +76,6 @@ public class LoginUI extends FrameUI implements ActionListener{
         loginButton.setForeground(new Color(0xFFF9E6));
         loginButton.addActionListener(this);
 
-        //====Left Panel====
-        panelLeft.setPreferredSize(new Dimension(100, 100));
-        panelLeft.setBackground(new Color(0xFFD600));
         
 
         Login = new JButton();
@@ -94,14 +95,18 @@ public class LoginUI extends FrameUI implements ActionListener{
         Register.setForeground(new Color(0xFFF9E6));
         Register.addActionListener(e -> {
             frame.dispose();
-            RegisterUI ru = new RegisterUI(cinema);
+            new RegisterUI(cinema);
         });
 
-        Exit.setText("Exit");
+        Exit.setText("Back");
         Exit.setFocusable(false);
-        Exit.addActionListener(e -> System.exit(0));
         Exit.setBackground(new Color(0xFF3D00));
         Exit.setForeground(new Color(0xFFF9E6));
+        Exit.addActionListener(e -> {
+            new HomeUi(cinema);
+            frame.dispose();
+            
+        });
 
         // Add components to center panel
         panelCenter.add(loginLabel);
@@ -111,6 +116,7 @@ public class LoginUI extends FrameUI implements ActionListener{
         panelCenter.add(password);
         panelCenter.add(loginButton);
         // Add components to left panel
+        panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
         panelLeft.add(Login);
         panelLeft.add(Register);
         panelLeft.add(Exit);
@@ -133,6 +139,9 @@ public class LoginUI extends FrameUI implements ActionListener{
             }else if(user.equals(this.user.getUsername()) && pass.equals(this.user.getPassword())){
                 frame.dispose();
                 new CustomerMovie(cinema,this.user);
+                cinema.saveData();
+                Hall.saveAll(cinema.halls);
+               //
             }else{
                 JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
             }

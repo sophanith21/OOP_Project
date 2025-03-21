@@ -12,11 +12,9 @@ import booking.Booking;
 
 public class Hall implements DataPersistence{
     private int hallId;
-    public static int maxSeats = 200;
     public ArrayList<ShowTime> showTimes;    //Stores info about the movie according to the specific showtimes
     public ArrayList<ArrayList<Seat>> seats; //each seat has the id of all users accross all the existed showtimes
     private String status;                    // Open, Closed, Full, Maintenances
-    private static int numberOfHalls = 0;
     private int managerId;
 
     public static int rowsPerHall = 10;
@@ -24,7 +22,6 @@ public class Hall implements DataPersistence{
     
     // For initialization for admin
     public Hall(){
-        this.hallId = ++numberOfHalls;
         showTimes = new ArrayList<>();
         seats = new ArrayList<>();
         status = "Open";

@@ -5,6 +5,9 @@ import user.*;
 import javax.swing.*;
 
 import cinema.Cinema;
+import cinema.Hall;
+import cinema.Movie;
+import cinema.ShowTime;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -73,13 +76,14 @@ public class CustomerMovie extends FrameUI {
         movieListPanel.setLayout(new BoxLayout(movieListPanel, BoxLayout.Y_AXIS));
         
         // Example Movie List
-        ArrayList<String[]> movies = new ArrayList<>();
-        movies.add(new String[]{"Inception", "148 min", "Sci-Fi"});
-        movies.add(new String[]{"Titanic", "195 min", "Romance"});
-        movies.add(new String[]{"The Dark Knight", "152 min", "Action"});
-        movies.add(new String[]{"Interstellar", "169 min", "Sci-Fi"});
+        // ArrayList<String[]> movies = new ArrayList<>();
+        // movies.add(new String[]{"Inception", "148 min", "Sci-Fi"});
+        // movies.add(new String[]{"Titanic", "195 min", "Romance"});
+        // movies.add(new String[]{"The Dark Knight", "152 min", "Action"});
+        // movies.add(new String[]{"Interstellar", "169 min", "Sci-Fi"});
+        ArrayList <Hall> halls = cinema.halls;
         
-        for (String[] movie : movies) {
+        for (Hall hall : halls) {
             JPanel moviePanel = new JPanel();
             moviePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
             // moviePanel.setPreferredSize(new Dimension(350, 50));
@@ -87,9 +91,9 @@ public class CustomerMovie extends FrameUI {
             moviePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             moviePanel.setBackground(new Color(0xFFB350));
             
-            JLabel titleLabel = new JLabel(movie[0]);
-            JLabel durationLabel = new JLabel(movie[1]);
-            JLabel genreLabel = new JLabel(movie[2]);
+            JLabel titleLabel = new JLabel(hall.getHallId() + "");
+            JLabel durationLabel = new JLabel(hall.getStatus());
+            JLabel genreLabel = new JLabel(hall.getStatus());
 
             titleLabel.setPreferredSize(new Dimension(125, 35));
             durationLabel.setPreferredSize(new Dimension(50, 35));

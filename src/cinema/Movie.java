@@ -103,7 +103,7 @@ public class Movie implements DataPersistence {
                 + "]";
     }
 
-    public static ArrayList<ShowTime> loadAll() {
+    public static ArrayList<Movie> loadAll() {
         throw new UnsupportedOperationException("Use loadAll in hall instead");
     }
 

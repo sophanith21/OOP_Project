@@ -28,10 +28,10 @@ public class FrameUI {
     protected JLabel label;
     public FrameUI(Cinema cinema) {
         frame = new JFrame();
-        frame.setBounds(300, 100, 700, 650);
+        frame.setBounds(300, 100, 1000, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setTitle(cinema.name);
+        frame.setResizable(true);
+        frame.setTitle(cinema.getName());
         frame.setLayout(new BorderLayout());
         
         panelTop = new JPanel();
@@ -54,7 +54,7 @@ public class FrameUI {
 
         // Top panel
         label = new JLabel();
-        label.setText(cinema.name);
+        label.setText(cinema.getName());
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setIconTextGap(10);

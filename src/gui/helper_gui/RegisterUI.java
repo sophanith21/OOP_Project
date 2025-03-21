@@ -5,7 +5,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
-import com.mysql.cj.log.Log;
 
 import cinema.Cinema;
 import user.Customer;
@@ -13,7 +12,6 @@ import user.User;
 
 import java.awt.Dimension;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class RegisterUI extends LoginUI {
@@ -42,7 +40,7 @@ public class RegisterUI extends LoginUI {
         Login.setEnabled(true);
         Login.addActionListener(e -> {
             frame.dispose();
-            LoginUI login = new LoginUI(cinema);
+            new LoginUI(cinema);
         });
         Register.setEnabled(false);
 

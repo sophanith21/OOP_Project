@@ -9,9 +9,9 @@ import DBConnection.DBConnection;
 import DataControl.DataPersistence;
 
 public class Cinema implements DataPersistence{
-    public String name;
-    public String location;
-    public int totalHalls;
+    private String name;
+    private String location;
+    private int totalHalls;
     public ArrayList <Hall> halls;
 
     public Cinema() { //For loading data in object creation
@@ -99,6 +99,17 @@ public class Cinema implements DataPersistence{
         
     }
 
+    
+
+    public String getName() {
+        return name;
+    }
+    public String getLocation() {
+        return location;
+    }
+    public int getTotalHalls() {
+        return totalHalls;
+    }
     public void iniHall(ArrayList<Hall> halls){
         this.halls = halls;
     }
