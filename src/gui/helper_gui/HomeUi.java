@@ -43,8 +43,8 @@ public class HomeUi extends FrameUI{
 
         loginButton.setText("Login");
         loginButton.setFocusable(false);
-        loginButton.setBackground(new Color(0xFF3D00));
-        loginButton.setForeground(new Color(0xFFF9E6));
+        loginButton.setBackground(new Color(0x0C0950));
+        loginButton.setForeground(new Color(0xFFFFFF));
         loginButton.addActionListener(e -> {
             new LoginUI(cinema);
             frame.dispose();
@@ -52,8 +52,8 @@ public class HomeUi extends FrameUI{
 
         registerButton.setText("Register");
         registerButton.setFocusable(false);
-        registerButton.setBackground(new Color(0xFF3D00));
-        registerButton.setForeground(new Color(0xFFF9E6));
+        registerButton.setBackground(new Color(0x0C0950));
+        registerButton.setForeground(new Color(0xFFFFFF));
         registerButton.addActionListener(e -> {
             new RegisterUI(cinema);
             frame.dispose();

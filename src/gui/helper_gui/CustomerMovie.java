@@ -25,8 +25,8 @@ public class CustomerMovie extends FrameUI {
         addMovie.setText("Add Movie");
         addMovie.setFocusable(false);
         addMovie.setEnabled(false);
-        addMovie.setBackground(new Color(0xFF3D00));
-        addMovie.setForeground(new Color(0xFFF9E6));
+        addMovie.setBackground(new Color(0xFFFFFF));
+        addMovie.setForeground(new Color(0x0C0950));
         addMovie.addActionListener(e -> {
             frame.dispose();
             new CustomerMovie(cinema,customer);
@@ -35,18 +35,18 @@ public class CustomerMovie extends FrameUI {
         viewOwnHistory = new JButton();
         viewOwnHistory.setText("View Own History");
         viewOwnHistory.setFocusable(false);
-        viewOwnHistory.setBackground(new Color(0xFF3D00));
-        viewOwnHistory.setForeground(new Color(0xFFF9E6));
+        viewOwnHistory.setBackground(new Color(0xFFFFFF));
+        viewOwnHistory.setForeground(new Color(0x0C0950));
         viewOwnHistory.addActionListener(e -> {
             frame.dispose();
-            new CustomerHistory();
+            new CustomerHistory(cinema, customer);
         });
 
         Exit = new JButton();
         Exit.setText("Exit");
         Exit.setFocusable(false);
-        Exit.setBackground(new Color(0xFF3D00));
-        Exit.setForeground(new Color(0xFFF9E6));
+        Exit.setBackground(new Color(0xFFFFFF));
+        Exit.setForeground(new Color(0x0C0950));
         Exit.addActionListener(e -> {
             frame.dispose();
             new LoginUI(cinema);
@@ -69,7 +69,7 @@ public class CustomerMovie extends FrameUI {
         cMoviepanel = new JPanel();
         cMoviepanel.setLayout(new BorderLayout(5,5));
         cMoviepanel.setPreferredSize(new Dimension(400, 400));
-        cMoviepanel.setBackground(new Color(0xFFF9E6));
+        cMoviepanel.setBackground(new Color(0xFFFFFF));
         
         // Movie List Panel with ScrollPane
         JPanel movieListPanel = new JPanel();
@@ -89,7 +89,7 @@ public class CustomerMovie extends FrameUI {
             // moviePanel.setPreferredSize(new Dimension(350, 50));
             moviePanel.setMaximumSize(new Dimension(600, 50));
             moviePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            moviePanel.setBackground(new Color(0xFFB350));
+            moviePanel.setBackground(new Color(0xFFFFFF));
             
             JLabel titleLabel = new JLabel(hall.getHallId() + "");
             JLabel durationLabel = new JLabel(hall.getStatus());
@@ -99,9 +99,9 @@ public class CustomerMovie extends FrameUI {
             durationLabel.setPreferredSize(new Dimension(50, 35));
             genreLabel.setPreferredSize(new Dimension(100, 35));
 
-            titleLabel.setForeground(new Color(0xFFF9E6));
-            durationLabel.setForeground(new Color(0xFFF9E6));
-            genreLabel.setForeground(new Color(0xFFF9E6));
+            titleLabel.setForeground(new Color(0x0C0950));
+            durationLabel.setForeground(new Color(0x0C0950));
+            genreLabel.setForeground(new Color(0x0C0950));
 
             JLabel spaceLabel = new JLabel(" ");
             spaceLabel.setPreferredSize(new Dimension(200, 35));
@@ -110,8 +110,8 @@ public class CustomerMovie extends FrameUI {
             JButton addButton = new JButton("+");
             addButton.setFocusable(false);
             addButton.setPreferredSize(new Dimension(50, 35));
-            addButton.setBackground(new Color(0xFF3D00));
-            addButton.setForeground(new Color(0xFFF9E6));
+            addButton.setBackground(new Color(0x0C0950));
+            addButton.setForeground(new Color(0xFFFFFF));
             
             moviePanel.add(titleLabel);
             moviePanel.add(durationLabel);
@@ -134,6 +134,6 @@ public class CustomerMovie extends FrameUI {
 
     }
     public static void main(String[] args) {
-        //new CustomerMovie();
+
     }
 }

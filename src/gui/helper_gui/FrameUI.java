@@ -39,11 +39,11 @@ public class FrameUI {
         panelCenter = new JPanel();
         panelBottom = new JPanel();
 
-        panelTop.setBackground(new Color(0x222831));
+        panelTop.setBackground(new Color(0x0C0950));
         panelTop.setLayout(new FlowLayout(FlowLayout.CENTER,0,30));
-        panelLeft.setBackground(new Color(0x205781));
-        panelCenter.setBackground(new Color(0xFFF9E6));
-        panelBottom.setBackground(new Color(0x222831));
+        panelLeft.setBackground(new Color(0x261FB3));
+        panelCenter.setBackground(new Color(0xFFFFFF));
+        panelBottom.setBackground(new Color(0x0C0950));
 
         panelTop.setPreferredSize(new Dimension(100, 100));
         panelLeft.setPreferredSize(new Dimension(100, 100));
