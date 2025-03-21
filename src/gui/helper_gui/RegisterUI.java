@@ -7,7 +7,9 @@ import javax.swing.JOptionPane;
 
 import com.mysql.cj.log.Log;
 
+import cinema.Cinema;
 import user.Customer;
+import user.User;
 
 import java.awt.Dimension;
 
@@ -21,7 +23,8 @@ public class RegisterUI extends LoginUI {
     protected JTextField email;
     protected JLabel phoneLabel;
     protected JTextField phone;
-    public RegisterUI() {
+    public RegisterUI(Cinema cinema) {
+        super(cinema);
         // Change the title
 
         loginLabel.setText("Register");
@@ -39,7 +42,7 @@ public class RegisterUI extends LoginUI {
         Login.setEnabled(true);
         Login.addActionListener(e -> {
             frame.dispose();
-            LoginUI login = new LoginUI();
+            LoginUI login = new LoginUI(cinema);
         });
         Register.setEnabled(false);
 
@@ -96,7 +99,7 @@ public class RegisterUI extends LoginUI {
             String reEnterText = new String(reEnterPassword.getPassword());
             String emailText = email.getText();
             String phoneNumber = phone.getText();
-
+            int id = User.getLastIdFromDB()+1;
             if (usernameText.equals("") || passwordText.equals("") || reEnterText.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (!passwordText.equals(reEnterText)) {
@@ -104,13 +107,13 @@ public class RegisterUI extends LoginUI {
             } else {
                 // Register the user
                 System.out.println("Registering user...");
-                Customer customer= new Customer(3,usernameText,emailText,passwordText,phoneNumber,3,"Normal","Horror",true);
+                Customer customer= new Customer(id,usernameText,emailText,passwordText,phoneNumber,3,"Normal","Horror",true);
                 customer.saveData();
             }
         }
     }
 
     public static void main(String[] args) {
-        new RegisterUI();
+        //new RegisterUI();
     }
 }

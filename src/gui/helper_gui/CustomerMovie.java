@@ -3,6 +3,9 @@ package gui.helper_gui;
 import user.*;
 
 import javax.swing.*;
+
+import cinema.Cinema;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -12,7 +15,8 @@ public class CustomerMovie extends FrameUI {
     protected JButton Exit;
     protected JPanel cMoviepanel;
     
-    CustomerMovie(User user) {
+    CustomerMovie(Cinema cinema,Customer customer) {
+        super(cinema);
         // =====LEFT PANEL=====
         addMovie = new JButton();
         addMovie.setText("Add Movie");
@@ -22,7 +26,7 @@ public class CustomerMovie extends FrameUI {
         addMovie.setForeground(new Color(0xFFF9E6));
         addMovie.addActionListener(e -> {
             frame.dispose();
-            new CustomerMovie(user);
+            new CustomerMovie(cinema,customer);
         });
 
         viewOwnHistory = new JButton();
@@ -42,7 +46,7 @@ public class CustomerMovie extends FrameUI {
         Exit.setForeground(new Color(0xFFF9E6));
         Exit.addActionListener(e -> {
             frame.dispose();
-            new LoginUI(user);
+            new LoginUI(cinema);
         });
 
 

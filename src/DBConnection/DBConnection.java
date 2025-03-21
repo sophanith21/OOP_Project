@@ -19,26 +19,24 @@ public class DBConnection {
 
     // Establish the connection
     public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-                System.out.println("Connected to MySQL successfully!");
-            }catch (CJCommunicationsException e) {
-                System.out.println("please check ur db server");
-               
-            }
-            catch (CommunicationsException e) {
-                System.out.println("please check ur db server");
-                
-            }
-            catch (SQLSyntaxErrorException e) {
-                System.out.println("Connection failed!");
-                
-            }
-            catch (SQLException e) {
-                System.out.println("Connection failed!");
-                
-            }
+        try {
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            System.out.println("Connected to MySQL successfully!");
+        }catch (CJCommunicationsException e) {
+            System.out.println("please check ur db server");
+            
+        }
+        catch (CommunicationsException e) {
+            System.out.println("please check ur db server");
+            
+        }
+        catch (SQLSyntaxErrorException e) {
+            System.out.println("Connection failed!");
+            
+        }
+        catch (SQLException e) {
+            System.out.println("Connection failed!");
+            
         }
         return connection;
     }

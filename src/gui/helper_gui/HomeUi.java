@@ -16,7 +16,8 @@ public class HomeUi extends FrameUI{
     protected JButton loginButton;
     protected JButton registerButton;
 
-    public HomeUi(Cinema ciname){
+    public HomeUi(Cinema cinema){
+        super(cinema);
         // =====CENTER PANEL=====
         panelCenter.setPreferredSize(new Dimension(100, 100));
         panelCenter.setBackground(new Color(0xFFF9E6));
@@ -24,9 +25,9 @@ public class HomeUi extends FrameUI{
         title = new JLabel();
         loginButton = new JButton();
         registerButton = new JButton();
-
-        title.setText("Welcome to " + ciname.name);
-        title.setBounds(120, 200, 80, 30);
+        System.out.println(cinema.name);
+        title.setText("Welcome to " + cinema.name);
+        title.setBounds(120, 200, 200, 30);
 
 
         loginButton.setText("Login");
@@ -35,7 +36,7 @@ public class HomeUi extends FrameUI{
         loginButton.setBackground(new Color(0xFF3D00));
         loginButton.setForeground(new Color(0xFFF9E6));
         loginButton.addActionListener(e -> {
-            new LoginUI();
+            new LoginUI(cinema);
             frame.dispose();
         });
 
@@ -45,7 +46,7 @@ public class HomeUi extends FrameUI{
         registerButton.setBackground(new Color(0xFF3D00));
         registerButton.setForeground(new Color(0xFFF9E6));
         registerButton.addActionListener(e -> {
-            new RegisterUI();
+            new RegisterUI(cinema);
             frame.dispose();
         });
         panelCenter.add(title);
@@ -60,7 +61,7 @@ public class HomeUi extends FrameUI{
     }
 
     public static void main(String[] args) {
-        Cinema cinema = new Cinema("Cineplex","Phnom Penh",5);
+        Cinema cinema = new Cinema("Legend","Phnom Penh",5);
         new HomeUi(cinema);
     }
 }

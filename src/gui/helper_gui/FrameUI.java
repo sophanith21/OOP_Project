@@ -5,12 +5,17 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import cinema.Cinema;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 public class FrameUI {
     protected JFrame frame;
@@ -21,23 +26,24 @@ public class FrameUI {
     protected JPanel panelBottom;
     protected JButton next;
     protected JLabel label;
-    public FrameUI() {
+    public FrameUI(Cinema cinema) {
         frame = new JFrame();
         frame.setBounds(300, 100, 700, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setTitle("Cineplex");
-        frame.setLayout(new BorderLayout(5,5));
+        frame.setTitle(cinema.name);
+        frame.setLayout(new BorderLayout());
         
         panelTop = new JPanel();
         panelLeft = new JPanel();
         panelCenter = new JPanel();
         panelBottom = new JPanel();
 
-        panelTop.setBackground(new Color(0xFF3D00));
-        panelLeft.setBackground(new Color(0xFFD600));
+        panelTop.setBackground(new Color(0x222831));
+        panelTop.setLayout(new FlowLayout(FlowLayout.CENTER,0,30));
+        panelLeft.setBackground(new Color(0x205781));
         panelCenter.setBackground(new Color(0xFFF9E6));
-        panelBottom.setBackground(new Color(0xFF3D00));
+        panelBottom.setBackground(new Color(0x222831));
 
         panelTop.setPreferredSize(new Dimension(100, 100));
         panelLeft.setPreferredSize(new Dimension(100, 100));
@@ -48,10 +54,11 @@ public class FrameUI {
 
         // Top panel
         label = new JLabel();
-        label.setText("Cineplex");
+        label.setText(cinema.name);
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setIconTextGap(10);
+        label.setBounds(frame.getWidth()/2-(label.getText().length()/2),panelTop.getHeight()/2,100,50);
         panelTop.add(label);
 
         // Add panels to frame
@@ -78,7 +85,8 @@ public class FrameUI {
         panelLeft.revalidate(); // Refresh the layout
         panelLeft.repaint(); // Redraw the panel
     }
+    
     public static void main(String[] args) {
-        new FrameUI();
+        //new FrameUI();
     }
 }

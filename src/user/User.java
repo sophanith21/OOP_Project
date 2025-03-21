@@ -1,9 +1,14 @@
 package user;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import DataControl.DataPersistence;
-
-public class User implements DataPersistence{
+import DBConnection.DBConnection;
+abstract public class User implements DataPersistence{
     protected int id;
     protected String username;
     protected String hashedPassword;
@@ -85,6 +90,29 @@ public class User implements DataPersistence{
     @Override
     public void saveData(){
         throw new UnsupportedOperationException ("Do not use it");
+    }
+
+    public static int getLastIdFromDB(){
+        try {
+            Connection conn = DBConnection.getConnection();
+            System.out.println(conn);
+            if (conn != null) {
+                String query = "SELECT COUNT(*) as lastId FROM user";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet set = stmt.executeQuery();
+                int id = 0;
+                while (set.next()){
+                    id = set.getInt("lastId");
+                }
+                
+                conn.close();
+                return id;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
     
     /*

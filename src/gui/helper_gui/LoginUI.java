@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import cinema.Cinema;
 import user.Customer;
 import user.User;
 
@@ -32,8 +33,11 @@ public class LoginUI extends FrameUI implements ActionListener{
     protected JButton Register;
     protected JButton Exit;
     //Data
-    private User user;
-    public LoginUI() {
+    private Customer user;
+    private Cinema cinema;
+    public LoginUI(Cinema cinema) {
+        super(cinema);
+        this.cinema = cinema;
         // =====CENTER PANEL=====
         panelCenter.setPreferredSize(new Dimension(100, 100));
         panelCenter.setBackground(new Color(0xFFF9E6));
@@ -90,7 +94,7 @@ public class LoginUI extends FrameUI implements ActionListener{
         Register.setForeground(new Color(0xFFF9E6));
         Register.addActionListener(e -> {
             frame.dispose();
-            RegisterUI ru = new RegisterUI();
+            RegisterUI ru = new RegisterUI(cinema);
         });
 
         Exit.setText("Exit");
@@ -121,14 +125,14 @@ public class LoginUI extends FrameUI implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String user = username.getText();
         String pass = new String(password.getPassword());
-        this.user = new Customer(3,user, "", pass, "", 0,"","",true);
+        this.user = new Customer(1,user, "", pass, "", 0,"","",true);
         this.user.loadData();
         if (!this.user.getEmail().isEmpty()){
             if (user.equals("admin") && pass.equals("admin")) {
                 frame.dispose();
             }else if(user.equals(this.user.getUsername()) && pass.equals(this.user.getPassword())){
                 frame.dispose();
-                new CustomerMovie(this.user);
+                new CustomerMovie(cinema,this.user);
             }else{
                 JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -136,7 +140,7 @@ public class LoginUI extends FrameUI implements ActionListener{
         
     }
     public static void main(String[] args) {
-        new LoginUI();
+        //new LoginUI();
     }
 
 }
