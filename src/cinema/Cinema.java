@@ -14,9 +14,10 @@ public class Cinema implements DataPersistence{
     private int totalHalls;
     public ArrayList <Hall> halls;
 
-    public Cinema() { //For loading data in object creation
-        loadData();
+    public Cinema () {
+
     }
+
     public Cinema(String name, String location, int totalHalls) {
         if(totalHalls < 1){
             throw new IllegalArgumentException("Total hall must be 1 or more"); //Should be handle in main (object creation)
@@ -71,6 +72,7 @@ public class Cinema implements DataPersistence{
                 String query = "SELECT * FROM cinema";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet set = stmt.executeQuery();
+                set.next();
                 this.name = set.getString("name");
                 this.location = set.getString("location");
                 this.totalHalls = set.getInt("totalHalls");
