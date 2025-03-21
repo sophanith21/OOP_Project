@@ -20,7 +20,7 @@ public class HomeUi extends FrameUI{
         super(cinema);
         // =====CENTER PANEL=====
         panelCenter.setPreferredSize(new Dimension(100, 100));
-        panelCenter.setBackground(new Color(0xFFF9E6));
+        panelCenter.setBackground(new Color(0xFFFFFF));
 
         title = new JLabel();
         loginButton = new JButton();
@@ -29,12 +29,14 @@ public class HomeUi extends FrameUI{
         title.setText("Welcome to " + cinema.name);
         title.setBounds(120, 200, 200, 30);
 
+        title.setText("Welcome to " + cinema.name);
+        title.setBounds(120, 200, 200, 30);
 
         loginButton.setText("Login");
         loginButton.setBounds(150, 250, 100, 30);
         loginButton.setFocusable(false);
-        loginButton.setBackground(new Color(0xFF3D00));
-        loginButton.setForeground(new Color(0xFFF9E6));
+        loginButton.setBackground(new Color(0x0C0950));
+        loginButton.setForeground(new Color(0xFFFFFF));
         loginButton.addActionListener(e -> {
             new LoginUI(cinema);
             frame.dispose();
@@ -43,8 +45,8 @@ public class HomeUi extends FrameUI{
         registerButton.setText("Register");
         registerButton.setBounds(280,250,100,30);
         registerButton.setFocusable(false);
-        registerButton.setBackground(new Color(0xFF3D00));
-        registerButton.setForeground(new Color(0xFFF9E6));
+        registerButton.setBackground(new Color(0x0C0950));
+        registerButton.setForeground(new Color(0xFFFFFF));
         registerButton.addActionListener(e -> {
             new RegisterUI(cinema);
             frame.dispose();

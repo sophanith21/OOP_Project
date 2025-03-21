@@ -40,7 +40,7 @@ public class LoginUI extends FrameUI implements ActionListener{
         this.cinema = cinema;
         // =====CENTER PANEL=====
         panelCenter.setPreferredSize(new Dimension(100, 100));
-        panelCenter.setBackground(new Color(0xFFF9E6));
+        panelCenter.setBackground(new Color(0xFFFFFF));
 
         username = new JTextField();
         password = new JPasswordField();
@@ -68,13 +68,13 @@ public class LoginUI extends FrameUI implements ActionListener{
         loginButton.setText("Login");
         loginButton.setBounds(250, 250, 100, 30);
         loginButton.setFocusable(false);
-        loginButton.setBackground(new Color(0xFF3D00));
-        loginButton.setForeground(new Color(0xFFF9E6));
+        loginButton.setBackground(new Color(0x0C0950));
+        loginButton.setForeground(new Color(0xFFFFFF));
         loginButton.addActionListener(this);
 
         //====Left Panel====
         panelLeft.setPreferredSize(new Dimension(100, 100));
-        panelLeft.setBackground(new Color(0xFFD600));
+        panelLeft.setBackground(new Color(0x261FB3));
         
 
         Login = new JButton();
@@ -85,13 +85,13 @@ public class LoginUI extends FrameUI implements ActionListener{
         Login.setText("Login");
         Login.setFocusable(false);
         Login.setEnabled(false);
-        Login.setBackground(new Color(0xFF3D00));
-        Login.setForeground(new Color(0xFFF9E6));
+        Login.setBackground(new Color(0xFFFFFF));
+        Login.setForeground(new Color(0x0C0950));
 
         Register.setText("Register");
         Register.setFocusable(false);
-        Register.setBackground(new Color(0xFF3D00));
-        Register.setForeground(new Color(0xFFF9E6));
+        Register.setBackground(new Color(0xFFFFFF));
+        Register.setForeground(new Color(0x0C0950));
         Register.addActionListener(e -> {
             frame.dispose();
             RegisterUI ru = new RegisterUI(cinema);
@@ -100,8 +100,8 @@ public class LoginUI extends FrameUI implements ActionListener{
         Exit.setText("Exit");
         Exit.setFocusable(false);
         Exit.addActionListener(e -> System.exit(0));
-        Exit.setBackground(new Color(0xFF3D00));
-        Exit.setForeground(new Color(0xFFF9E6));
+        Exit.setBackground(new Color(0xFFFFFF));
+        Exit.setForeground(new Color(0x0C0950));
 
         // Add components to center panel
         panelCenter.add(loginLabel);

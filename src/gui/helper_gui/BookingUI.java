@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import user.*;
+import cinema.Cinema;
 
 public class BookingUI extends CustomerMovie {
     protected JTextField seatAmountField;
@@ -14,10 +16,11 @@ public class BookingUI extends CustomerMovie {
     protected JLabel changeLabel;
     protected JPanel panelBooking;
 
-    public BookingUI() {
+    public BookingUI(Cinema cinema, Customer customer) {
+        super(cinema, customer);
         panelBooking = new JPanel();
         panelBooking.setBounds(90, 50, 400, 300); // Adjust these values as needed
-        panelBooking.setBackground(new Color(0xFFF9E6));
+        panelBooking.setBackground(new Color(0xFFFFFF));
         // Set up the center panel for booking details
         panelBooking.setLayout(new GridLayout(7, 2, 20, 20)); // 7 rows, 2 columns, with gaps
 
@@ -49,8 +52,8 @@ public class BookingUI extends CustomerMovie {
 
         // Add a button to calculate the total price and process payment
         JButton calculateButton = new JButton("Calculate Total");
-        calculateButton.setBackground(new Color(0xFF3D00));
-        calculateButton.setForeground(new Color(0xFFF9E6));
+        calculateButton.setBackground(new Color(0x0C0950));
+        calculateButton.setForeground(new Color(0xFFFFFF));
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,8 +63,8 @@ public class BookingUI extends CustomerMovie {
         panelBooking.add(calculateButton);
 
         JButton payButton = new JButton("Pay");
-        payButton.setBackground(new Color(0xFF3D00));
-        payButton.setForeground(new Color(0xFFF9E6));
+        payButton.setBackground(new Color(0x0C0950));
+        payButton.setForeground(new Color(0xFFFFFF));
         payButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,14 +120,14 @@ public class BookingUI extends CustomerMovie {
                 double change = paymentAmount - totalPrice;
                 changeLabel.setText(String.format("$%.2f", change));
                             // Open the receipt screen
-            new ReceiptUI(
-                seatAmountField.getText(), // Number of seats
-                seatIdField.getText(), // Seat ID
-                (String) bookingTypeComboBox.getSelectedItem(), // Booking type
-                totalPriceLabel.getText(), // Total price
-                paymentAmountField.getText(), // Payment amount
-                changeLabel.getText() // Change
-            );
+            // new ReceiptUI(
+            //     seatAmountField.getText(), // Number of seats
+            //     seatIdField.getText(), // Seat ID
+            //     (String) bookingTypeComboBox.getSelectedItem(), // Booking type
+            //     totalPriceLabel.getText(), // Total price
+            //     paymentAmountField.getText(), // Payment amount
+            //     changeLabel.getText() // Change
+            // );
 
             // Optionally, clear the booking fields for a new booking
             seatAmountField.setText("");
@@ -142,6 +145,6 @@ public class BookingUI extends CustomerMovie {
     }
 
     public static void main(String[] args) {
-            new BookingUI();
+
     }
 }

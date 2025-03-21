@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import cinema.Cinema;
+
 public class EditandAddMovie extends FrameUI {
 
     private JTextField titleField;
@@ -13,8 +15,8 @@ public class EditandAddMovie extends FrameUI {
     private JTextField showTimeField;
     private JButton saveButton;
 
-    public EditandAddMovie() {
-        super();
+    public EditandAddMovie(Cinema cinema) {
+        super(cinema);
         initializeUI();
     }
 
@@ -23,7 +25,7 @@ public class EditandAddMovie extends FrameUI {
         JPanel editAddPanel = new JPanel();
         editAddPanel.setBounds(90, 50, 400, 300);
         editAddPanel.setLayout(new GridLayout(5, 2, 20, 20));
-        editAddPanel.setBackground(new Color(0xFFF9E6));
+        editAddPanel.setBackground(new Color(0xFFFFFF));
 
         // Add components to the panel
         editAddPanel.add(new JLabel("Movie Title:"));
@@ -43,8 +45,8 @@ public class EditandAddMovie extends FrameUI {
         editAddPanel.add(showTimeField);
 
         saveButton = new JButton("Save");
-        saveButton.setBackground(new Color(0xFF3D00));
-        saveButton.setForeground(new Color(0xFFF9E6));
+        saveButton.setBackground(new Color(0x0C0950));
+        saveButton.setForeground(new Color(0xFFFFFF));
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,6 +86,7 @@ public class EditandAddMovie extends FrameUI {
     }
 
     public static void main(String[] args) {
-        new EditandAddMovie();
+        Cinema cinema = new Cinema("Legend", "Phnom Penh", 5);
+        new EditandAddMovie(cinema);
     }
 }

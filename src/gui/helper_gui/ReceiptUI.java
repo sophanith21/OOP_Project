@@ -2,6 +2,8 @@ package gui.helper_gui;
 
 import javax.swing.*;
 import java.awt.*;
+import user.*;
+import cinema.Cinema;
 
 public class ReceiptUI extends BookingUI {
     protected String seatAmount;
@@ -11,7 +13,9 @@ public class ReceiptUI extends BookingUI {
     protected String paymentAmount;
     protected String change;
 
-    public ReceiptUI(String seatAmount, String seatId, String bookingType, String totalPrice, String paymentAmount, String change) {
+    public ReceiptUI(String seatAmount, String seatId, String bookingType, String totalPrice, String paymentAmount, String change, 
+    Cinema cinema, Customer customer) {
+        super(cinema,customer); // Call the appropriate constructor of BookingUI
         this.seatAmount = seatAmount;
         this.seatId = seatId;
         this.bookingType = bookingType;
@@ -65,6 +69,6 @@ public class ReceiptUI extends BookingUI {
     }
 
     public static void main(String[] args) {
-            new ReceiptUI("2", "A1, A2", "Premium", "$30.00", "$40.00", "$10.00");
+            // new ReceiptUI("2", "A1, A2", "Premium", "$30.00", "$40.00", "$10.00");
     }
 }

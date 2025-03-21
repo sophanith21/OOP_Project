@@ -11,14 +11,16 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-
+import user.*;
+import cinema.Cinema;
 public class AdminMovie extends CustomerMovie {
     JPanel aMoviePanel;
     JPanel adminNav;
     JButton crudMovie;
     JButton viewAllHistory;
     JButton Exit;
-    public AdminMovie() {
+    public AdminMovie(Cinema cinema, Customer Customer, Admin admin) {
+        super(cinema, Customer);
         aMoviePanel = new JPanel();
         adminNav = new JPanel();
         adminNav.setBackground(new Color(0xFFD600));
@@ -28,8 +30,8 @@ public class AdminMovie extends CustomerMovie {
         crudMovie.setText("CRUD Movie");
         crudMovie.setFocusable(false);
         crudMovie.setEnabled(false);
-        crudMovie.setBackground(new Color(0xFF3D00));
-        crudMovie.setForeground(new Color(0xFFF9E6));
+        crudMovie.setBackground(new Color(0xFFFFFF));
+        crudMovie.setForeground(new Color(0x0C0950));
         crudMovie.addActionListener(e -> {
             // Update the current panel instead of creating a new instance
             updateCenterPanel(aMoviePanel);
@@ -38,8 +40,8 @@ public class AdminMovie extends CustomerMovie {
         viewAllHistory = new JButton();
         viewAllHistory.setText("View all History");
         viewAllHistory.setFocusable(false);
-        viewAllHistory.setBackground(new Color(0xFF3D00));
-        viewAllHistory.setForeground(new Color(0xFFF9E6));
+        viewAllHistory.setBackground(new Color(0xFFFFFF));
+        viewAllHistory.setForeground(new Color(0x0C0950));
         viewAllHistory.addActionListener(e -> {
             frame.dispose();
             new ViewAllHistory();
@@ -48,11 +50,11 @@ public class AdminMovie extends CustomerMovie {
         Exit = new JButton();
         Exit.setText("Exit");
         Exit.setFocusable(false);
-        Exit.setBackground(new Color(0xFF3D00));
-        Exit.setForeground(new Color(0xFFF9E6));
+        Exit.setBackground(new Color(0xFFFFFF));
+        Exit.setForeground(new Color(0x0C0950));
         Exit.addActionListener(e -> {
             frame.dispose();
-            new LoginUI();
+            new LoginUI(cinema);
         });
 
 
@@ -72,7 +74,7 @@ public class AdminMovie extends CustomerMovie {
         aMoviePanel = new JPanel();
         aMoviePanel.setLayout(new BorderLayout(5,5));
         aMoviePanel.setPreferredSize(new Dimension(400, 400));
-        aMoviePanel.setBackground(new Color(0xFFF9E6));
+        aMoviePanel.setBackground(new Color(0x0C0950));
         
         // Movie List Panel with ScrollPane
         JPanel movieListPanel = new JPanel();
@@ -101,9 +103,9 @@ public class AdminMovie extends CustomerMovie {
             durationLabel.setPreferredSize(new Dimension(50, 35));
             genreLabel.setPreferredSize(new Dimension(100, 35));
 
-            titleLabel.setForeground(new Color(0xFFF9E6));
-            durationLabel.setForeground(new Color(0xFFF9E6));
-            genreLabel.setForeground(new Color(0xFFF9E6));
+            titleLabel.setForeground(new Color(0x0C0950));
+            durationLabel.setForeground(new Color(0x0C0950));
+            genreLabel.setForeground(new Color(0x0C0950));
 
             JLabel spaceLabel = new JLabel(" ");
             spaceLabel.setPreferredSize(new Dimension(150, 35));
@@ -112,14 +114,14 @@ public class AdminMovie extends CustomerMovie {
             JButton editButton = new JButton("E");
             editButton.setFocusable(false);
             editButton.setPreferredSize(new Dimension(50, 35));
-            editButton.setBackground(new Color(0xFF3D00));
-            editButton.setForeground(new Color(0xFFF9E6));
+            editButton.setBackground(new Color(0xFFFFFF));
+            editButton.setForeground(new Color(0x0C0950));
 
             JButton removeButton = new JButton("x");
             removeButton.setFocusable(false);
             removeButton.setPreferredSize(new Dimension(50, 35));
-            removeButton.setBackground(new Color(0xFF3D00));
-            removeButton.setForeground(new Color(0xFFF9E6));
+            removeButton.setBackground(new Color(0xFFFFFF));
+            removeButton.setForeground(new Color(0x0C0950));
             
             moviePanel.add(titleLabel);
             moviePanel.add(durationLabel);
@@ -141,7 +143,7 @@ public class AdminMovie extends CustomerMovie {
 
     }
     public static void main(String[] args) {
-        new AdminMovie();
+        // new AdminMovie();
     }
 
 }
