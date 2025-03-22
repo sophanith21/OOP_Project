@@ -82,5 +82,16 @@ public class HomeUi extends FrameUI{
         Cinema cinema = new Cinema("Cineplex","Phnom Penh",5);
         cinema.loadData();
         new HomeUi(cinema);
+
+        //To test on a new database
+        // Cinema cinema = new Cinema("Cineplex","Phnom Penh",5);
+        // cinema.saveData();
+        // cinema.iniHall();
+        // Hall.saveAll(cinema.halls);
+        // for (Hall hall: cinema.halls) {
+        //     hall.initSeats();
+        //     Seat.saveAll(hall.seats);
+        //     ShowTime.saveAll(hall.showTimes);
+        // }
     }
 }
