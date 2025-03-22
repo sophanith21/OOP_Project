@@ -14,9 +14,10 @@ public class Cinema implements DataPersistence{
     private int totalHalls;
     public ArrayList <Hall> halls;
 
-    public Cinema() { //For loading data in object creation
-        loadData();
+    public Cinema () {
+        halls = new ArrayList<>();
     }
+
     public Cinema(String name, String location, int totalHalls) {
         if(totalHalls < 1){
             throw new IllegalArgumentException("Total hall must be 1 or more"); //Should be handle in main (object creation)
@@ -36,7 +37,7 @@ public class Cinema implements DataPersistence{
                 System.out.println("Database connection test successful!");
 
                 // Correct query using placeholders
-                String query = "INSERT INTO cinema (name, location, totalHalls) VALUES (?, ?, ?)";
+                String query = "INSERT INTO cinema (name, location, totalHalls) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE location=VALUES(location),totalHalls=VALUES(totalHalls)";
 
                 // Use PreparedStatement to prevent SQL injection
                 PreparedStatement pstmt = conn.prepareStatement(query);
@@ -71,6 +72,7 @@ public class Cinema implements DataPersistence{
                 String query = "SELECT * FROM cinema";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet set = stmt.executeQuery();
+                set.next();
                 this.name = set.getString("name");
                 this.location = set.getString("location");
                 this.totalHalls = set.getInt("totalHalls");

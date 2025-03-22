@@ -16,9 +16,10 @@ public class Movie implements DataPersistence {
     private String title;
     private int durationMinutes;
     private String genre;
-    private String showTimeId;
+    //private String showTimeId;
+    
     //For loading data from database
-    public Movie(String movieID, String title, int durationMinutes, String genre,String showTimeId) {
+    public Movie(String movieID, String title, int durationMinutes, String genre) {
         this.movieID = movieID;
         this.title = title;
         this.durationMinutes = durationMinutes;
@@ -42,9 +43,9 @@ public class Movie implements DataPersistence {
                 System.out.println("Database connection test successful!");
 
                 String query = "INSERT INTO movie (movieID, title, durationMinutes,genre,showTimeId) " +
-                "VALUES (?, ?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE " + 
-                "showTimeId = VALUES(showTimeId)";
+                "VALUES (?, ?, ?, ?) ";
+                //"ON DUPLICATE KEY UPDATE "
+                //"showTimeId = VALUES(showTimeId)";
 
                 // Use PreparedStatement to prevent SQL injection
                 PreparedStatement pstmt = conn.prepareStatement(query);
@@ -52,7 +53,7 @@ public class Movie implements DataPersistence {
                 pstmt.setString(2, movie.getTitle() );   
                 pstmt.setInt(3, movie.getDurationMinutes());    
                 pstmt.setString(4, movie.getGenre());
-                pstmt.setString(5, movie.getShowTimeId());
+                //pstmt.setString(5, movie.getShowTimeId());
                 pstmt.executeUpdate();
 
                 // Close resources
@@ -82,9 +83,9 @@ public class Movie implements DataPersistence {
         return movieID;
     }
 
-    public String getShowTimeId() {
-        return showTimeId;
-    }
+    // public String getShowTimeId() {
+    //     return showTimeId;
+    // }
 
     public static int getTotalMovies() {
         return numberOfMovies;

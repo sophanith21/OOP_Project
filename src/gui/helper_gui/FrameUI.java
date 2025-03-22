@@ -54,11 +54,10 @@ public class FrameUI {
 
         // Top panel
         label = new JLabel();
-        label.setText(cinema.getName());
+        label.setText(cinema.getName() + " Cinema Management System");
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setIconTextGap(10);
-        label.setBounds(frame.getWidth()/2-(label.getText().length()/2),panelTop.getHeight()/2,100,50);
         panelTop.add(label);
 
         // Add panels to frame

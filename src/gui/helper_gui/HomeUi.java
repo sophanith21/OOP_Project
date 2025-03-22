@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -16,6 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 import cinema.Cinema;
+import cinema.Hall;
+import cinema.Seat;
+import cinema.ShowTime;
 
 public class HomeUi extends FrameUI{
 
@@ -26,11 +30,9 @@ public class HomeUi extends FrameUI{
     public HomeUi(Cinema cinema){
         super(cinema);
         // =====CENTER PANEL====
-        panelCenter.setSize(frame.getWidth()-panelLeft.getWidth(),frame.getHeight()-panelTop.getHeight());;
         panelCenter.setBackground(new Color(0xFFF9E6));
         panelCenter.setLayout(new BoxLayout(panelCenter,BoxLayout.Y_AXIS));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,50,0));
-        
 
         title = new JLabel();
         loginButton = new JButton();
@@ -45,6 +47,7 @@ public class HomeUi extends FrameUI{
         loginButton.setFocusable(false);
         loginButton.setBackground(new Color(0x0C0950));
         loginButton.setForeground(new Color(0xFFFFFF));
+        loginButton.setPreferredSize(new Dimension(100, 35));
         loginButton.addActionListener(e -> {
             new LoginUI(cinema);
             frame.dispose();
@@ -54,6 +57,7 @@ public class HomeUi extends FrameUI{
         registerButton.setFocusable(false);
         registerButton.setBackground(new Color(0x0C0950));
         registerButton.setForeground(new Color(0xFFFFFF));
+        registerButton.setPreferredSize(new Dimension(100, 35));
         registerButton.addActionListener(e -> {
             new RegisterUI(cinema);
             frame.dispose();
@@ -75,7 +79,8 @@ public class HomeUi extends FrameUI{
     }
 
     public static void main(String[] args) {
-        Cinema cinema = new Cinema("Legend","Phnom Penh",5);
+        Cinema cinema = new Cinema("Cineplex","Phnom Penh",5);
+        cinema.loadData();
         new HomeUi(cinema);
     }
 }

@@ -16,15 +16,18 @@ public class Hall implements DataPersistence{
     public ArrayList<ArrayList<Seat>> seats; //each seat has the id of all users accross all the existed showtimes
     private String status;                    // Open, Closed, Full, Maintenances
     private int managerId;
+    private static int numOfHall = 0;
 
     public static int rowsPerHall = 10;
     public static int seatsPerRow = 20;
     
     // For initialization for admin
     public Hall(){
+        hallId = ++numOfHall;
         showTimes = new ArrayList<>();
         seats = new ArrayList<>();
         status = "Open";
+        managerId = 1;
     }
 
     // For loading data
@@ -97,13 +100,13 @@ public class Hall implements DataPersistence{
                         String showTimeId = showTimeSet.getString("showTimeId");
                         String startTime = showTimeSet.getString("startTime");
                         String endTime = showTimeSet.getString("endTime");
-
+                        String movieId = showTimeSet.getString("movieId");
                         // Step 3: Load a Movie for this showTime
                         // This is just a false initialization
                         Movie movie = new Movie(startTime, hallId, endTime);
-                        String movieQuery = "SELECT * FROM movie WHERE showTimeId = ?";
+                        String movieQuery = "SELECT * FROM movie WHERE movieId = ?";
                         PreparedStatement movieStmt = conn.prepareStatement(movieQuery);
-                        movieStmt.setString(1, showTimeId);
+                        movieStmt.setString(1, movieId);
                         ResultSet movieSet = movieStmt.executeQuery();
     
                         while (movieSet.next()) {
@@ -111,8 +114,7 @@ public class Hall implements DataPersistence{
                                 movieSet.getString("movieId"),
                                 movieSet.getString("title"),
                                 movieSet.getInt("durationMinutes"),
-                                movieSet.getString("genre"),
-                                movieSet.getString("showTimeId")
+                                movieSet.getString("genre")
                             );
                         }
                         movieStmt.close();
@@ -127,6 +129,9 @@ public class Hall implements DataPersistence{
                     ArrayList<ArrayList<Seat>> seats = new ArrayList<>();
                     for (int i = 0 ; i < 10 ; i++) {
                         seats.add(new ArrayList<>());
+                        for (int j = 0; j <20 ; j++){
+                            seats.get(i).add(new Seat(1,1,1));
+                        }
                     }
                     String seatsQuery = "SELECT * FROM seat WHERE hallId = ?";
                     PreparedStatement seatsStmt = conn.prepareStatement(seatsQuery);
@@ -178,7 +183,7 @@ public class Hall implements DataPersistence{
                             seatsSet.getString("services"),
                             bookings
                         );
-                        seats.get(row).add(col, seat);
+                        seats.get(row-1).set(col-1, seat);
                     }
                     seatsStmt.close();
                     // Create Hall object with showTimes

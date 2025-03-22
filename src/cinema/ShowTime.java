@@ -17,7 +17,7 @@ public class ShowTime implements DataPersistence{
     private int hallId;
     private String startTime;
     private String endTime;
-    private Movie movie;
+    public Movie movie;
     //For loading data
     public ShowTime(String showTimeId, String startTime, String endTime, Movie movie, int hallId) {
         this.showTimeId = showTimeId;

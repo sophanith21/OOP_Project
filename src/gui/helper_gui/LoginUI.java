@@ -18,6 +18,7 @@ import user.User;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -42,9 +43,7 @@ public class LoginUI extends FrameUI implements ActionListener{
     public LoginUI(Cinema cinema) {
         super(cinema);
         this.cinema = cinema;
-        // =====CENTER PANEL=====
-        panelCenter.setPreferredSize(new Dimension(100, 100));
-        panelCenter.setBackground(new Color(0xFFFFFF));
+        panelCenter.setLayout(new BoxLayout(panelCenter,BoxLayout.Y_AXIS));
 
         username = new JTextField();
         password = new JPasswordField();
@@ -53,29 +52,40 @@ public class LoginUI extends FrameUI implements ActionListener{
         loginLabel = new JLabel();
         loginButton = new JButton();
 
-        loginLabel.setText("Login");
+        loginLabel.setText("<html><h1 style='font-size:30px'><b>Login<b></h1></html>");
         loginLabel.setFont(new Font("Arial", Font.BOLD, 30));
         loginLabel.setBounds(250, 50, 200, 40);
+        JPanel loginPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,40));
+        loginPanel.add(loginLabel);
+        loginPanel.setOpaque(false);
 
         userLabel.setText("Username: ");
         userLabel.setBounds(120, 150, 80, 30);
-
         username.setPreferredSize(new Dimension(200, 25));
         username.setBounds(200, 150, 200, 25);
+        JPanel userPanel = new JPanel();
+        userPanel.add(userLabel);
+        userPanel.add(username);
+        userPanel.setOpaque(false);
 
         passLabel.setText("Password: ");
         passLabel.setBounds(120, 200, 80, 30);
-
         password.setPreferredSize(new Dimension(200, 25));
         password.setBounds(200, 200, 200, 25);
+        JPanel passPanel = new JPanel();
+        passPanel.add(passLabel);
+        passPanel.add(password);
+        passPanel.setOpaque(false);
 
-        loginButton.setText("Login");
+        loginButton.setText("<html><p style='font-size:13px'><b>Login<b></p></html>");
         loginButton.setBounds(250, 250, 100, 30);
         loginButton.setFocusable(false);
         loginButton.setBackground(new Color(0x0C0950));
         loginButton.setForeground(new Color(0xFFFFFF));
         loginButton.addActionListener(this);
-
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(loginButton);
+        buttonPanel.setOpaque(false);
         
 
         Login = new JButton();
@@ -100,25 +110,39 @@ public class LoginUI extends FrameUI implements ActionListener{
 
         Exit.setText("Back");
         Exit.setFocusable(false);
-        Exit.setBackground(new Color(0xFF3D00));
-        Exit.setForeground(new Color(0xFFF9E6));
+        Exit.setBackground(new Color(0xFFFFFF));
+        Exit.setForeground(new Color(0x0C0950));
         Exit.addActionListener(e -> {
             new HomeUi(cinema);
             frame.dispose();
             
         });
 
+        Login.setMaximumSize(new Dimension(90, 40));
+        Login.setAlignmentX(JButton.CENTER_ALIGNMENT);
+
+        Register.setMaximumSize(new Dimension(90, 40));
+        Register.setAlignmentX(JButton.CENTER_ALIGNMENT);
+
+        Exit.setMaximumSize(new Dimension(90, 40));
+        Exit.setAlignmentX(JButton.CENTER_ALIGNMENT);
+
+
         // Add components to center panel
-        panelCenter.add(loginLabel);
-        panelCenter.add(userLabel);
-        panelCenter.add(username);
-        panelCenter.add(passLabel);
-        panelCenter.add(password);
-        panelCenter.add(loginButton);
+        panelCenter.add(loginPanel);
+        panelCenter.add(Box.createRigidArea(new Dimension(0,30)));
+        panelCenter.add(userPanel);
+        panelCenter.add(Box.createRigidArea(new Dimension(0,30)));
+        panelCenter.add(passPanel);
+        panelCenter.add(Box.createRigidArea(new Dimension(0,30)));
+        panelCenter.add(buttonPanel);
         // Add components to left panel
         panelLeft.setLayout(new BoxLayout(panelLeft, BoxLayout.Y_AXIS));
+        panelLeft.add(Box.createRigidArea(new Dimension(0,20)));
         panelLeft.add(Login);
+        panelLeft.add(Box.createRigidArea(new Dimension(0,20)));
         panelLeft.add(Register);
+        panelLeft.add(Box.createRigidArea(new Dimension(0,20)));
         panelLeft.add(Exit);
         //Revalidate and repaint panels (refresh UI)
         frame.revalidate();
@@ -134,17 +158,13 @@ public class LoginUI extends FrameUI implements ActionListener{
         this.user = new Customer(1,user, "", pass, "", 0,"","",true);
         this.user.loadData();
         if (!this.user.getEmail().isEmpty()){
-            if (user.equals("admin") && pass.equals("admin")) {
+            if(user.equals(this.user.getUsername()) && pass.equals(this.user.getPassword())){
+                JOptionPane.showMessageDialog(null, "Log in successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                new CustomerMenu(cinema,this.user);
                 frame.dispose();
-            }else if(user.equals(this.user.getUsername()) && pass.equals(this.user.getPassword())){
-                frame.dispose();
-                new CustomerMovie(cinema,this.user);
-                cinema.saveData();
-                Hall.saveAll(cinema.halls);
-               //
-            }else{
-                JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
         
     }

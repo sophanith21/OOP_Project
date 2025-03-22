@@ -56,6 +56,7 @@ public class Seat implements DataPersistence{
         this.services = services;
     }
 
+    // need to save booking id to seatbooking
     public static void saveAll(ArrayList <ArrayList<Seat>> seats) {
         try {
             Connection conn = DBConnection.getConnection();
@@ -63,11 +64,11 @@ public class Seat implements DataPersistence{
             if (conn != null) {
                 System.out.println("Database connection successful!");
                 String query = "INSERT INTO seat " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                "VALUES (?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY " +
                 "UPDATE " +
                 "seatType = VALUES(seatType)," +
-                "price = VALUES(price)" + 
+                "price = VALUES(price)," + 
                 "services =VALUES(services)";
                 PreparedStatement pstmt = conn.prepareStatement(query);
     
@@ -75,10 +76,10 @@ public class Seat implements DataPersistence{
                     for (int k = 0 ; k <seats.get(0).size(); k++) {
                         Seat currentSeat = seats.get(i).get(k);
                         pstmt.setString(1, currentSeat.getSeatId());
-                        pstmt.setString(2, currentSeat.getSeatType());
-                        pstmt.setInt(3, currentSeat.getHallId());
-                        pstmt.setDouble(4, currentSeat.getPrice());
-                        pstmt.setString(5,currentSeat.getServices());
+                        pstmt.setString(3, currentSeat.getSeatType());
+                        pstmt.setInt(2, currentSeat.getHallId());
+                        pstmt.setDouble(5, currentSeat.getPrice());
+                        pstmt.setString(4,currentSeat.getServices());
                         pstmt.executeUpdate();
                         Booking.saveAll(currentSeat.booked);
                     }
