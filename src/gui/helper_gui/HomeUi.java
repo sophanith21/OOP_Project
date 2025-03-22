@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,6 +30,7 @@ public class HomeUi extends FrameUI{
         panelCenter.setBackground(new Color(0xFFF9E6));
         panelCenter.setLayout(new BoxLayout(panelCenter,BoxLayout.Y_AXIS));
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,50,0));
+        
 
         title = new JLabel();
         loginButton = new JButton();
@@ -75,8 +75,7 @@ public class HomeUi extends FrameUI{
     }
 
     public static void main(String[] args) {
-        Cinema cinema = new Cinema();
-        cinema.loadData();
+        Cinema cinema = new Cinema("Legend","Phnom Penh",5);
         new HomeUi(cinema);
     }
 }
