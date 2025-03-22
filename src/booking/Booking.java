@@ -13,6 +13,7 @@ import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.FileReader;
 
@@ -24,13 +25,13 @@ public class Booking implements DataPersistence{
     public HashSet <String> seatIds; //More efficient than Array and won't allow duplication
     private double totalPrice;
     private String paymentId;
-    private String customerId;
+    private int customerId;
     private String bookingType;
 
     private static ArrayList<Booking> listOfBookings = new ArrayList<>();
     //Constructor
     public Booking(String bookingId, String ShowTimeId, String movieId, HashSet<String> seatId, 
-            double totalPrice, String paymentId, String customerId, String bookingType) {
+            double totalPrice, String paymentId, int customerId, String bookingType) {
         this.bookingId = bookingId;
         this.ShowTimeId = ShowTimeId;
         this.movieId = movieId;
@@ -57,24 +58,22 @@ public class Booking implements DataPersistence{
             if (conn != null) {
                 System.out.println("Database connection successful!");
                 String query = "INSERT INTO booking " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE" +
-                "status = VALUES(status)";
+                "VALUES (?, ?, ?, ?, ?, ?) ";
                 PreparedStatement pstmt = conn.prepareStatement(query);
 
                 for (Booking book : bookings) {
                     pstmt.setString(1, book.getBookingId());
-                    pstmt.setString(2, book.getBookingType());
-                    pstmt.setString(3, book.getCustomerId());
+                    pstmt.setString(6, book.getBookingType());
+                    pstmt.setInt(3, book.getCustomerId());
                     pstmt.setDouble(4, book.getTotalPrice());
                     pstmt.setString(5, book.getPaymentId());
-                    pstmt.setString(6, book.getMovieId());
+                    pstmt.setString(2, book.getShowTimeId());
                     pstmt.executeUpdate();
 
                     HashSet <String> seatIds = book.getSeatId();
-                    String seatIdsBookedQuery = "INSERT INTO book_seat (bookingId,seatId)" +
-                    "VALUES (?,?)" + 
-                    "ON DUPLICATE KEY UPDATE" +
+                    String seatIdsBookedQuery = "INSERT INTO Seatbooking (bookingId,seatId) " +
+                    "VALUES (?,?) " + 
+                    "ON DUPLICATE KEY UPDATE " +
                     "seatId = VALUES(seatId)";
                     PreparedStatement seatIdBookedStmt = conn.prepareStatement(seatIdsBookedQuery);
                     
@@ -119,7 +118,7 @@ public class Booking implements DataPersistence{
     public double getTotalPrice() { return totalPrice; }
     public String getPaymentId() { return paymentId; }
     public String getBookingType() { return bookingType; }
-    public String getCustomerId() { return customerId; }
+    public int getCustomerId() { return customerId; }
     //Setter
     private void setBookingId(String bookingId) { this.bookingId = bookingId; }
     private void setShowTimeId(String ShowTimeId) { this.ShowTimeId = ShowTimeId; }
@@ -128,7 +127,7 @@ public class Booking implements DataPersistence{
     private void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
     private void setPayment(String paymentId) { this.paymentId = paymentId; }
     private void setBookingType(String bookingType) { this.bookingType = bookingType; }
-    private void setCustomer(String customerId) { this.customerId = customerId; }
+    private void setCustomer(int customerId) { this.customerId = customerId; }
 
     
     @Override
@@ -155,48 +154,67 @@ public class Booking implements DataPersistence{
                 + ", bookingType=" + bookingType + "]";
     }
    
-    public static void makeBooking() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter Booking ID: ");
-        String bookingId = scanner.nextLine();
+    // public static void makeBooking() {
+    //     Scanner scanner = new Scanner(System.in);
+    //     System.out.print("Enter Booking ID: ");
+    //     String bookingId = scanner.nextLine();
 
-        System.out.print("Enter Reservation Time: ");
-        String ShowTimeId = scanner.nextLine();
+    //     System.out.print("Enter Reservation Time: ");
+    //     String ShowTimeId = scanner.nextLine();
 
-        System.out.print("Enter Movie ID: ");
-        String movieId = scanner.nextLine();
+    //     System.out.print("Enter Movie ID: ");
+    //     String movieId = scanner.nextLine();
 
-        System.out.print("Enter number of seats: ");
-        int totalSeat = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+    //     System.out.print("Enter number of seats: ");
+    //     int totalSeat = scanner.nextInt();
+    //     scanner.nextLine(); // Consume newline
 
-        HashSet<String> seatId = new HashSet<>();
-        for (int i = 0; i < totalSeat; i++) {
-            System.out.print("Enter Seat ID: ");
-            seatId.add(scanner.nextLine());
+    //     HashSet<String> seatId = new HashSet<>();
+    //     for (int i = 0; i < totalSeat; i++) {
+    //         System.out.print("Enter Seat ID: ");
+    //         seatId.add(scanner.nextLine());
+    //     }
+
+    //     System.out.print("Enter Total Price: ");
+    //     double totalPrice = scanner.nextDouble();
+    //     scanner.nextLine(); // Consume newline
+
+    //     System.out.print("Enter Payment Method: ");
+    //     String paymentMethod = scanner.nextLine();
+
+    //     System.out.print("Enter Payment Status: ");
+    //     String status = scanner.nextLine();
+
+    //     System.out.print("Enter Transaction ID: ");
+    //     String transactionID = scanner.nextLine();
+
+    //     Payment payment = new Payment("user123", "pay123", "2025-03-06", totalPrice, paymentMethod, status, transactionID);
+
+    //     System.out.print("Enter Booking Type: ");
+    //     String bookingType = scanner.nextLine();
+    //     // Please fix this
+    //     //Booking newBooking = new Booking(bookingId, ShowTimeId, movieId, seatId, totalSeat, totalPrice, payment, bookingType);
+    //     //listOfBookings.add(newBooking); // Add booking to the list
+    // }
+
+    public static int geLastBookingId (){
+        try {
+            Connection conn = DBConnection.getConnection();
+            if (conn != null) {
+                String query = "SELECT COUNT(*) as numOfEntries FROM Booking";
+                ResultSet set = DBConnection.executeQuery(query);
+                int temp;
+                set.next();
+                temp = set.getInt("numOfEntries");
+                conn.close();
+                return temp;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        System.out.print("Enter Total Price: ");
-        double totalPrice = scanner.nextDouble();
-        scanner.nextLine(); // Consume newline
-
-        System.out.print("Enter Payment Method: ");
-        String paymentMethod = scanner.nextLine();
-
-        System.out.print("Enter Payment Status: ");
-        String status = scanner.nextLine();
-
-        System.out.print("Enter Transaction ID: ");
-        String transactionID = scanner.nextLine();
-
-        Payment payment = new Payment("user123", "pay123", "2025-03-06", totalPrice, paymentMethod, status, transactionID);
-
-        System.out.print("Enter Booking Type: ");
-        String bookingType = scanner.nextLine();
-        // Please fix this
-        //Booking newBooking = new Booking(bookingId, ShowTimeId, movieId, seatId, totalSeat, totalPrice, payment, bookingType);
-        //listOfBookings.add(newBooking); // Add booking to the list
+        return 0;
     }
+
     private static void displayBookings() {
         for (Booking booking : listOfBookings) {
             if (booking != null) {

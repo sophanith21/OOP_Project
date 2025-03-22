@@ -162,15 +162,22 @@ public class Hall implements DataPersistence{
                             while (seatIdbookedSet.next()) {
                                 seatIds.add(seatIdbookedSet.getString("seatId"));
                             }
-
+                            String showTimeId = bookSet.getString("showTimeid");
+                            String movieId = "";
+                            for (ShowTime showTime : showTimes){
+                                if (showTime.getShowTimeId().equals(showTimeId)){
+                                    movieId = showTime.movie.getMovieID();
+                                    break;
+                                }
+                            }
                             Booking booked = new Booking(
                                 bookSet.getString("bookingId"),
                                 bookSet.getString("showTimeId"),
-                                bookSet.getString("movieId"),
+                                movieId,
                                 seatIds,
                                 bookSet.getDouble("totalPrice"),
                                 bookSet.getString("paymentId"),
-                                bookSet.getString("customerId"),
+                                bookSet.getInt("customerId"),
                                 bookSet.getString("bookingType")
                             );
                             bookings.add(booked);

@@ -1,11 +1,24 @@
 package gui.helper_gui;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import booking.Booking;
+import booking.Payment;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import user.*;
 import cinema.Cinema;
+import cinema.Hall;
+import cinema.Seat;
+import cinema.ShowTime;
 
 public class BookingUI extends CustomerMovie {
     protected JTextField seatAmountField;
@@ -16,59 +29,108 @@ public class BookingUI extends CustomerMovie {
     protected JLabel changeLabel;
     protected JPanel panelBooking;
 
-    public BookingUI(Cinema cinema, Customer customer) {
-        super(cinema, customer);
+    public BookingUI(Cinema cinema, Customer customer,Hall hall,ShowTime showTime,HashSet <Seat> selectedSeats) {
+        super(cinema,customer,hall);
+
+        Exit.removeActionListener(Exit.getActionListeners()[0]);;
+        Exit.addActionListener(e -> {
+            frame.dispose();
+            new SeatInHallUI(cinema, customer,hall,showTime);
+        });
         panelBooking = new JPanel();
         panelBooking.setBounds(90, 50, 400, 300); // Adjust these values as needed
         panelBooking.setBackground(new Color(0xFFFFFF));
         // Set up the center panel for booking details
-        panelBooking.setLayout(new GridLayout(7, 2, 20, 20)); // 7 rows, 2 columns, with gaps
+        panelBooking.setLayout(new GridLayout(7, 1, 20, 20)); // 7 rows, 2 columns, with gaps
 
         // Add components to the center panel
-        panelBooking.add(new JLabel("Number of Seats:"));
-        seatAmountField = new JTextField();
-        panelBooking.add(seatAmountField);
+        panelBooking.add(new JLabel("Number of Seats: " + selectedSeats.size()));
 
-        panelBooking.add(new JLabel("Seat ID:"));
-        seatIdField = new JTextField();
-        panelBooking.add(seatIdField);
 
-        panelBooking.add(new JLabel("Booking Type:"));
-        String[] bookingTypes = {"Standard", "Premium", "VIP"};
-        bookingTypeComboBox = new JComboBox<>(bookingTypes);
-        panelBooking.add(bookingTypeComboBox);
+        String numBookedType = "";
+        int normalNum = 0, vipNum =0;
+        String temp = "";
+        for (Seat seat : selectedSeats){
+            temp += seat.getSeatId() + ",";
+            if (seat.getServices().isEmpty()) {
+                normalNum++;
+            } else {
+                vipNum++;
+            }
+        }
+        numBookedType = numBookedType + normalNum + " Normal Seat(s), " + vipNum + " VIP seat(s)";
 
-        panelBooking.add(new JLabel("Total Price:"));
-        totalPriceLabel = new JLabel("$0.00");
-        panelBooking.add(totalPriceLabel);
+        JLabel seatIds = new JLabel();
+        if (!temp.isEmpty()){
+            temp.substring(0,temp.length()-2);
+        }
+        
+        seatIds.setText("Seat ID: "+ temp);
+        panelBooking.add(seatIds);
 
-        panelBooking.add(new JLabel("Payment Amount:"));
+        
+        panelBooking.add(new JLabel("Booking Type: " + numBookedType));
+
+        double totalPrice = calculateTotalPrice(selectedSeats);
+        panelBooking.add(new JLabel("Total Price:" + totalPrice + " $"));
+
+        JPanel paymentpanel = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
+        paymentpanel.setBorder(null);
+        JLabel change = new JLabel();
+        paymentpanel.add(new JLabel("Payment Amount:"));
+        paymentpanel.add(Box.createRigidArea(new Dimension(30,0)));
+        paymentpanel.setOpaque(false);
         paymentAmountField = new JTextField();
-        panelBooking.add(paymentAmountField);
-
-        panelBooking.add(new JLabel("Change:"));
-        changeLabel = new JLabel("$0.00");
-        panelBooking.add(changeLabel);
-
-        // Add a button to calculate the total price and process payment
-        JButton calculateButton = new JButton("Calculate Total");
-        calculateButton.setBackground(new Color(0x0C0950));
-        calculateButton.setForeground(new Color(0xFFFFFF));
-        calculateButton.addActionListener(new ActionListener() {
+        paymentAmountField.setPreferredSize(new Dimension(80,20));
+        paymentAmountField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                calculateTotalPrice();
+            public void insertUpdate(DocumentEvent e){
+                change.setText("Change: " + (Integer.parseInt(paymentAmountField.getText()) - totalPrice+""));
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e){
+                if (change.getText().isEmpty()){
+                    change.setText("0");
+                } else {
+                    change.setText("Change: " + (Integer.parseInt(paymentAmountField.getText()) - totalPrice+""));
+                }
+                
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e){
+                change.setText("Change: " + (Integer.parseInt(paymentAmountField.getText()) - totalPrice+""));
             }
         });
-        panelBooking.add(calculateButton);
+        paymentpanel.add(paymentAmountField);
+        panelBooking.add(paymentpanel);
+
+        panelBooking.add(change);
+
+        // Add a button to calculate the total price and process payment
+        // JButton calculateButton = new JButton("Calculate Total");
+        // calculateButton.setBackground(new Color(0x0C0950));
+        // calculateButton.setForeground(new Color(0xFFFFFF));
+        // calculateButton.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         calculateTotalPrice(selectedSeats);
+        //     }
+        // });
+        // panelBooking.add(calculateButton);
 
         JButton payButton = new JButton("Pay");
         payButton.setBackground(new Color(0x0C0950));
         payButton.setForeground(new Color(0xFFFFFF));
+        payButton.setMaximumSize(new Dimension(100,30));
         payButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                processPayment();
+                processPayment(totalPrice,Double.parseDouble(paymentAmountField.getText()),customer,showTime,selectedSeats);
+                cinema.loadData();
+                frame.dispose();
+                new CustomerMenu(cinema, customer);
             }
         });
         panelBooking.add(payButton);
@@ -84,67 +146,63 @@ public class BookingUI extends CustomerMovie {
     }
 
     // Method to calculate the total price
-    private void calculateTotalPrice() {
-        try {
-            int seatAmount = Integer.parseInt(seatAmountField.getText());
-            String bookingType = (String) bookingTypeComboBox.getSelectedItem();
-            double pricePerSeat = 0.0;
-
-            // Determine price per seat based on booking type
-            switch (bookingType) {
-                case "Standard":
-                    pricePerSeat = 10.00;
-                    break;
-                case "Premium":
-                    pricePerSeat = 15.00;
-                    break;
-                case "VIP":
-                    pricePerSeat = 20.00;
-                    break;
-            }
-
-            double totalPrice = seatAmount * pricePerSeat;
-            totalPriceLabel.setText(String.format("$%.2f", totalPrice));
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(frame, "Please enter a valid number of seats.", "Error", JOptionPane.ERROR_MESSAGE);
+    private double calculateTotalPrice(HashSet<Seat> seats) {
+        double total = 0;
+        for(Seat seat : seats){
+            total += seat.getPrice();
         }
+
+        return total;
     }
 
     // Method to process payment
-    private void processPayment() {
-        try {
-            double totalPrice = Double.parseDouble(totalPriceLabel.getText().replace("$", ""));
-            double paymentAmount = Double.parseDouble(paymentAmountField.getText());
-
-            if (paymentAmount >= totalPrice) {
-                double change = paymentAmount - totalPrice;
-                changeLabel.setText(String.format("$%.2f", change));
-                            // Open the receipt screen
-            // new ReceiptUI(
-            //     seatAmountField.getText(), // Number of seats
-            //     seatIdField.getText(), // Seat ID
-            //     (String) bookingTypeComboBox.getSelectedItem(), // Booking type
-            //     totalPriceLabel.getText(), // Total price
-            //     paymentAmountField.getText(), // Payment amount
-            //     changeLabel.getText() // Change
-            // );
-
-            // Optionally, clear the booking fields for a new booking
-            seatAmountField.setText("");
-            seatIdField.setText("");
-            paymentAmountField.setText("");
-            totalPriceLabel.setText("$0.00");
-            changeLabel.setText("$0.00");
-                JOptionPane.showMessageDialog(frame, "Payment successful! Change: $" + String.format("%.2f", change), "Success", JOptionPane.INFORMATION_MESSAGE);
+    private void processPayment(double totalPrice,double payAmount,Customer customer,ShowTime showTime,HashSet<Seat> seats) {
+        // Open the receipt screen
+        // new ReceiptUI(
+        //     seatAmountField.getText(), // Number of seats
+        //     seatIdField.getText(), // Seat ID
+        //     (String) bookingTypeComboBox.getSelectedItem(), // Booking type
+        //     totalPriceLabel.getText(), // Total price
+        //     paymentAmountField.getText(), // Payment amount
+        //     changeLabel.getText() // Change
+        // );
+        if (payAmount < totalPrice) {
+            JOptionPane.showMessageDialog(null, "Payment Amount is not enough.", "Payment Issue", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (customer.getBalance() < payAmount) {
+                JOptionPane.showMessageDialog(null, "Your balance is not enough for the payment amount.", "Payment Issue", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(frame, "Insufficient payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+                HashSet <String> set = new HashSet<>();
+                for (Seat seat: seats){
+                    set.add(seat.getSeatId());
+                }
+                customer.setWalletBalance(customer.getBalance()-totalPrice);
+                customer.saveData();
+                LocalDate today = LocalDate.now();
+                String paymentId = String.valueOf(Payment.getLastPaymentId()+1);
+
+                Payment payment = new Payment(customer.getId(),paymentId , today+"", totalPrice, "Account-Wallet", "Completed", String.valueOf(Payment.getLastPaymentId()+1));
+                ArrayList<Payment> paymentList = new ArrayList<>();
+                paymentList.add(payment);
+                Payment.saveAll(paymentList);
+                
+                Booking book = new Booking(String.valueOf(Booking.geLastBookingId()+1), showTime.getShowTimeId(), showTime.movie.getMovieID(), set, totalPrice, paymentId, customer.getId(), "Online");
+                ArrayList<Booking> bookList = new ArrayList<>();
+                bookList.add(book);
+                Booking.saveAll(bookList);
+                
+               
+
+                JOptionPane.showMessageDialog(null, "Payment Success. Your wallet: " + customer.getBalance() + " $", "Payment Sucesss", JOptionPane.INFORMATION_MESSAGE);
+
             }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(frame, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void main(String[] args) {
-
+        // Customer customer = new Customer(0, "admin", "null", "admin", "null", 0, null, null, true);
+        // customer.loadData();
+        // customer.setWalletBalance(1000000);
+        // customer.saveData();
     }
 }

@@ -11,7 +11,7 @@ import DBConnection.DBConnection;
 import DataControl.DataPersistence;
 
 public class Payment implements DataPersistence{ 
-    private String userId;
+    private int userId;
     private String paymentId;
     private String paymentDate;
     private double paymentAmount;
@@ -19,7 +19,7 @@ public class Payment implements DataPersistence{
     private String status;
     private String transactionId;
 
-    public Payment(String userId, String paymentId, String paymentDate, double paymentAmount, 
+    public Payment(int userId, String paymentId, String paymentDate, double paymentAmount, 
                    String paymentMethod, String status, String transactionID) {
         this.userId = userId;
         this.paymentId = paymentId;
@@ -30,7 +30,7 @@ public class Payment implements DataPersistence{
         this.transactionId = transactionID;
     }
 
-    public String getUserId() { return userId; }
+    public int getUserId() { return userId; }
     public String getPaymentId() { return paymentId; }
     public String getPaymentDate() { return paymentDate; }
     public double getPaymentAmount() { return paymentAmount; }
@@ -38,7 +38,7 @@ public class Payment implements DataPersistence{
     public String getStatus() { return status; }
     public String getTransactionID() { return transactionId; }
 
-    private void setUserId(String userId) { this.userId = userId; }
+    private void setUserId(int userId) { this.userId = userId; }
     private void setPaymentId(String paymentId) { this.paymentId = paymentId; }
     private void setPaymentDate(String paymentDate) { this.paymentDate = paymentDate; }
     private void setPaymentAmount(double paymentAmount) { this.paymentAmount = paymentAmount; }
@@ -87,19 +87,18 @@ public class Payment implements DataPersistence{
             if (conn != null) {
                 System.out.println("Database connection successful!");
                 String query = "INSERT INTO payment " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                "VALUES (?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE " +
                 "status = VALUES(status)";
                 PreparedStatement pstmt = conn.prepareStatement(query);
 
                 for (Payment paymt : payments) {
-                    pstmt.setString(1, paymt.getUserId());
-                    pstmt.setString(2, paymt.getPaymentId());
-                    pstmt.setString(3, paymt.getPaymentDate());
-                    pstmt.setDouble(4, paymt.getPaymentAmount());
-                    pstmt.setString(5, paymt.getPaymentMethod());
-                    pstmt.setString(6, paymt.getStatus());
-                    pstmt.setString(7, paymt.getTransactionID());
+                    pstmt.setString(1, paymt.getPaymentId());
+                    pstmt.setString(2, paymt.getPaymentDate());
+                    pstmt.setDouble(3, paymt.getPaymentAmount());
+                    pstmt.setString(4, paymt.getPaymentMethod());
+                    pstmt.setString(5, paymt.getStatus());
+                    pstmt.setString(6, paymt.getTransactionID());
                     pstmt.executeUpdate();
                 }
 
@@ -125,7 +124,7 @@ public class Payment implements DataPersistence{
                 ResultSet set = pstmt.executeQuery();
                 while (set.next()){
                     Payment pay = new Payment(
-                        set.getString("userId"), 
+                        set.getInt("userId"), 
                         set.getString("paymentId"), 
                         set.getString("paymentDate"),
                         set.getInt("paymentAmount"),
@@ -145,6 +144,24 @@ public class Payment implements DataPersistence{
         return payments;
     }
 
+    public static int getLastPaymentId (){
+        try {
+            Connection conn = DBConnection.getConnection();
+            if (conn != null) {
+                String query = "SELECT COUNT(*) as numOfEntries FROM Booking";
+                ResultSet set = DBConnection.executeQuery(query);
+                int temp;
+                set.next();
+                temp = set.getInt("numOfEntries");
+                conn.close();
+                return temp;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     @Override
     public void saveData(){
         throw new UnsupportedOperationException("Use saveAll instead");
@@ -154,6 +171,7 @@ public class Payment implements DataPersistence{
     public void loadData(){
         throw new UnsupportedOperationException("Use loadAll instead");
     }
+
 
     @Override
     public String toString() {

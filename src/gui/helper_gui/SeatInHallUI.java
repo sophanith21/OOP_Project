@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SeatInHallUI extends FrameUI {
-    private HashSet<JButton> selectedSeats = new HashSet<>();
+    private HashSet<JButton> selectedSeatsButton = new HashSet<>();
+    private HashSet<Seat> selectedSeats = new HashSet<>();
 
     public SeatInHallUI(Cinema cinema,Customer customer, Hall hall, ShowTime showTime) {
         super(cinema); // Initialize FrameUI
@@ -54,6 +55,10 @@ public class SeatInHallUI extends FrameUI {
                 if (curSeat.getServices() != null && !curSeat.getServices().isEmpty()) {
                     seatButton.setBackground(new Color(218, 165, 32)); // Gold for VIP
                     seatButton.setForeground(Color.BLACK);
+                } else if (curSeat.getStatus(showTime.getShowTimeId()).equals("Booked")) {
+                    seatButton.setBackground(Color.RED); // Red for booked seats
+                    seatButton.setForeground(Color.BLACK);
+                    seatButton.setEnabled(false);
                 } else {
                     seatButton.setBackground(Color.LIGHT_GRAY); // Normal seat
                     seatButton.setForeground(Color.BLACK);
@@ -97,9 +102,8 @@ public class SeatInHallUI extends FrameUI {
         confirmButton.setBackground(new Color(0x0C0950));
         confirmButton.setForeground(new Color(0xFFFFFF));
         confirmButton.addActionListener(e -> {
-            confirmSelection();
             frame.dispose();
-            new BookingUI(cinema, customer);
+            new BookingUI(cinema, customer,hall,showTime,selectedSeats);
         });
 
         panelBottom.add(backButton);
@@ -114,17 +118,22 @@ public class SeatInHallUI extends FrameUI {
 
     // 🔹 Toggle seat selection (Gray = Unselected, Green = Selected)
     private void toggleSeat(JButton seat,Seat curSeat) {
-        if (selectedSeats.contains(seat)) {
+        if (selectedSeatsButton.contains(seat)) {
             if (curSeat.getServices() != null && !curSeat.getServices().isEmpty()) {
                 seat.setBackground(new Color(218, 165, 32)); // Gold for VIP
                 seat.setForeground(Color.BLACK);
+                selectedSeatsButton.remove(seat);
+                selectedSeats.remove(curSeat);
             } else {
                 seat.setBackground(Color.LIGHT_GRAY); // Normal seat
                 seat.setForeground(Color.BLACK);
+                selectedSeatsButton.remove(seat);
+                selectedSeats.remove(curSeat);
             }
         } else {
             seat.setBackground(Color.GREEN);
-            selectedSeats.add(seat);
+            selectedSeatsButton.add(seat);
+            selectedSeats.add(curSeat);
         }
     }
 
