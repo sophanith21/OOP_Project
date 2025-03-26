@@ -16,12 +16,12 @@ abstract public class User implements DataPersistence{
     protected String phone;
     protected String role; // "CUSTOMER" or "ADMIN"
 
-    public User(String username, String email, String hashedPassword, String phone, String role, boolean isHashed) {
+    public User(String username, String email, String hashedPassword, String phone, boolean isHashed) {
         this.id = 0;
         this.username = username;
         this.email = email;
         this.phone = phone;
-        this.role = role;
+        //this.role = role;
 
         if (isHashed) { 
             this.hashedPassword = hashedPassword;  // Use the existing hashed password from CSV
