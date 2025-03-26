@@ -32,7 +32,7 @@ public class EditMovie extends JDialog {
 
         // Initialize fields with movie data
         titleField = new JTextField(movie.getTitle());
-        durationField = new JTextField(String.valueOf(movie.getDuration()));
+        durationField = new JTextField(String.valueOf(movie.getDurationMinutes()));
         genreField = new JTextField(movie.getGenre());
 
         // Add components to the dialog
@@ -65,7 +65,7 @@ public class EditMovie extends JDialog {
 
         try {
             int durationMinutes = Integer.parseInt(duration); // Convert duration to integer
-            updateMovieInDatabase(movie.getMovieId(), title, durationMinutes, genre);
+            updateMovieInDatabase(movie.getMovieID(), title, durationMinutes, genre);
             adminMenu.refreshMovieList(); // Refresh the movie list in AdminMenu
             dispose(); // Close the dialog
         } catch (NumberFormatException ex) {

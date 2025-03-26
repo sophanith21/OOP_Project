@@ -214,7 +214,8 @@ public class AdminMenu extends FrameUI {
         moviePanel.setBackground(new Color(0xFFB350));
 
         JLabel titleLabel = new JLabel(movie.getTitle());
-        JLabel durationLabel = new JLabel(movie.getDuration() + " min");
+        JLabel durationLabel = new JLabel(movie.getDurationMinutes
+        () + " min");
         JLabel genreLabel = new JLabel(movie.getGenre());
 
         titleLabel.setPreferredSize(new Dimension(125, 35));
@@ -264,7 +265,7 @@ public class AdminMenu extends FrameUI {
             try (Connection conn = DBConnection.getConnection();
                     PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-                pstmt.setString(1, movie.getMovieId());
+                pstmt.setString(1, movie.getMovieID());
                 pstmt.executeUpdate();
 
                 displayAllMovies(); // Refresh the movie list
