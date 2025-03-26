@@ -12,10 +12,11 @@ import org.mindrot.jbcrypt.BCrypt;
 import DBConnection.DBConnection;
 
 public class Admin extends User {
+    private String role = "Admin";
     private ArrayList<Integer> managedHalls; // ad admin can manage multiple halls
 
-    public Admin(int id, String username, String email, String password, String phone, ArrayList<Integer> managedHalls, boolean isHashed) {
-        super(username, email, password, phone, "ADMIN", isHashed);
+    public Admin(String username, String email, String password, String phone, ArrayList<Integer> managedHalls, boolean isHashed) {
+        super(username, email, password, phone, isHashed);
         this.managedHalls = managedHalls;
     }
 
