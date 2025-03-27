@@ -132,7 +132,7 @@ public class Customer extends User {
                 ResultSet set = stmt.executeQuery();
                 while (set.next()){
                     if(username.equals(set.getString("username"))) {
-                        if (hashedPassword.equals(set.getString("hashedPassword"))) {
+                        if (hashedPassword.equals(set.getString("hashedPassword")) && set.getString("role").equals("CUSTOMER")) {
                             this.id = set.getInt("id");
                             this.email = set.getString("email");
                             this.phone = set.getString("phone");

@@ -39,7 +39,9 @@ public class HomeUi extends FrameUI{
         registerButton = new JButton();
 
         JPanel textPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,0,40));
-        title.setText("<html><h2 style='text-align:center; font-size:30px'>Welcome to " + cinema.getName() + "<br>Cinema management system</h2></html>");
+        title.setText("<html><h2 style='text-align:center; font-size:30px'>Welcome to " + cinema.getName() +
+         "<br>Cinema management system</h2><br><h3>Location: " + cinema.getLocation() +"</h3><br><h3>Total Hall: " +
+         cinema.getTotalHalls()+"</h3></html>");
         title.setBounds(panelCenter.getWidth()/2-title.getWidth()/2, panelCenter.getHeight()/2, 200, 30);
 
 

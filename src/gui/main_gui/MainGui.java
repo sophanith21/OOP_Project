@@ -1,13 +1,20 @@
 package gui.main_gui;
 
 import cinema.Cinema;
-import gui.*;
+import cinema.Hall;
+import cinema.Seat;
 import gui.helper_gui.HomeUi;
-import gui.helper_gui.LoginUI;
 public class MainGui {
     public MainGui () {
-        Cinema cinema = new Cinema("Cineplex","Phnom Penh",5);
+        Cinema cinema = new Cinema();
         cinema.loadData();
+        // //cinema.iniHall();
+        // //Hall.saveAll(cinema.halls);
+        // for (Hall hall:cinema.halls){
+        //     //hall.initSeats();
+        //     //Seat.saveAll(hall.seats);
+            
+        // }
         new HomeUi(cinema);
     }
 }
