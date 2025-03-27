@@ -172,7 +172,7 @@ public class LoginUI extends FrameUI implements ActionListener{
             if (user.equals(admin.getUsername()) && pass.equals(admin.getPassword()) && "ADMIN".equals(admin.getRole())) {
                 JOptionPane.showMessageDialog(null, "Logged in successfully as Admin", "Success", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
-                new AdminMenu(cinema);
+                new AdminMenu(cinema,admin);
             }
         } 
         else {
@@ -180,7 +180,7 @@ public class LoginUI extends FrameUI implements ActionListener{
         }
     }
     public static void main(String[] args) {
-        Cinema cinema = new Cinema(); // Assuming you have a default constructor
+        Cinema cinema = new Cinema(); 
         new LoginUI(cinema);
     }
 

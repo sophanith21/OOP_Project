@@ -392,7 +392,7 @@ public class AdminMenu extends FrameUI {
 
     public static void main(String[] args) {
         Cinema cinema = new Cinema("Legend", "Phnom Penh", 5);
-        Admin admin = new Admin("admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
+        Admin admin = new Admin(1,"admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
         new AdminMenu(cinema, admin);
     }
 }

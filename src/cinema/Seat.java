@@ -19,7 +19,7 @@ public class Seat implements DataPersistence{
     private int hallId;                 // Hall ID
     private double price;               // Seat price
     private String seatId;              // Unique seat identifier (row-seat)
-    public static int seatTaken = 0;    // Tracks booked seats (To be implemented)
+    public static int bookedIndexFromGetStatus = 0;
     
     public Seat(int hallId, int rowNumber, int colNum){
         this.seatType = "Regular";
@@ -126,6 +126,7 @@ public class Seat implements DataPersistence{
         if(!booked.isEmpty()) {
             for(int i = 0; i< booked.size(); i++) {
                 if(booked.get(i).ShowTimeId.equals(showTime)){
+                    bookedIndexFromGetStatus = i;
                     return "Booked";
                 } else {
                     return "Available";

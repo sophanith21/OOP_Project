@@ -153,12 +153,12 @@ public class ProfileChecker extends FrameUI {
     }
 
     public static void main(String[] args) {
-        Cinema cinema = new Cinema("Cineplex", "Phnom Penh", 5);
+        // Cinema cinema = new Cinema("Cineplex", "Phnom Penh", 5);
         
-        // Admin admin = new Admin("admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
-        // new ProfileChecker(cinema, admin);
+        // // Admin admin = new Admin("admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
+        // // new ProfileChecker(cinema, admin);
         
-        Customer customer = new Customer("john_doe", "john@example.com", "password123", "1234567890", 100.0, "Gold", "Action", false);
-        new ProfileChecker(cinema, customer);
+        // Customer customer = new Customer("john_doe", "john@example.com", "password123", "1234567890", 100.0, "Gold", "Action", false);
+        // new ProfileChecker(cinema, customer);
     }
 }

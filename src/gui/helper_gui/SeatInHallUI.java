@@ -52,13 +52,17 @@ public class SeatInHallUI extends FrameUI {
                 seatButton.setFocusable(false);
 
                 // 🔹 Set color based on whether the seat has services (VIP)
-                if (curSeat.getServices() != null && !curSeat.getServices().isEmpty()) {
-                    seatButton.setBackground(new Color(218, 165, 32)); // Gold for VIP
-                    seatButton.setForeground(Color.BLACK);
-                } else if (curSeat.getStatus(showTime.getShowTimeId()).equals("Booked")) {
-                    seatButton.setBackground(Color.RED); // Red for booked seats
+                if (curSeat.getStatus(showTime.getShowTimeId()).equals("Booked")) {
+                    if(curSeat.booked.get(Seat.bookedIndexFromGetStatus).getCustomerId() == customer.getId()){
+                        seatButton.setBackground(Color.GREEN);
+                    } else {
+                        seatButton.setBackground(new Color(0xf23329)); // Red for booked seats
+                    }
                     seatButton.setForeground(Color.BLACK);
                     seatButton.setEnabled(false);
+                } else if (curSeat.getServices() != null && !curSeat.getServices().isEmpty()) {
+                    seatButton.setBackground(new Color(218, 165, 32)); // Gold for VIP
+                    seatButton.setForeground(Color.BLACK);
                 } else {
                     seatButton.setBackground(Color.LIGHT_GRAY); // Normal seat
                     seatButton.setForeground(Color.BLACK);
@@ -134,16 +138,6 @@ public class SeatInHallUI extends FrameUI {
             seat.setBackground(Color.GREEN);
             selectedSeatsButton.add(seat);
             selectedSeats.add(curSeat);
-        }
-    }
-
-    // 🔹 Confirm Selection
-    private void confirmSelection() {
-        if (selectedSeats.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "No seats selected!");
-        } else {
-            JOptionPane.showMessageDialog(frame, "Seats booked: " + selectedSeats.size());
-            frame.dispose();
         }
     }
 }
