@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import cinema.Cinema;
 import cinema.Hall;
 import cinema.ShowTime;
+import user.Admin;
 import user.Customer;
 import user.User;
 
@@ -21,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;
@@ -155,21 +157,31 @@ public class LoginUI extends FrameUI implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String user = username.getText();
         String pass = new String(password.getPassword());
-        this.user = new Customer(1,user, "", pass, "", 0,"","",true);
-        this.user.loadData();
-        if (!this.user.getEmail().isEmpty()){
-            if(user.equals(this.user.getUsername()) && pass.equals(this.user.getPassword())){
+
+        Customer customer = new Customer(1,user, "", pass, "", 0,"","",true);
+        customer.loadData();
+        Admin admin = new Admin(1, user, "", pass, "", new ArrayList<>(), true);
+        admin.loadData();
+        if (!customer.getEmail().isEmpty()){
+            if(user.equals(customer.getUsername()) && pass.equals(customer.getPassword()) && "CUSTOMER".equals(customer.getRole())){
                 JOptionPane.showMessageDialog(null, "Log in successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-                new CustomerMenu(cinema,this.user);
-                frame.dispose();
+                frame.dispose();                
+                new CustomerMenu(cinema,customer);
             }
-        } else {
+        } else if (!admin.getEmail().isEmpty()) { // Successful login as Admin
+            if (user.equals(admin.getUsername()) && pass.equals(admin.getPassword()) && "ADMIN".equals(admin.getRole())) {
+                JOptionPane.showMessageDialog(null, "Logged in successfully as Admin", "Success", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
+                new AdminMenu(cinema);
+            }
+        } 
+        else {
             JOptionPane.showMessageDialog(null, "This username and password has not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
-        
     }
     public static void main(String[] args) {
-        //new LoginUI();
+        Cinema cinema = new Cinema(); // Assuming you have a default constructor
+        new LoginUI(cinema);
     }
 
 }

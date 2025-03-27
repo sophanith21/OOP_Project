@@ -15,8 +15,8 @@ public class Admin extends User {
     private String role = "Admin";
     private ArrayList<Integer> managedHalls; // ad admin can manage multiple halls
 
-    public Admin(String username, String email, String password, String phone, ArrayList<Integer> managedHalls, boolean isHashed) {
-        super(username, email, password, phone, isHashed);
+    public Admin(int id, String username, String email, String password, String phone, ArrayList<Integer> managedHalls, boolean isHashed) {
+        super(username, email, password, phone, "ADMIN", isHashed);
         this.managedHalls = managedHalls;
     }
 
@@ -140,5 +140,29 @@ public class Admin extends User {
     @Override
     public String toString() {
         return super.toString() + "," + managedHalls.toString().replaceAll("[\\[\\] ]", "");
+    }
+    public static void main(String[] args) {
+        ArrayList<Integer> halls = new ArrayList<>();
+        halls.add(101);
+        halls.add(102);
+
+        Admin admin = new Admin(1, "adminUser", "admin@example.com", "password123", "1234567890", halls, false);
+
+        // Display admin details
+        System.out.println("Admin Details:");
+        System.out.println(admin);
+
+        // Display admin menu
+        admin.displayAdminMenu();
+
+        // Save admin data to the database
+        admin.saveData();
+
+        // Load admin data from the database
+        admin.loadData();
+
+        // Display updated admin details
+        System.out.println("Updated Admin Details:");
+        System.out.println(admin);
     }
 }

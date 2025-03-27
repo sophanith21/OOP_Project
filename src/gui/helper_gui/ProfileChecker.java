@@ -11,10 +11,12 @@ import java.util.ArrayList;
 
 public class ProfileChecker extends FrameUI {
     private User currentUser;
+    private Cinema cinema;
 
     public ProfileChecker(Cinema cinema, User user) {
-        super(cinema);
+        super(cinema); // Explicitly call the constructor of FrameUI
         this.currentUser = user;
+        this.cinema = cinema;
         
         // Load user data from database
         this.currentUser.loadData();
@@ -33,16 +35,6 @@ public class ProfileChecker extends FrameUI {
         } else if (currentUser instanceof Customer) {
             showCustomerProfile();
         }
-
-        // Add back button to left panel
-        JButton backButton = new JButton("Back");
-        backButton.setBackground(new Color(0xFFFFFF));
-        backButton.setForeground(new Color(0x0C0950));
-        backButton.setFocusable(false);
-        backButton.addActionListener(e -> {
-            frame.dispose();
-        });
-        panelLeft.add(backButton);
 
         // Refresh the UI
         panelCenter.revalidate();
@@ -90,6 +82,16 @@ public class ProfileChecker extends FrameUI {
 
         // Add to center panel
         panelCenter.add(profilePanel);
+        // Add back button to left panel
+        JButton backButton = new JButton("Back");
+        backButton.setBackground(new Color(0xFFFFFF));
+        backButton.setForeground(new Color(0x0C0950));
+        backButton.setFocusable(false);
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new AdminMenu(this.cinema, (Admin) this.currentUser);
+        });
+        panelLeft.add(backButton);
     }
 
     private void showCustomerProfile() {
@@ -138,15 +140,25 @@ public class ProfileChecker extends FrameUI {
 
         // Add to center panel
         panelCenter.add(profilePanel);
+        // Add back button to left panel
+        JButton backButton = new JButton("Back");
+        backButton.setBackground(new Color(0xFFFFFF));
+        backButton.setForeground(new Color(0x0C0950));
+        backButton.setFocusable(false);
+        backButton.addActionListener(e -> {
+            frame.dispose();
+            new CustomerMenu(this.cinema, customer);
+        });
+        panelLeft.add(backButton);
     }
 
     public static void main(String[] args) {
         Cinema cinema = new Cinema("Cineplex", "Phnom Penh", 5);
         
-        Admin admin = new Admin(1, "admin1", "admin", "password", "1234567890", new ArrayList<>(), false);
-        new ProfileChecker(cinema, admin);
-
-        Customer customer = new Customer(2, "customer1", "customer", "customer1", "0987654321", 50.00, "Gold", "Action", false);
+        // Admin admin = new Admin("admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
+        // new ProfileChecker(cinema, admin);
+        
+        Customer customer = new Customer("john_doe", "john@example.com", "password123", "1234567890", 100.0, "Gold", "Action", false);
         new ProfileChecker(cinema, customer);
     }
 }

@@ -16,9 +16,9 @@ public class Customer extends User {
     private String role = "Customer";
     Scanner sc = new Scanner(System.in);
 
-    public Customer(String username, String email, String password, String phone, double walletBalance,
+    public Customer(int id, String username, String email, String password, String phone, double walletBalance,
             String membershipLevel, String favoriteGenre, boolean isHashed) {
-        super(username, email, password, phone, isHashed);
+        super(username, email, password, phone, "CUSTOMER", isHashed);
         this.walletBalance = walletBalance;
         this.membershipLevel = membershipLevel;
         this.favoriteGenre = favoriteGenre;

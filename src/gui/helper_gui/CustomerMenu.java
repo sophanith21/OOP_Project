@@ -61,6 +61,7 @@ public class CustomerMenu extends FrameUI{
         checkProfile.setBackground(Color.BLACK);
         checkProfile.setForeground(Color.white);
         checkProfile.addActionListener(e -> {
+            new ProfileChecker(cinema, customer);
             frame.dispose();
         });
 
