@@ -210,12 +210,11 @@ public class AdminMenu extends FrameUI {
         JPanel moviePanel = new JPanel();
         moviePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         moviePanel.setMaximumSize(new Dimension(600, 50));
-        moviePanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+        moviePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         moviePanel.setBackground(new Color(0xFFB350));
 
         JLabel titleLabel = new JLabel(movie.getTitle());
-        JLabel durationLabel = new JLabel(movie.getDurationMinutes
-        () + " min");
+        JLabel durationLabel = new JLabel(movie.getDurationMinutes() + " min");
         JLabel genreLabel = new JLabel(movie.getGenre());
 
         titleLabel.setPreferredSize(new Dimension(125, 35));
@@ -277,47 +276,36 @@ public class AdminMenu extends FrameUI {
     }
 
     private void displayBookingHistory() {
-        centerPanel.removeAll(); // Clear the center panel
-        // System.out.println("Displaying booking history..."); // Debug
+        centerPanel.removeAll();
 
         JPanel bookingListPanel = new JPanel();
         bookingListPanel.setLayout(new BoxLayout(bookingListPanel, BoxLayout.Y_AXIS));
 
-        // Simplified query to fetch booking history
-        String query = "SELECT b.bookingId, b.customerId, b.totalPrice, p.paymentDate " +
+        // Query that joins Booking with Payment and other tables
+        String query = "SELECT b.bookingId, u.username AS customerName, b.totalPrice, " +
+                "p.paymentDate, p.status, GROUP_CONCAT(sb.seatId SEPARATOR ', ') AS seats " +
                 "FROM Booking b " +
-                "LEFT JOIN Payment p ON b.bookingId = p.bookingId";
+                "JOIN User u ON b.customerId = u.id " +
+                "LEFT JOIN Payment p ON b.paymentId = p.paymentId " +
+                "LEFT JOIN SeatBooking sb ON b.bookingId = sb.bookingId " +
+                "GROUP BY b.bookingId, u.username, b.totalPrice, p.paymentDate, p.status";
+
         try (Connection conn = DBConnection.getConnection();
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(query)) {
-
-            System.out.println("Database connection and query execution successful.");
 
             boolean hasBookings = false;
             while (rs.next()) {
                 hasBookings = true;
                 String bookingId = rs.getString("bookingId");
-                String customerId = rs.getString("customerId");
+                String customerName = rs.getString("customerName");
                 double totalPrice = rs.getDouble("totalPrice");
                 String paymentDate = rs.getString("paymentDate");
-                // String paymentStatus = rs.getString("status") != null ?
-                // rs.getString("status") : "N/A";
+                String status = rs.getString("status");
+                String seats = rs.getString("seats");
 
-                /*
-                 * Debug: Print booking details to the console
-                 * System.out.println(
-                 * "Loaded Booking: " + bookingId + " - " + customerId + " - " + totalPrice +
-                 * " - "
-                 * + paymentStatus);
-                 */
-
-                // Create a panel for the booking
-                JPanel bookingPanel = createBookingPanel(bookingId, customerId, totalPrice, paymentDate,
-                        "N/A"); // No
-                // seats
-                // in
-                // this
-                // query
+                JPanel bookingPanel = createBookingPanel(bookingId, customerName, totalPrice,
+                        paymentDate, status, seats);
                 bookingListPanel.add(bookingPanel);
             }
 
@@ -327,24 +315,23 @@ public class AdminMenu extends FrameUI {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.err.println("SQL Error: " + e.getMessage()); // Print the SQL error message
-            JOptionPane.showMessageDialog(frame, "Failed to load booking history.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Error loading bookings: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         JScrollPane scrollPane = new JScrollPane(bookingListPanel);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Add the "Back" button at the bottom-left corner of the center panel
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Align the back button to the left
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottomPanel.add(backButton);
         centerPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        updateCenterPanel(centerPanel); // Update the center panel with the booking history
+        updateCenterPanel(centerPanel);
     }
 
-    private JPanel createBookingPanel(String bookingId, String customerId, double totalPrice, String paymentDate,
-            String seats) {
+    // Updated method to include status parameter
+    private JPanel createBookingPanel(String bookingId, String customerId, double totalPrice,
+            String paymentDate, String status, String seats) {
         JPanel bookingPanel = new JPanel();
         bookingPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         bookingPanel.setMaximumSize(new Dimension(600, 50));
@@ -352,35 +339,31 @@ public class AdminMenu extends FrameUI {
         bookingPanel.setBackground(new Color(0xFFB350));
 
         JLabel bookingIdLabel = new JLabel("Booking ID: " + bookingId);
-        JLabel customerIdLabel = new JLabel("Customer ID: " + customerId);
-        JLabel totalPriceLabel = new JLabel("Total Price: $" + totalPrice);
-        JLabel paymentDateLabel = new JLabel("Payment Date: " + paymentDate);
-        // JLabel paymentStatusLabel = new JLabel("Payment Status: " + paymentStatus);
+        JLabel customerIdLabel = new JLabel("Customer: " + customerId);
+        JLabel totalPriceLabel = new JLabel("Total: $" + totalPrice);
+        JLabel paymentDateLabel = new JLabel("Date: " + paymentDate);
+        JLabel paymentStatusLabel = new JLabel("Status: " + status);
         JLabel seatsLabel = new JLabel("Seats: " + seats);
 
         bookingIdLabel.setPreferredSize(new Dimension(120, 35));
         customerIdLabel.setPreferredSize(new Dimension(120, 35));
         totalPriceLabel.setPreferredSize(new Dimension(100, 35));
         paymentDateLabel.setPreferredSize(new Dimension(150, 35));
-        // paymentStatusLabel.setPreferredSize(new Dimension(120, 35));
+        paymentStatusLabel.setPreferredSize(new Dimension(120, 35));
         seatsLabel.setPreferredSize(new Dimension(150, 35));
 
         bookingIdLabel.setForeground(new Color(0x0C0950));
         customerIdLabel.setForeground(new Color(0x0C0950));
         totalPriceLabel.setForeground(new Color(0x0C0950));
         paymentDateLabel.setForeground(new Color(0x0C0950));
-        // paymentStatusLabel.setForeground(new Color(0x0C0950));
+        paymentStatusLabel.setForeground(new Color(0x0C0950));
         seatsLabel.setForeground(new Color(0x0C0950));
 
-        JLabel spaceLabel = new JLabel(" ");
-        spaceLabel.setPreferredSize(new Dimension(50, 35));
-
-        // Add components to the booking panel
         bookingPanel.add(bookingIdLabel);
         bookingPanel.add(customerIdLabel);
         bookingPanel.add(totalPriceLabel);
         bookingPanel.add(paymentDateLabel);
-        // bookingPanel.add(paymentStatusLabel);
+        bookingPanel.add(paymentStatusLabel);
         bookingPanel.add(seatsLabel);
 
         return bookingPanel;
