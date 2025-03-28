@@ -20,7 +20,7 @@ public class AdminMovie extends CustomerMovie {
     JButton viewAllHistory;
     JButton Exit;
     public AdminMovie(Cinema cinema, Customer Customer, Admin admin) {
-        super(cinema, Customer);
+        super(cinema, Customer,null);
         aMoviePanel = new JPanel();
         adminNav = new JPanel();
         adminNav.setBackground(new Color(0xFFD600));
@@ -35,16 +35,6 @@ public class AdminMovie extends CustomerMovie {
         crudMovie.addActionListener(e -> {
             // Update the current panel instead of creating a new instance
             updateCenterPanel(aMoviePanel);
-        });
-
-        viewAllHistory = new JButton();
-        viewAllHistory.setText("View all History");
-        viewAllHistory.setFocusable(false);
-        viewAllHistory.setBackground(new Color(0xFFFFFF));
-        viewAllHistory.setForeground(new Color(0x0C0950));
-        viewAllHistory.addActionListener(e -> {
-            frame.dispose();
-            new ViewAllHistory();
         });
 
         Exit = new JButton();

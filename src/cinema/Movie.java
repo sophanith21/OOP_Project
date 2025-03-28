@@ -3,6 +3,7 @@ package cinema;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -96,6 +97,29 @@ public class Movie implements DataPersistence {
 
         Movie other = (Movie) obj;
         return movieID.equals(other.movieID);
+    }
+
+    public static String getLastIdFromDB(){
+        try {
+            Connection conn = DBConnection.getConnection();
+            System.out.println(conn);
+            if (conn != null) {
+                String query = "SELECT COUNT(*) as lastId FROM movie";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet set = stmt.executeQuery();
+                String id = "";
+                while (set.next()){
+                    id = set.getString("lastId");
+                }
+                
+                conn.close();
+                return id;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "0";
     }
 
     @Override

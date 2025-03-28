@@ -33,15 +33,6 @@ public class CustomerMovie extends FrameUI {
             new CustomerMovie(cinema,customer,hall);
         });
 
-        viewOwnHistory = new JButton();
-        viewOwnHistory.setText("View Own History");
-        viewOwnHistory.setFocusable(false);
-        viewOwnHistory.setBackground(new Color(0xFFFFFF));
-        viewOwnHistory.setForeground(new Color(0x0C0950));
-        viewOwnHistory.addActionListener(e -> {
-            frame.dispose();
-            new CustomerHistory(cinema, customer);
-        });
 
         Exit = new JButton();
         Exit.setText("Back");
@@ -55,8 +46,6 @@ public class CustomerMovie extends FrameUI {
 
 
         //Add panels to frame
-        panelLeft.add(addMovie);
-        panelLeft.add(viewOwnHistory);
         panelLeft.add(Exit);
        
 
