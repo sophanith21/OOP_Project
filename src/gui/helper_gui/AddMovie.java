@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import DBConnection.DBConnection;
 import cinema.Cinema;
+import cinema.Movie;
 
 public class AddMovie extends JDialog {
     private JTextField titleField;
@@ -80,7 +81,7 @@ public class AddMovie extends JDialog {
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            String movieId = "M" + System.currentTimeMillis(); // Generate a unique movieId
+            String movieId = (Integer.parseInt(Movie.getLastIdFromDB()+1))+""; // Generate a unique movieId
             pstmt.setString(1, movieId);
             pstmt.setString(2, title);
             pstmt.setInt(3, duration);
