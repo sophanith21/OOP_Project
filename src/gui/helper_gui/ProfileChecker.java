@@ -131,13 +131,51 @@ public class ProfileChecker extends FrameUI {
         detailsPanel.add(new JLabel("Favorite Genre:"));
         detailsPanel.add(new JLabel(customer.getFavoriteGenre() != null ? customer.getFavoriteGenre() : "Not specified"));
 
+
+
+        JPanel actionsPanel = new JPanel();
+        actionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        actionsPanel.setBackground(Color.WHITE);
+
+        JButton topUpButton = new JButton("Top Up Wallet");
+
+        topUpButton.setBackground(new Color(0x0C0950));
+        topUpButton.setForeground(new Color(0xFFFFFF));
+
+        actionsPanel.add(topUpButton);
+
+        topUpButton.addActionListener(e -> {
+            String amount = JOptionPane.showInputDialog(frame, "Enter amount to top up:");
+            if (amount != null && !amount.isEmpty()) {
+                try {
+                    double topUpAmount = Double.parseDouble(amount);
+                    if (topUpAmount > 0) {
+                        customer.setWalletBalance(customer.getBalance() + topUpAmount);
+                        customer.saveData(); // Save the updated balance to database
+                        JOptionPane.showMessageDialog(frame, 
+                            String.format("Successfully added $%.2f to your wallet", topUpAmount));
+                        // Refresh profile to show updated balance
+                        panelCenter.removeAll();
+                        panelLeft.removeAll();
+                        showCustomerProfile();
+                        panelCenter.revalidate();
+                        panelCenter.repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Please enter a positive amount");
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid number");
+                }
+            }
+        });
         // Add components to profile panel
         profilePanel.add(Box.createVerticalStrut(20));
         profilePanel.add(headerLabel);
         profilePanel.add(Box.createVerticalStrut(20));
         profilePanel.add(detailsPanel);
         profilePanel.add(Box.createVerticalStrut(20));
-
+        profilePanel.add(Box.createVerticalStrut(20));
+        profilePanel.add(actionsPanel);
         // Add to center panel
         panelCenter.add(profilePanel);
         // Add back button to left panel
@@ -153,12 +191,12 @@ public class ProfileChecker extends FrameUI {
     }
 
     public static void main(String[] args) {
-        // Cinema cinema = new Cinema("Cineplex", "Phnom Penh", 5);
+        Cinema cinema = new Cinema("Cineplex", "Phnom Penh", 5);
         
-        // // Admin admin = new Admin("admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
+        // Admin admin = new Admin(1,"admin", "admin@example.com", "admin", "123456789", new ArrayList<>(), false);
         // // new ProfileChecker(cinema, admin);
         
-        // Customer customer = new Customer("john_doe", "john@example.com", "password123", "1234567890", 100.0, "Gold", "Action", false);
-        // new ProfileChecker(cinema, customer);
+        Customer customer = new Customer(1, "john_doe", "john@example.com", "password123", "1234567890", 100.0, "Gold", "Action", false);
+        new ProfileChecker(cinema, customer);
     }
 }
